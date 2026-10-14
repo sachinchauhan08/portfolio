@@ -8,7 +8,14 @@ import styles from '@/styles/sections/VideoIntro.module.css'
 
 function scrollNext() {
   const main = document.querySelector('main')
-  if (main) {
+  const hero = document.getElementById('hero')
+  if (main && hero) {
+    gsap.to(main, {
+      scrollTop: hero.offsetTop,
+      duration: 1.0,
+      ease: 'power3.inOut',
+    })
+  } else if (main) {
     gsap.to(main, {
       scrollTop: window.innerHeight,
       duration: 1.0,

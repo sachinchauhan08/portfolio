@@ -307,12 +307,22 @@
   color: #ffffff;
 }
 
-/* ── Mobile ──────────────────────────────────── */
-@media (max-width: 767px) {
+/* ── Tablet (<= 1024px) ───────────────────────── */
+@media (max-width: 1024px) {
   .section {
+    position: relative;
     height: auto;
     min-height: 100svh;
-    padding: 4.5rem 1.2rem 3rem;
+    padding: 5.2rem 1.8rem 3.5rem;
+    overflow: visible;
+  }
+
+  .header {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0 0 1.5rem 0;
   }
 
   .snakeLine {
@@ -320,8 +330,17 @@
   }
 
   .entries {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .entry {
@@ -335,10 +354,50 @@
 
   .card {
     margin-top: 0;
-    padding: 1.15rem;
+    padding: 1.3rem;
   }
 
   .bullets {
     max-height: none !important;
+  }
+}
+
+/* ── Mobile (< 768px) ────────────────────────── */
+@media (max-width: 767px) {
+  .section {
+    padding: 4.6rem 1.15rem 2.8rem;
+  }
+
+  .header {
+    padding-bottom: 1rem;
+  }
+
+  .label {
+    font-size: 0.7rem;
+  }
+
+  .labelRight {
+    font-size: 0.72rem;
+  }
+
+  .entries {
+    gap: 1.15rem;
+  }
+
+  .card {
+    padding: 1.05rem;
+    gap: 0.55rem;
+  }
+
+  .company {
+    font-size: 1.2rem;
+  }
+
+  .role {
+    font-size: 0.78rem;
+  }
+
+  .bullet {
+    font-size: 0.74rem;
   }
 }

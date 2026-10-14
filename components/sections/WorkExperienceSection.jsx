@@ -63,6 +63,7 @@ export default function WorkExperienceSection() {
     if (!scroller) return
 
     let isActive = false
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024
 
     function resetAnim() {
       tlRef.current?.kill()
@@ -84,12 +85,28 @@ export default function WorkExperienceSection() {
       })
     }
 
-    resetAnim()
+    if (isMobileOrTablet) {
+      playAnim()
+      isActive = true
+    } else {
+      resetAnim()
+    }
 
     function onScroll() {
-      const inRange = Math.abs(scroller.scrollTop - section.offsetTop) < window.innerHeight * 0.5
-      if (inRange && !isActive)  { isActive = true;  playAnim() }
-      if (!inRange && isActive)  { isActive = false; resetAnim() }
+      const scrollY = scroller.scrollTop
+      const top = section.offsetTop
+      const height = section.offsetHeight
+      const inRange =
+        scrollY + window.innerHeight * 0.85 >= top &&
+        scrollY <= top + height - window.innerHeight * 0.15
+
+      if (inRange && !isActive) {
+        isActive = true
+        playAnim()
+      } else if (!inRange && isActive && !isMobileOrTablet) {
+        isActive = false
+        resetAnim()
+      }
     }
 
     scroller.addEventListener('scroll', onScroll, { passive: true })
@@ -97,7 +114,7 @@ export default function WorkExperienceSection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className={styles.section}>
+    <section ref={sectionRef} className={styles.section} id="experience">
 
       <div className={styles.bgImg} aria-hidden>
         <Image

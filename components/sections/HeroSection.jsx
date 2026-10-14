@@ -30,16 +30,20 @@ export default function HeroSection() {
 
   function handleViewProjects() {
     const scroller = document.querySelector('main')
-    if (scroller) {
-      // Index 4 is Projects (0=video, 1=hero, 2=about, 3=skills, 4=projects)
+    const target = document.getElementById('projects')
+    if (scroller && target) {
+      gsap.to(scroller, { scrollTop: target.offsetTop, duration: 1.0, ease: 'power3.inOut' })
+    } else if (scroller) {
       gsap.to(scroller, { scrollTop: 4 * window.innerHeight, duration: 1.0, ease: 'power3.inOut' })
     }
   }
 
   function handleConnect() {
     const scroller = document.querySelector('main')
-    if (scroller) {
-      // Contact is right after WorkExperience
+    const target = document.getElementById('contact')
+    if (scroller && target) {
+      gsap.to(scroller, { scrollTop: target.offsetTop, duration: 1.1, ease: 'power3.inOut' })
+    } else if (scroller) {
       const contactIdx = 4 + profile.projects.length + 1
       gsap.to(scroller, { scrollTop: contactIdx * window.innerHeight, duration: 1.2, ease: 'power3.inOut' })
     }

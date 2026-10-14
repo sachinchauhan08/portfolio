@@ -362,32 +362,100 @@
   will-change: transform;
 }
 
-/* ── Mobile ──────────────────────────────────── */
-@media (max-width: 767px) {
-  .slideContent {
-    grid-template-columns: 1fr;
-    align-items: flex-end;
-    gap: 1.1rem;
-    padding-bottom: 4rem;
+/* ── Tablet ──────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .topBar {
+    padding: 5rem 2rem 0;
   }
-
-  .slideRight {
-    padding: 1.1rem;
-    gap: 0.8rem;
+  .slideContent {
+    grid-template-columns: minmax(0, 48%) minmax(0, 1fr);
+    padding: 5.5rem 2rem 3rem;
+    gap: 1.5rem;
+  }
+  .title {
+    font-size: clamp(2rem, 3.8vw, 2.8rem);
   }
   .featuresList {
     grid-template-columns: 1fr;
   }
-  .desc {
-    -webkit-line-clamp: 3;
-    font-size: 0.82rem;
+  .slideNum {
+    font-size: 5rem;
+    bottom: 3.5rem;
   }
-  .title { font-size: 1.8rem; }
-  .slideNum { font-size: 4.5rem; bottom: 5rem; }
 }
 
-/* ── Tablet ──────────────────────────────────── */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .slideContent { grid-template-columns: minmax(0, 48%) minmax(0, 1fr); }
-  .title { font-size: 2.6rem; }
+/* ── Mobile ──────────────────────────────────── */
+@media (max-width: 767px) {
+  .topBar {
+    padding: 4.2rem 1.15rem 0;
+  }
+
+  .slideContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 4.8rem 1.15rem 2rem;
+    overflow: visible;
+  }
+
+  .slideLeft {
+    gap: 0.35rem;
+  }
+
+  .typeTag {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .title {
+    font-size: clamp(1.4rem, 6.5vw, 1.85rem);
+    line-height: 1.05;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+  }
+
+  .btnGroup {
+    gap: 0.45rem;
+    margin-top: 0.2rem;
+  }
+
+  .liveBtn,
+  .githubBtn {
+    padding: 0.42rem 0.95rem;
+    font-size: 0.72rem;
+  }
+
+  .slideRight {
+    padding: 0.85rem 1rem;
+    gap: 0.6rem;
+    border-radius: 14px;
+    background: rgba(14, 18, 27, 0.85);
+  }
+
+  .desc {
+    -webkit-line-clamp: 3;
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .featuresList {
+    display: none;
+  }
+
+  .tag {
+    font-size: 0.64rem;
+    padding: 0.2rem 0.55rem;
+  }
+
+  .slideNum {
+    display: none;
+  }
+
+  .bottomUI {
+    padding: 0 1.15rem 0.6rem;
+  }
 }

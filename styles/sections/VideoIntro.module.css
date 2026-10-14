@@ -460,12 +460,19 @@
 
 /* ── Responsive: Tablet (< 1080px) ───────────────────────── */
 @media (max-width: 1080px) {
+    .section {
+        height: auto;
+        min-height: 100svh;
+        padding: 5rem 1.8rem 3rem;
+    }
+
     .studioContainer {
         grid-template-columns: 1fr;
         gap: 1.8rem;
         max-width: 680px;
         text-align: center;
         justify-items: center;
+        margin: auto 0;
     }
 
     .textContent {
@@ -474,15 +481,17 @@
     }
 
     .nameHeading {
-        font-size: clamp(2.2rem, 6vw, 3.2rem);
+        font-size: clamp(2.4rem, 6vw, 3.4rem);
     }
 
     .heroDescription {
-        font-size: 0.9rem;
+        font-size: 0.92rem;
+        max-width: 480px;
     }
 
     .metaRow {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .actionRow {
@@ -493,12 +502,18 @@
 /* ── Responsive: Mobile (< 768px) ────────────────────────── */
 @media (max-width: 767px) {
     .section {
-        padding: 0 1rem;
+        height: auto;
+        min-height: 100svh;
+        padding: 4.6rem 1.15rem 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .studioContainer {
-        gap: 1.25rem;
-        margin-top: 2rem;
+        gap: 1.2rem;
+        margin: 0 auto;
+        width: 100%;
     }
 
     .textContent {
@@ -506,29 +521,43 @@
     }
 
     .statusBadge {
-        padding: 0.3rem 0.8rem;
+        padding: 0.32rem 0.85rem;
     }
 
     .statusText {
-        font-size: 0.68rem;
+        font-size: 0.7rem;
     }
 
     .nameHeading {
-        font-size: clamp(2rem, 8.5vw, 2.6rem);
+        font-size: clamp(2rem, 9vw, 2.7rem);
     }
 
     .heroDescription {
-        font-size: 0.82rem;
-        line-height: 1.45;
+        font-size: 0.84rem;
+        line-height: 1.5;
+        max-width: 320px;
+    }
+
+    .metaRow {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        justify-content: center;
+    }
+
+    .roleTag {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.7rem;
     }
 
     .primaryAction {
         font-size: 0.78rem;
-        padding: 0.58rem 1.25rem;
+        padding: 0.58rem 1.3rem;
     }
 
     .cinemaCard {
         border-radius: 16px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .mainVideo,
@@ -543,13 +572,13 @@
     }
 
     .ctrlBtn {
-        width: 28px;
-        height: 28px;
+        width: 30px;
+        height: 30px;
     }
 
     .playCircle {
-        width: 58px;
-        height: 58px;
+        width: 56px;
+        height: 56px;
     }
 
     .scrollPill {

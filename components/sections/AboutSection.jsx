@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
@@ -44,6 +44,7 @@ export default function AboutSection() {
     if (!scroller) return
 
     let isActive = false
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024
 
     function resetAnim() {
       gsap.killTweensOf(photoColRef.current)
@@ -63,12 +64,29 @@ export default function AboutSection() {
       })
     }
 
-    resetAnim()
+    if (isMobileOrTablet) {
+      // Ensure content is immediately visible on mobile/tablet without waiting for exact scroll threshold
+      playAnim()
+      isActive = true
+    } else {
+      resetAnim()
+    }
 
     function onScroll() {
-      const inRange = Math.abs(scroller.scrollTop - section.offsetTop) < window.innerHeight * 0.55
-      if (inRange && !isActive)  { isActive = true;  playAnim() }
-      if (!inRange && isActive)  { isActive = false; resetAnim() }
+      const scrollY = scroller.scrollTop
+      const top = section.offsetTop
+      const height = section.offsetHeight
+      const inRange =
+        scrollY + window.innerHeight * 0.85 >= top &&
+        scrollY <= top + height - window.innerHeight * 0.15
+
+      if (inRange && !isActive) {
+        isActive = true
+        playAnim()
+      } else if (!inRange && isActive && !isMobileOrTablet) {
+        isActive = false
+        resetAnim()
+      }
     }
 
     scroller.addEventListener('scroll', onScroll, { passive: true })

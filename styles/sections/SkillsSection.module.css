@@ -1,4 +1,4 @@
-﻿/* Skills Section - Premium Redesign */
+/* Skills Section - Premium Redesign */
 .section {
   position: sticky;
   top: 0;
@@ -326,21 +326,64 @@
 }
 
 /* Responsive */
-@media (max-width: 1100px) {
-  .container { padding: 0 2.5rem; gap: 1.4rem; }
-  .skillsGrid { grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
-  .eduContent { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
-  .eduDivider { display: none; }
+@media (max-width: 1024px) {
+  .section {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+    padding: 5.2rem 2rem 3.5rem;
+    overflow: visible;
+  }
+  .container {
+    padding: 0;
+    gap: 1.6rem;
+    max-width: 720px;
+  }
+  .skillsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .eduContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .eduDivider {
+    display: none;
+  }
 }
 
 @media (max-width: 767px) {
-  .section { position: relative; height: auto; min-height: 100svh; padding: 4.5rem 1.2rem 3rem; }
-  .container { padding: 0; gap: 1.3rem; }
-  .skillsGrid { grid-template-columns: 1fr; gap: 0.8rem; }
-  .skillCard { padding: 1rem; }
-  .title { font-size: 1.6rem; }
-  .titleRow { flex-direction: column; align-items: flex-start; }
-  .eduBanner { flex-direction: column; gap: 1rem; padding: 1rem; }
-  .eduContent { flex-direction: column; gap: 0.5rem; }
-  .eduDivider { display: none; }
+  .section {
+    padding: 4.6rem 1.15rem 2.8rem;
+  }
+  .container {
+    gap: 1.3rem;
+  }
+  .skillsGrid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  .skillCard {
+    padding: 1rem;
+  }
+  .title {
+    font-size: clamp(1.6rem, 7vw, 2.1rem);
+  }
+  .titleRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .eduBanner {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .eduContent {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .eduDesc {
+    font-size: 0.76rem;
+  }
 }

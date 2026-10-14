@@ -235,7 +235,7 @@ export default function PublicationsFooterSection() {
   const year = new Date().getFullYear()
 
   return (
-    <div ref={wrapperRef} className={styles.wrapper}>
+    <div ref={wrapperRef} className={styles.wrapper} id="contact">
       <div ref={stickyRef} className={styles.sticky}>
 
         {/* ── Video canvas (desktop WebGL background) ── */}
