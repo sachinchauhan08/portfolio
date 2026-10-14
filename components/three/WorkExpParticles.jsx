@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
 const COUNT  = 140
-const ACCENT = new THREE.Color(0xf7931e)
+const ACCENT = new THREE.Color(0x6366f1)
 
 export default function WorkExpParticles({ slideIdx }) {
   const mountRef  = useRef(null)

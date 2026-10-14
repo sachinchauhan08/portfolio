@@ -19,7 +19,8 @@ function createBokehTexture() {
   return new THREE.CanvasTexture(canvas)
 }
 
-const PALETTE = [0xfff4e0, 0xffcc88, 0xff9944, 0xffeedd, 0xffddaa, 0xffffff]
+// Electric blue, violet, cyan, and luminous white bokeh
+const PALETTE = [0x60a5fa, 0xa78bfa, 0x22d3ee, 0x818cf8, 0x38bdf8, 0xffffff]
 
 export default function CinematicLayer() {
   const canvasRef = useRef(null)

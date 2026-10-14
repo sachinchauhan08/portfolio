@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { FaGithub } from 'react-icons/fa'
+import { FiArrowUpRight, FiCheck } from 'react-icons/fi'
 import profile from '@/data/profile.json'
 import styles from '@/styles/sections/ProjectsSection.module.css'
 
@@ -70,7 +72,7 @@ export default function ProjectsSection() {
         const sub   = next.querySelector(`.${styles.subtitle}`)
         const desc  = next.querySelector(`.${styles.desc}`)
         const tags  = next.querySelectorAll(`.${styles.tag}`)
-        const btn   = next.querySelector(`.${styles.liveBtn}`)
+        const btnGroup = next.querySelector(`.${styles.btnGroup}`)
 
         if (meta)  tl.fromTo(meta,  { x: -10, opacity: 0 }, { x: 0, opacity: 1, duration: 0.25, ease: 'power2.out' }, i + 0.45)
         if (title) tl.fromTo(title, { opacity: 0, y: 20 },  { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out'   }, i + 0.48)
@@ -79,7 +81,7 @@ export default function ProjectsSection() {
         if (tags.length) {
           tl.fromTo(tags,  { y: 6, opacity: 0 },  { y: 0, opacity: 1, duration: 0.25, ease: 'power2.out', stagger: 0.03 }, i + 0.65)
         }
-        if (btn)   tl.fromTo(btn,   { y: 8, opacity: 0 },  { y: 0, opacity: 1, duration: 0.30, ease: 'power2.out' }, i + 0.72)
+        if (btnGroup) tl.fromTo(btnGroup, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.30, ease: 'power2.out' }, i + 0.72)
       }
     }
 
@@ -108,12 +110,12 @@ export default function ProjectsSection() {
   }, [])
 
   return (
-    <div style={{ height: `${PROJECTS.length * 100}vh` }}>
+    <div style={{ height: `${PROJECTS.length * 100}vh` }} id="projects">
       <section ref={sectionRef} className={styles.section}>
 
         {/* Top bar */}
         <div className={styles.topBar}>
-          <span className={styles.sectionLabel}>Projects</span>
+          <span className={styles.sectionLabel}>Featured Projects</span>
           <div className={styles.counter}>
             <span ref={counterRef} className={styles.cCur}>01</span>
             <span className={styles.cSep}> / </span>
@@ -160,21 +162,47 @@ export default function ProjectsSection() {
                   </div>
                   <h2 className={styles.title}>{proj.title}</h2>
                   <p  className={styles.subtitle}>{proj.subtitle}</p>
-                  <a
-                    href={proj.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.liveBtn}
-                  >
-                    <span>Live Demo</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-                      <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </a>
+
+                  <div className={styles.btnGroup}>
+                    {proj.link && (
+                      <a
+                        href={proj.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.liveBtn}
+                      >
+                        <span>Live Preview</span>
+                        <FiArrowUpRight size={14} />
+                      </a>
+                    )}
+                    {proj.github && (
+                      <a
+                        href={proj.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.githubBtn}
+                      >
+                        <FaGithub size={14} />
+                        <span>Source</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
 
                 <div className={styles.slideRight}>
                   <p className={styles.desc}>{proj.desc}</p>
+
+                  {proj.features && proj.features.length > 0 && (
+                    <div className={styles.featuresList}>
+                      {proj.features.map(f => (
+                        <div key={f} className={styles.featureItem}>
+                          <FiCheck className={styles.featureCheck} size={13} />
+                          <span>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <div className={styles.stack}>
                     {proj.tech.map(t => (
                       <span key={t} className={styles.tag}>{t}</span>

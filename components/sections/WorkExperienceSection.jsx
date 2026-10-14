@@ -37,8 +37,8 @@ export default function WorkExperienceSection() {
     const tl = gsap.timeline()
     hoverTlsRef.current[i] = tl
     tl.to(ul,  { maxHeight: ul.scrollHeight, duration: 0.5, ease: 'power2.out' }, 0)
-      .to(ul,  { borderLeftColor: 'rgba(247,147,30,0.6)', duration: 0.3 }, 0)
-      .to(dot, { scale: 1.1, boxShadow: '0 0 0 8px rgba(247,147,30,0.12), 0 0 28px rgba(247,147,30,0.22)', duration: 0.3, ease: 'back.out(2)' }, 0)
+      .to(ul,  { borderLeftColor: 'rgba(99, 102, 241, 0.6)', duration: 0.3 }, 0)
+      .to(dot, { scale: 1.1, boxShadow: '0 0 0 8px rgba(99, 102, 241, 0.15), 0 0 28px rgba(99, 102, 241, 0.3)', duration: 0.3, ease: 'back.out(2)' }, 0)
   }
 
   function handleCardLeave(i) {
@@ -51,8 +51,8 @@ export default function WorkExperienceSection() {
     const tl = gsap.timeline()
     hoverTlsRef.current[i] = tl
     tl.to(ul,  { maxHeight: collapsed, duration: 0.35, ease: 'power2.in' }, 0)
-      .to(ul,  { borderLeftColor: 'rgba(247,147,30,0.2)', duration: 0.25 }, 0)
-      .to(dot, { scale: 1, boxShadow: '0 0 0 6px rgba(247,147,30,0.05), 0 0 22px rgba(247,147,30,0.1)', duration: 0.25, ease: 'power2.in' }, 0)
+      .to(ul,  { borderLeftColor: 'rgba(99, 102, 241, 0.2)', duration: 0.25 }, 0)
+      .to(dot, { scale: 1, boxShadow: '0 0 0 6px rgba(99, 102, 241, 0.08), 0 0 20px rgba(99, 102, 241, 0.15)', duration: 0.25, ease: 'power2.in' }, 0)
   }
 
   useEffect(() => {

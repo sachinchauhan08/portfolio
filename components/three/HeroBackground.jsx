@@ -16,12 +16,13 @@ function makeSprite() {
   return new THREE.CanvasTexture(c)
 }
 
-// Warm whites + cream - stand out against hero's orange gradient
+// Electric blue, violet, subtle cyan & crisp white particles
 const PALETTE = [
   new THREE.Color('#ffffff'),
-  new THREE.Color('#fff9f0'),
-  new THREE.Color('#ffe8cc'),
-  new THREE.Color('#ffd4a0'),
+  new THREE.Color('#60a5fa'),
+  new THREE.Color('#a78bfa'),
+  new THREE.Color('#22d3ee'),
+  new THREE.Color('#818cf8'),
 ]
 
 function randColor() {

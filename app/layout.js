@@ -29,20 +29,22 @@ const dancing = Dancing_Script({
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Sachin Chauhan | Full Stack Developer',
+    default: 'Sachin Chauhan | Frontend & Full Stack Developer',
     template: '%s | Sachin Chauhan',
   },
   description:
-    'Full Stack Engineer with 4+ years building scalable web and AI-powered systems using MERN, Next.js, and Python. Available worldwide for collaborations.',
+    'Frontend & Full Stack Developer with 4+ years of experience building high-performance web applications, reusable UI architectures, and scalable full-stack systems using React, Next.js, and TypeScript.',
   keywords: [
     'Sachin Chauhan',
-    'Full Stack Developer',
-    'Software Engineer',
-    'MERN Stack',
-    'Next.js Developer',
+    'Frontend Developer',
     'React Developer',
+    'Full Stack Developer',
+    'Next.js Developer',
+    'TypeScript',
+    'Software Engineer',
+    'JavaScript',
     'Node.js',
-    'AI Systems',
+    'Web Architecture',
     'Portfolio',
     'India',
   ],
@@ -53,9 +55,9 @@ export const metadata = {
     locale: 'en_IN',
     url: SITE_URL,
     siteName: 'Sachin Chauhan',
-    title: 'Sachin Chauhan | Full Stack Developer',
+    title: 'Sachin Chauhan | Frontend & Full Stack Developer',
     description:
-      'Full Stack Engineer with 4+ years building scalable web and AI-powered systems using MERN, Next.js, and Python. Available worldwide for collaborations.',
+      'Frontend & Full Stack Developer with 4+ years of experience building high-performance web applications, reusable UI architectures, and scalable full-stack systems using React, Next.js, and TypeScript.',
     images: [
       {
         url: '/opengraph-image',
@@ -120,9 +122,10 @@ export default function RootLayout({ children }) {
               name: 'Sachin Chauhan',
               url: SITE_URL,
               email: 'csachinj@gmail.com',
-              jobTitle: 'Full Stack Developer',
+              jobTitle: 'Frontend & Full Stack Developer',
               sameAs: [
                 'https://github.com/sachinchauhan08',
+                'https://linkedin.com/in/sachinchauhan08'
               ],
             }),
           }}

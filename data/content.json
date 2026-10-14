@@ -1,22 +1,57 @@
 {
   "site": {
-    "tagline": "Portfolio 2026"
+    "tagline": "Frontend & Full Stack Developer"
   },
   "hero": {
+    "availabilityLabel": "Open to Opportunities",
+    "headingLine1": "Hi, I'm Sachin Chauhan.",
+    "headingLine2": "I build modern digital experiences.",
+    "supportingDesc": "I'm a software developer focused on building responsive, intuitive, and high-performance web applications using modern frontend technologies and practical full-stack development tools.",
+    "primaryCta": "View My Projects",
+    "secondaryCta": "Let's Connect",
+    "resumeCta": "Resume",
+    "pills": ["React.js", "Next.js", "TypeScript", "Node.js", "Full Stack"],
     "taglineHighlight": "experiences",
-    "freelanceNote": "Available for freelance & full-time opportunities.",
-    "availableLabel": "Available for work",
-    "pills": ["AI Architect", "Full Stack Engineer", "Cinematic Creator", "MERN Stack"],
-    "specialistStat": { "value": "AI + Full Stack", "label": "Specialist" }
+    "freelanceNote": "Available for full-time roles & high-impact projects.",
+    "specialistStat": { "value": "React + Next.js", "label": "Specialization" }
   },
-  "interstitial": {
-    "availabilityLabel": "Availability",
-    "basedInLabel": "Based in",
-    "statLabels": ["Years\nexperience", "Projects\ndelivered", "Companies\nworked at"]
+  "about": {
+    "eyebrow": "About Me",
+    "title": "Engineering High-Performance Interfaces & Modern Web Applications",
+    "focusAreas": [
+      {
+        "title": "Frontend Architecture",
+        "desc": "Modular React & Next.js systems, custom design tokens, accessible components, and microfrontends."
+      },
+      {
+        "title": "API & Full-Stack Systems",
+        "desc": "RESTful endpoints, JWT & RBAC auth, queue processing via BullMQ/Redis, and robust database layers."
+      },
+      {
+        "title": "Performance & Optimization",
+        "desc": "Core Web Vitals tuning, ISR/SSR, code splitting, memoization, and lightweight asset pipelines."
+      }
+    ]
+  },
+  "skills": {
+    "eyebrow": "Technical Expertise",
+    "title": "Skills & Specializations",
+    "subtitle": "Production-proven tools and frameworks across frontend engineering, backend services, databases, and modern developer workflows."
+  },
+  "education": {
+    "eyebrow": "Academic Foundation",
+    "title": "Education & Background",
+    "subtitle": "Rigorous academic training in computer applications, software engineering principles, and core computer science."
+  },
+  "contact": {
+    "headingLine1": "Have a project in mind?",
+    "headingLine2": "Let's build something meaningful.",
+    "supportingText": "Open to Frontend Developer, React Developer, and Full Stack positions worldwide. Let's discuss how I can contribute to your engineering team.",
+    "eyebrow": "Open to Opportunities"
   },
   "footer": {
-    "eyebrow": "Available for work",
-    "ctaLines": ["Crafting modern", "digital products", "that feel"],
+    "eyebrow": "Open to Opportunities",
+    "ctaLines": ["Crafting modern", "digital experiences", "that feel"],
     "ctaAccent": "alive."
   }
 }

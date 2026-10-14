@@ -1,220 +1,344 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import dynamic from 'next/dynamic'
 import { gsap } from '@/lib/gsap'
+import { FiPlay, FiPause, FiArrowDown } from 'react-icons/fi'
 import profile from '@/data/profile.json'
-import content from '@/data/content.json'
 import styles from '@/styles/sections/VideoIntro.module.css'
-
-const CinematicLayer = dynamic(() => import('@/components/three/CinematicLayer'), { ssr: false })
 
 function scrollNext() {
   const main = document.querySelector('main')
-  if (main) main.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+  if (main) {
+    gsap.to(main, {
+      scrollTop: window.innerHeight,
+      duration: 1.0,
+      ease: 'power3.inOut',
+    })
+  }
 }
 
 export default function VideoIntro() {
-  const videoRef    = useRef(null)
-  const greetRef    = useRef(null)
-  const nameRef     = useRef(null)
-  const roleRef     = useRef(null)
-  const scrollRef   = useRef(null)
-  const hintRef     = useRef(null)
+  const videoRef = useRef(null)
+  const bgVideoRef = useRef(null)
+  const textRef = useRef(null)
+  const cinemaRef = useRef(null)
+  const scrollRef = useRef(null)
+  const hasEndedRef = useRef(false)
+  const hasLeftTopRef = useRef(false)
 
-  // muted state drives icon only - DOM muted property is controlled exclusively via ref
-  const [muted,    setMuted]    = useState(true)
-  const [playing,  setPlaying]  = useState(true)
-  const [showHint, setShowHint] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
+  const [playing, setPlaying] = useState(true)
 
+  // Smooth entrance choreography
   useEffect(() => {
-    setIsMobile(window.matchMedia('(max-width: 767px)').matches)
-  }, [])
+    const tl = gsap.timeline({ delay: 0.25 })
 
-  // Entrance animation
-  useEffect(() => {
-    const tl = gsap.timeline({ delay: 0.4 })
-    tl.fromTo(greetRef.current,  { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' })
-      .fromTo(nameRef.current,   { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out' }, '-=0.2')
-      .fromTo(roleRef.current,   { opacity: 0, y:  20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.4')
-      .fromTo(scrollRef.current, { opacity: 0 },         { opacity: 1, duration: 0.5 }, '-=0.1')
+    if (textRef.current) {
+      tl.fromTo(
+        textRef.current,
+        { opacity: 0, x: -35, filter: 'blur(8px)' },
+        { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.85, ease: 'power3.out' }
+      )
+    }
+
+    if (cinemaRef.current) {
+      tl.fromTo(
+        cinemaRef.current,
+        { opacity: 0, scale: 0.94, filter: 'blur(8px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.85, ease: 'power3.out' },
+        '-=0.65'
+      )
+    }
+
+    if (scrollRef.current) {
+      tl.fromTo(
+        scrollRef.current,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+        '-=0.3'
+      )
+    }
+
     return () => tl.kill()
   }, [])
 
-  // Video fade-in - no auto-unmute; user must click the button
-  useEffect(() => {
+  // Strictly unmuted playback - never mute
+  function startPlayback() {
     const v = videoRef.current
+    const bg = bgVideoRef.current
     if (!v) return
-    // Guarantee muted on mount regardless of browser attribute handling
-    v.muted = true
-    const t = gsap.fromTo(v, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' })
-    return () => t.kill()
+
+    v.volume = 1
+    v.muted = false
+
+    const playPromise = v.play()
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setPlaying(true)
+          if (bg) bg.play().catch(() => { })
+        })
+        .catch(() => {
+          // Wait for first user click/touch to play unmuted with audio
+          setPlaying(false)
+        })
+    }
+  }
+
+  // Launch playback on mount
+  useEffect(() => {
+    startPlayback()
   }, [])
 
-  // Unmute when screen loader is dismissed (fires inside user gesture - Safari safe)
+  // Trigger playback when ScreenLoader finishes
   useEffect(() => {
-    function onLoaderDismissed() {
+    function onLoaderDone() {
+      startPlayback()
+    }
+    window.addEventListener('loader-animation-done', onLoaderDone)
+    return () => window.removeEventListener('loader-animation-done', onLoaderDone)
+  }, [])
+
+  // Automatically unmute audio with full volume on any user click or touch
+  useEffect(() => {
+    function unlockAudio() {
       const v = videoRef.current
       if (!v) return
+
       v.muted = false
-      setMuted(false)
-      dismissHint()
+      v.volume = 1
+
+      if (v.paused && !hasEndedRef.current) {
+        v.play().then(() => setPlaying(true)).catch(() => { })
+      }
     }
-    window.addEventListener('loader-dismissed', onLoaderDismissed)
-    return () => window.removeEventListener('loader-dismissed', onLoaderDismissed)
+
+    window.addEventListener('pointerdown', unlockAudio, { passive: true })
+    window.addEventListener('click', unlockAudio, { passive: true })
+    window.addEventListener('touchstart', unlockAudio, { passive: true })
+    window.addEventListener('keydown', unlockAudio, { passive: true })
+
+    return () => {
+      window.removeEventListener('pointerdown', unlockAudio)
+      window.removeEventListener('click', unlockAudio)
+      window.removeEventListener('touchstart', unlockAudio)
+      window.removeEventListener('keydown', unlockAudio)
+    }
   }, [])
 
-  // Play video after shatter animation finishes
+  // Section Tracking: Automatically PAUSE and MUTE when moving to other sections,
+  // and resume playing with audio when returning to top
   useEffect(() => {
-    function onAnimationDone() {
+    const main = document.querySelector('main')
+    if (!main) return
+
+    function onMainScroll() {
       const v = videoRef.current
+      const bg = bgVideoRef.current
       if (!v) return
-      v.play().catch(() => {})
+
+      // Moving to other sections: automatically MUTE & PAUSE
+      if (main.scrollTop >= window.innerHeight * 0.4) {
+        v.pause()
+        if (bg) bg.pause()
+        v.muted = true
+        setPlaying(false)
+        hasLeftTopRef.current = true
+      }
+      // Returning to top section: automatically UNMUTE & PLAY
+      else if (main.scrollTop < 30 && hasLeftTopRef.current) {
+        hasLeftTopRef.current = false
+        hasEndedRef.current = false
+        v.currentTime = 0
+        if (bg) bg.currentTime = 0
+        v.muted = false
+        v.volume = 1
+        v.play().then(() => {
+          if (bg) bg.play().catch(() => { })
+          setPlaying(true)
+        }).catch(() => {
+          v.play().then(() => setPlaying(true)).catch(() => { })
+        })
+      }
     }
-    window.addEventListener('loader-animation-done', onAnimationDone)
-    return () => window.removeEventListener('loader-animation-done', onAnimationDone)
+
+    main.addEventListener('scroll', onMainScroll, { passive: true })
+    return () => main.removeEventListener('scroll', onMainScroll)
   }, [])
 
-  // Auto-hide hint after 6 s
-  useEffect(() => {
-    if (!showHint) return
-    const id = setTimeout(() => dismissHint(), 6000)
-    return () => clearTimeout(id)
-  }, [showHint])
-
-  function dismissHint() {
-    if (!hintRef.current) return
-    gsap.to(hintRef.current, {
-      opacity: 0, y: -8, duration: 0.35,
-      onComplete: () => setShowHint(false),
-    })
+  // Video End: ALWAYS scroll to the next section
+  function handleEnded() {
+    hasEndedRef.current = true
+    setPlaying(false)
+    if (bgVideoRef.current) {
+      bgVideoRef.current.pause()
+    }
+    scrollNext()
   }
 
   function togglePlay() {
     const v = videoRef.current
+    const bg = bgVideoRef.current
     if (!v) return
-    if (playing) { v.pause(); setPlaying(false) }
-    else         { v.play();  setPlaying(true)  }
-  }
 
-  function toggleMute() {
-    if (showHint) dismissHint()
-    const v = videoRef.current
-    if (!v) return
-    // Set DOM property synchronously inside click gesture - Safari requires this.
-    // React never updates `v.muted` on re-renders (known React limitation for video),
-    // so the static `muted` attr in JSX does not fight with this.
-    v.muted = !v.muted
-    setMuted(v.muted)
-  }
+    if (!v.paused) {
+      v.pause()
+      if (bg) bg.pause()
+      setPlaying(false)
+    } else {
+      v.muted = false
+      v.volume = 1
+      hasEndedRef.current = false
 
-  function handleEnded() {
-    const main = document.querySelector('main')
-    if (main && main.scrollTop < window.innerHeight * 0.4) scrollNext()
+      if (v.ended || (v.duration && v.currentTime >= v.duration - 0.2)) {
+        v.currentTime = 0
+        if (bg) bg.currentTime = 0
+      }
+
+      const p = v.play()
+      if (p !== undefined) {
+        p.then(() => {
+          if (bg) bg.play().catch(() => { })
+          setPlaying(true)
+        }).catch(() => setPlaying(false))
+      } else {
+        if (bg) bg.play().catch(() => { })
+        setPlaying(true)
+      }
+    }
   }
 
   return (
-    <section className={styles.section}>
-
-      {/* 1 - Blurred ambient background */}
+    <section className={styles.section} id="intro">
+      {/* 1 - Ambient blurred background bloom */}
       <video
+        ref={bgVideoRef}
         src="/assets/about-me.mp4"
-        autoPlay muted playsInline
+        autoPlay
+        muted
+        playsInline
         aria-hidden="true"
         className={styles.bgVideo}
       />
 
-      {/* 2 - Main video: static `muted` attr so React never touches the DOM property on re-renders */}
-      <video
-        ref={videoRef}
-        data-testid="intro-video"
-        src="/assets/about-me.mp4"
-        muted playsInline
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnded={handleEnded}
-        className={styles.mainVideo}
-      />
+      {/* 2 - Radial glow and atmospheric vignette */}
+      <div className={styles.ambientGlow} aria-hidden="true" />
+      <div className={styles.vignette} aria-hidden="true" />
 
-      {/* 3 - Cinematic gradient overlay */}
-      <div className={styles.overlay} />
+      {/* 3 - Studio Split Grid Container */}
+      <div className={styles.studioContainer}>
+        {/* Left Column: Editorial Identity & Typography */}
+        <div ref={textRef} className={styles.textContent}>
+          {/* Status Badge */}
+          <div className={styles.statusBadge}>
+            <span className={styles.statusDot} />
+            <span className={styles.statusText}>
+              {profile.availabilityLabel || 'Available for Roles'}
+            </span>
+            <span className={styles.statusYear}>· 2026</span>
+          </div>
 
-      {/* 4 - Three.js cinematic bokeh layer (desktop only) */}
-      {!isMobile && <CinematicLayer />}
+          {/* Bold Name Typography */}
+          <h1 className={styles.nameHeading}>
+            <span>{profile.name.first}</span>
+            <span className={styles.nameGradient}>{profile.name.last}</span>
+          </h1>
 
-      {/* 5 - Landing text */}
-      <div className={styles.heroContent}>
-        <p ref={greetRef} className={styles.eyebrow}>{content.site.tagline}</p>
-        <h1 ref={nameRef} className={styles.name}>
-          {profile.name.first}<br />{profile.name.last}
-        </h1>
-        <p ref={roleRef} className={styles.role}>{profile.roles.detailed}</p>
-      </div>
+          {/* Subtitle / Focus */}
+          <p className={styles.heroDescription}>
+            Building high-performance digital experiences with modern web technologies & AI.
+          </p>
 
-      {/* 6 - Paused overlay */}
-      {!playing && (
-        <button className={styles.playOverlay} onClick={togglePlay} aria-label="Play video">
-          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-            <circle cx="36" cy="36" r="35" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
-            <polygon points="29,20 56,36 29,52" fill="white" />
-          </svg>
-        </button>
-      )}
+          {/* Clean Meta Tags (No Mute Button) */}
+          <div className={styles.metaRow}>
+            <span className={styles.roleTag}>
+              {profile.roles.short}
+            </span>
+            <span className={styles.roleTag}>
+              React · Next.js · Full Stack
+            </span>
+          </div>
 
-      {/* 7 - Sound hint badge (auto-fades after 6 s) */}
-      {showHint && (
-        <div ref={hintRef} className={styles.soundHint} onClick={toggleMute} style={{ pointerEvents: 'all', cursor: 'pointer' }}>
-          <span className={styles.soundPulse} />
-          <span>Tap for sound</span>
+          {/* Quick Action Button */}
+          <div className={styles.actionRow}>
+            <button
+              type="button"
+              className={styles.primaryAction}
+              onClick={scrollNext}
+            >
+              <span>Explore Portfolio</span>
+              <FiArrowDown size={14} className={styles.arrowIcon} />
+            </button>
+          </div>
         </div>
-      )}
 
-      {/* 8 - Controls (bottom-right) */}
-      <div className={styles.controls}>
-        <button className={styles.ctrlBtn} onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}>
-          {playing
-            ? /* Pause icon */
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <rect x="2" y="1" width="4" height="12" rx="1" />
-                <rect x="8" y="1" width="4" height="12" rx="1" />
-              </svg>
-            : /* Play icon */
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <polygon points="2,1 13,7 2,13" />
-              </svg>
-          }
-        </button>
+        {/* Right Column: 16:9 Studio Cinema Display */}
+        <div ref={cinemaRef} className={styles.cinemaCard}>
+          <video
+            ref={videoRef}
+            data-testid="intro-video"
+            src="/assets/about-me.mp4"
+            playsInline
+            autoPlay
+            onEnded={handleEnded}
+            onPlay={() => {
+              setPlaying(true)
+              hasEndedRef.current = false
+            }}
+            onPause={() => setPlaying(false)}
+            className={styles.mainVideo}
+          />
 
-        <button className={styles.ctrlBtn} onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}>
-          {muted
-            ? /* Muted icon */
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-                <path d="M2 5.5h2.5L8 3v10l-3.5-2.5H2V5.5z" fill="currentColor" stroke="none" />
-                <line x1="10" y1="5" x2="14" y2="11" />
-                <line x1="14" y1="5" x2="10" y2="11" />
-              </svg>
-            : /* Sound icon */
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-                <path d="M2 5.5h2.5L8 3v10l-3.5-2.5H2V5.5z" fill="currentColor" stroke="none" />
-                <path d="M10.5 5.5C11.8 6.5 12.5 7.2 12.5 8s-.7 1.5-2 2.5" />
-                <path d="M12 3.5C14 5 15 6.4 15 8s-1 3-3 4.5" />
-              </svg>
-          }
-        </button>
+          {/* Glass border reflection highlight */}
+          <div className={styles.cardGlassHighlight} aria-hidden="true" />
+
+          {/* Paused state centered play button */}
+          {!playing && !hasEndedRef.current && (
+            <button
+              type="button"
+              className={styles.playOverlay}
+              onClick={(e) => {
+                e.stopPropagation()
+                togglePlay()
+              }}
+              aria-label="Play video"
+            >
+              <div className={styles.playCircle}>
+                <FiPlay size={28} className={styles.playIcon} />
+              </div>
+            </button>
+          )}
+
+          {/* Pinned Play/Pause Transport Controls (No Mute Option) */}
+          <div className={styles.cinemaControls}>
+            <button
+              type="button"
+              className={styles.ctrlBtn}
+              onClick={(e) => {
+                e.stopPropagation()
+                togglePlay()
+              }}
+              aria-label={playing ? 'Pause video' : 'Play video'}
+              title={playing ? 'Pause' : 'Play'}
+            >
+              {playing ? <FiPause size={14} /> : <FiPlay size={14} />}
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* 9 - Scroll cue */}
+      {/* 4 - Minimalist scroll cue */}
       <button
         ref={scrollRef}
-        className={styles.scrollCue}
+        type="button"
+        className={styles.scrollPill}
         onClick={scrollNext}
         aria-label="Scroll to next section"
       >
-        <span className={styles.scrollLabel}>Scroll</span>
-        <span className={styles.scrollLine} />
+        <span className={styles.scrollMouse}>
+          <span className={styles.scrollWheel} />
+        </span>
+        <span className={styles.scrollText}>SCROLL</span>
       </button>
-
     </section>
   )
 }

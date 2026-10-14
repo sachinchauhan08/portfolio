@@ -1,0 +1,346 @@
+﻿/* Skills Section - Premium Redesign */
+.section {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 4;
+  background: var(--bg-obsidian);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bgGlow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 25%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 20% 75%, rgba(59, 130, 246, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 35% at 50% 10%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.gridLines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eyebrowWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.eyebrowLine {
+  width: 28px;
+  height: 2px;
+  background: var(--accent-gradient);
+  border-radius: 9999px;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.title {
+  font-size: clamp(1.8rem, 2.6vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.titleAccent {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: clamp(0.88rem, 1vw, 0.98rem);
+  line-height: 1.5;
+  color: #64748b;
+  max-width: 52rem;
+  margin: 0;
+}
+
+/* Skills Grid - 4 cards */
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.skillCard {
+  background: rgba(12, 16, 24, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.065);
+  border-radius: 1.25rem;
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top gradient accent line per card */
+.skillCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  right: 1.25rem;
+  height: 1px;
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.skillCard:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
+.skillCard:nth-child(2)::before { background: linear-gradient(90deg, #8b5cf6, #06b6d4); }
+.skillCard:nth-child(3)::before { background: linear-gradient(90deg, #06b6d4, #10b981); }
+.skillCard:nth-child(4)::before { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+
+.skillCard:hover {
+  border-color: rgba(99, 102, 241, 0.32);
+  background: rgba(16, 22, 36, 0.85);
+  box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.18);
+  transform: translateY(-4px);
+}
+
+.skillCard:hover::before { opacity: 1; }
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.iconWrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-light);
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.skillCard:hover .iconWrap {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%);
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.cardTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.categoryName {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.countBadge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 0;
+}
+
+.tagsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skillTag {
+  font-size: 0.73rem;
+  font-weight: 500;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 0.26rem 0.65rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.skillTag:hover {
+  background: rgba(99, 102, 241, 0.14);
+  border-color: rgba(99, 102, 241, 0.32);
+  color: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+/* Education Banner */
+.eduBanner {
+  background: rgba(12, 16, 24, 0.6);
+  border: 1px solid rgba(255,255,255,0.065);
+  border-radius: 1.25rem;
+  padding: 1.1rem 1.6rem;
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.25s ease;
+}
+
+.eduBanner:hover {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.eduIconWrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6ee7b7;
+  flex-shrink: 0;
+}
+
+.eduContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.eduLeft { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.eduDegreeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.eduDegree {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.verifiedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 0.18rem 0.55rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.eduFocus {
+  font-size: 0.76rem;
+  color: var(--accent-light);
+  margin: 0;
+  font-weight: 500;
+}
+
+.eduDivider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+
+.eduDesc {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: #64748b;
+  margin: 0;
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .container { padding: 0 2.5rem; gap: 1.4rem; }
+  .skillsGrid { grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+  .eduContent { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .eduDivider { display: none; }
+}
+
+@media (max-width: 767px) {
+  .section { position: relative; height: auto; min-height: 100svh; padding: 4.5rem 1.2rem 3rem; }
+  .container { padding: 0; gap: 1.3rem; }
+  .skillsGrid { grid-template-columns: 1fr; gap: 0.8rem; }
+  .skillCard { padding: 1rem; }
+  .title { font-size: 1.6rem; }
+  .titleRow { flex-direction: column; align-items: flex-start; }
+  .eduBanner { flex-direction: column; gap: 1rem; padding: 1rem; }
+  .eduContent { flex-direction: column; gap: 0.5rem; }
+  .eduDivider { display: none; }
+}

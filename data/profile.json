@@ -5,36 +5,101 @@
     "full": "Sachin Chauhan"
   },
   "email": "csachinj@gmail.com",
-  "tagline": "Building cinematic digital experiences with modern web technologies & AI.",
-  "description": "Building cinematic digital experiences, scalable systems, and AI-powered products with modern web technologies.",
+  "tagline": "Building high-performance digital experiences with modern web technologies & AI.",
+  "description": "Software developer focused on building responsive, intuitive, and high-performance web applications using modern frontend technologies and practical full-stack development tools.",
   "roles": {
-    "short": "Software Developer",
-    "detailed": "Full-Stack Engineer · AI Systems · System Design"
+    "short": "Frontend & Full Stack Developer",
+    "detailed": "Frontend Architecture · React & Next.js · Full Stack Systems"
   },
   "location": {
     "based": "India",
-    "availability": "Worldwide"
+    "availability": "Worldwide / Remote"
   },
   "available": true,
-  "bio": "Full Stack Engineer with 4+ years of experience building scalable web and AI powered systems using MERN, Next.js, and Python. Specialized in microservices, high performance APIs, and production ready architectures with a strong focus on scalability, performance, and clean system design. Experienced across the full stack from frontend architecture to backend systems, Redis caching, async processing, and AI platforms powered by FastAPI and LangChain.",
+  "availabilityLabel": "Open to Opportunities",
+  "bio": "I'm Sachin Chauhan, a developer with a background in computer applications and a passion for building reliable, user-focused web experiences. I work with modern JavaScript frameworks, reusable components, API integrations, and responsive interfaces. I enjoy solving practical problems, writing maintainable code, and continuously improving my development skills.",
   "stats": [
     { "value": "4+",  "label": "Years Experience" },
     { "value": "20+", "label": "Projects Completed" },
     { "value": "3",   "label": "Companies" }
   ],
   "skills": [
-    "Full Stack Engineer",
-    "AI Builder",
-    "Problem Solver",
-    "System Designer",
-    "MERN Stack",
-    "Next.js Dev",
-    "Python Dev",
-    "Microservices",
-    "Open Source",
-    "API Architect",
-    "LangChain",
-    "FastAPI"
+    "React.js",
+    "Next.js",
+    "TypeScript",
+    "JavaScript",
+    "Node.js",
+    "FastAPI",
+    "Express.js",
+    "MongoDB",
+    "PostgreSQL",
+    "Redis",
+    "Tailwind CSS",
+    "REST APIs"
+  ],
+  "skillGroups": [
+    {
+      "category": "Frontend",
+      "skills": [
+        "React.js",
+        "Next.js",
+        "TypeScript",
+        "JavaScript",
+        "Angular",
+        "HTML5",
+        "CSS3",
+        "Responsive UI",
+        "RxJS",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "category": "Backend & APIs",
+      "skills": [
+        "Node.js",
+        "NestJS",
+        "Express.js",
+        "FastAPI",
+        "REST APIs",
+        "JWT Authentication",
+        "Role-Based Access Control",
+        "Middleware & Guards",
+        "Swagger"
+      ]
+    },
+    {
+      "category": "Database",
+      "skills": [
+        "MongoDB",
+        "PostgreSQL",
+        "Redis Caching",
+        "SQL Server",
+        "Entity Framework Core",
+        "Dapper",
+        "Drizzle ORM"
+      ]
+    },
+    {
+      "category": "Tools & Workflow",
+      "skills": [
+        "Git",
+        "GitHub",
+        "Postman",
+        "VS Code",
+        "Cursor",
+        "GitHub Copilot",
+        "Docker",
+        "AWS"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Computer Applications (BCA)",
+      "institution": "University Computer Science & Applications",
+      "focus": "Software Engineering, Data Structures, Database Systems & Modern Web Technologies",
+      "description": "Comprehensive academic foundation in computer applications, object-oriented programming, systems architecture, and modern application development."
+    }
   ],
   "experience": [
     {
@@ -104,29 +169,74 @@
       "id": 1,
       "title": "ArtGenio",
       "subtitle": "AI Prompt Marketplace & Creator Platform",
-      "type": "SaaS",
+      "type": "SaaS Platform",
       "link": "https://artgenio.com/",
+      "github": "https://github.com/sachinchauhan08",
       "image": "/assets/project-artgenio.png",
       "tech": ["Next.js", "MongoDB", "NextAuth", "Google Gemini API", "Razorpay", "PayPal"],
-      "desc": "Full-scale AI-powered marketplace for influencers and businesses. Features a subscription-based Creator Hub with 6 AI tools,Payment integration support for both international and domestic payments, scalable backend with MongoDB, and a complete admin dashboard for managing users, prompts, and analytics."
+      "desc": "Full-scale AI marketplace and creator platform featuring a subscription-based Creator Hub with 6 AI generation tools, dual international & domestic payment integration, scalable MongoDB architecture, and a real-time admin analytics dashboard.",
+      "features": [
+        "6 Specialized AI Generation Tools",
+        "Razorpay & PayPal Multi-Currency Checkout",
+        "Role-Based Creator & Admin Hub",
+        "Real-Time Usage & Revenue Analytics"
+      ]
     },
     {
       "id": 2,
+      "title": "WhatsApp AI Chatbot",
+      "subtitle": "Conversational Agent & Message Router",
+      "type": "AI Platform",
+      "link": "https://github.com/sachinchauhan08",
+      "github": "https://github.com/sachinchauhan08",
+      "image": "/assets/project-whatsapp.jpg",
+      "tech": ["Node.js", "React.js", "FastAPI", "Redis", "BullMQ", "WhatsApp API", "JWT"],
+      "desc": "Intelligent automated messaging system utilizing LLM agents with persona-matched tone simulation, asynchronous job queue processing via BullMQ & Redis, role-based access control, and high-throughput webhook event routing.",
+      "features": [
+        "Persona-Matched Tone Simulation",
+        "BullMQ & Redis Async Job Queue",
+        "Webhook Event Routing Architecture",
+        "Real-Time Conversational Flow Analytics"
+      ]
+    },
+    {
+      "id": 3,
       "title": "EasyFolio",
       "subtitle": "Multi-User Portfolio Platform",
-      "type": "Platform",
+      "type": "Web Application",
       "link": "https://easyfolio.wuwb.in",
+      "github": "https://github.com/sachinchauhan08",
       "image": "/assets/project-easyfolio.png",
       "tech": ["Next.js", "TypeScript", "Drizzle ORM", "Turso (libSQL)", "NextAuth", "Cloudinary"],
-      "desc": "Full-stack multi-user portfolio platform enabling dynamic, database-driven portfolios with multiple themes. Role-based admin system, real-time content editing, PDF CV parsing, portfolio completion tracking."
+      "desc": "Full-stack multi-user portfolio platform enabling dynamic, database-driven developer portfolios with multiple curated themes, real-time visual editing, PDF CV parsing, and Cloudinary media optimization.",
+      "features": [
+        "Dynamic Multi-Theme Engine",
+        "Edge-Ready libSQL Database Architecture",
+        "Intelligent PDF CV Parsing",
+        "Real-Time Profile Completion Tracking"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "VetWise",
+      "subtitle": "Veterinary Clinic Management Portal",
+      "type": "Healthcare SaaS",
+      "link": "https://github.com/sachinchauhan08",
+      "github": "https://github.com/sachinchauhan08",
+      "image": "/assets/project-vetwise.jpg",
+      "tech": ["React.js", "Next.js", "Node.js", "PostgreSQL", "REST APIs", "Tailwind CSS"],
+      "desc": "Healthcare management portal for veterinary clinics providing real-time appointment scheduling, patient diagnostic records, automated follow-up reminders, and an intuitive pet health tracking interface.",
+      "features": [
+        "Real-Time Appointment Scheduling Timeline",
+        "Patient Health & Diagnostic Records",
+        "Staff & Doctor Role-Based Workflows",
+        "Automated Follow-up Reminders"
+      ]
     }
   ],
-  "publications": [],
+  "monogram": "SC",
   "socials": [
     { "label": "GitHub",    "href": "https://github.com/sachinchauhan08" },
-    { "label": "LinkedIn",  "href": "#" },
-    { "label": "Medium",    "href": "#" },
-    { "label": "Instagram", "href": "#" },
-    { "label": "YouTube",   "href": "#" }
+    { "label": "LinkedIn",  "href": "https://linkedin.com/in/sachinchauhan08" }
   ]
 }
