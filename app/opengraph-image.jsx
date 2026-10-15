@@ -218,6 +218,7 @@ export default function Image() {
           }}
         >
           {/* IMAGE */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={photoUrl}
             width={420}

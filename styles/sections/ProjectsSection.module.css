@@ -459,3 +459,91 @@
     padding: 0 1.15rem 0.6rem;
   }
 }
+
+/* ── Light Mode Custom Styling ── */
+:global([data-theme="light"]) .section {
+  background: var(--bg-obsidian);
+}
+
+:global([data-theme="light"]) .slideOverlayLeft {
+  background: linear-gradient(
+    108deg,
+    rgba(248, 250, 252, 0.96) 0%,
+    rgba(248, 250, 252, 0.88) 48%,
+    rgba(248, 250, 252, 0.55) 100%
+  );
+}
+
+:global([data-theme="light"]) .counter {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+:global([data-theme="light"]) .cCur {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .cSep {
+  color: var(--text-muted);
+}
+
+:global([data-theme="light"]) .slideNum {
+  color: rgba(15, 23, 42, 0.05);
+}
+
+:global([data-theme="light"]) .title {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .subtitle {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .typeTag {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: rgba(79, 70, 229, 0.2);
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .githubBtn {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .githubBtn:hover {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .slideRight {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: var(--card-shadow);
+}
+
+:global([data-theme="light"]) .desc {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .featureItem {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .tag {
+  background: var(--surface-card);
+  border-color: var(--border-glass);
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .tag:hover {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .progressTrack {
+  background: rgba(15, 23, 42, 0.1);
+}

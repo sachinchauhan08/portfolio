@@ -9,8 +9,6 @@ import AboutSection          from '@/components/sections/AboutSection'
 import SkillsSection         from '@/components/sections/SkillsSection'
 import ProjectsSection       from '@/components/sections/ProjectsSection'
 import WorkExperienceSection from '@/components/sections/WorkExperienceSection'
-import PublicationsFooterSection from '@/components/sections/PublicationsFooterSection'
-import ScreenLoader from '@/components/sections/ScreenLoader'
 import profile               from '@/data/profile.json'
 
 // Snap: 0=video 1=hero 2=about 3=skills 4..=projects work-exp contact footer
@@ -23,7 +21,6 @@ export default function Home() {
   const busyRef        = useRef(false)
   const tweenRef       = useRef(null)
   const loopOverlayRef = useRef(null)
-  const [showLoader, setShowLoader] = useState(true)
 
   useEffect(() => {
     const el = mainRef.current
@@ -124,6 +121,15 @@ export default function Home() {
       if (dy < 0 && atTop)    fadeLoop(el.scrollHeight - el.clientHeight, TOTAL - 1)
     }
 
+    // Navigation from Navbar or CTAs
+    function onPortfolioNavigate(e) {
+      const { idx } = e.detail || {}
+      if (typeof idx === 'number') {
+        busyRef.current = false
+        goTo(idx)
+      }
+    }
+
     if (!isMobile) {
       el.addEventListener('touchstart', onTouchStart, { passive: true })
       el.addEventListener('touchend',   onTouchEnd,   { passive: true })
@@ -132,6 +138,7 @@ export default function Home() {
       el.addEventListener('touchend',   onMobileTouchEnd,   { passive: true })
     }
     window.addEventListener('footer-loop-back', onFooterLoop)
+    window.addEventListener('portfolio-navigate', onPortfolioNavigate)
 
     return () => {
       el.removeEventListener('wheel',  onWheel)
@@ -144,16 +151,13 @@ export default function Home() {
         el.removeEventListener('touchend',   onMobileTouchEnd)
       }
       window.removeEventListener('footer-loop-back', onFooterLoop)
+      window.removeEventListener('portfolio-navigate', onPortfolioNavigate)
       tweenRef.current?.kill()
     }
   }, [])
 
   return (
     <>
-      {showLoader && (
-        <ScreenLoader onDismiss={() => setShowLoader(false)} />
-      )}
-
       {/* Full-screen fade overlay for seamless footer → top loop */}
       <div
         ref={loopOverlayRef}
@@ -176,7 +180,6 @@ export default function Home() {
           <SkillsSection />
           <ProjectsSection />
           <WorkExperienceSection />
-          <PublicationsFooterSection />
         </div>
       </main>
     </>

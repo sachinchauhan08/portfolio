@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 /* ─── Brand Tokens: Deep Charcoal Luxury & Electric Blue/Violet ────────── */
-:root {
+:root,
+[data-theme="dark"] {
   /* Core Charcoal / Obsidian Palette */
   --bg-obsidian:        #07090e;
   --bg-obsidian-deep:   #030407;
@@ -57,11 +58,8 @@
   --email-btn-bg:       linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
   --email-btn-text:     #ffffff;
 
-  /* Typography Scale */
-  --hero-name-size:     clamp(3.8rem, 9.5vw, 8.5rem);
-  --text-body:          clamp(0.9rem, 1.15vw, 1.05rem);
-  --text-small:         0.75rem;
-  --hero-role-size:     clamp(0.85rem, 1.2vw, 1rem);
+  /* Card shadow */
+  --card-shadow:        0 10px 30px -10px rgba(0, 0, 0, 0.5);
 
   /* shadcn bridge */
   --background:         var(--bg-obsidian);
@@ -70,6 +68,82 @@
   --primary-foreground: #ffffff;
   --ring:               var(--accent-light);
   --radius:             12px;
+}
+
+/* ─── Light Theme: Architectural Editorial Luxury ─────────────────────── */
+[data-theme="light"] {
+  /* Core Clean Architectural Canvas */
+  --bg-obsidian:        #f8fafc;
+  --bg-obsidian-deep:   #f1f5f9;
+  --surface-card:       rgba(255, 255, 255, 0.88);
+  --surface-card-hover: rgba(255, 255, 255, 0.98);
+  --surface-glass:      rgba(15, 23, 42, 0.035);
+  --surface-overlay:    rgba(248, 250, 252, 0.92);
+
+  /* Borders & Glass Highlights */
+  --border-glass:       rgba(15, 23, 42, 0.09);
+  --border-glass-light: rgba(15, 23, 42, 0.16);
+  --border-accent:      rgba(79, 70, 229, 0.4);
+  --border-accent-glow: rgba(37, 99, 235, 0.35);
+  --border-cyan-glow:   rgba(8, 145, 178, 0.35);
+
+  /* Curated Indigo, Blue & Cyan Accents with Accessible Contrast */
+  --accent:             #4f46e5;
+  --accent-light:       #6366f1;
+  --accent-hover:       #4338ca;
+  --accent-glow:        rgba(79, 70, 229, 0.18);
+  --accent-subtle:      rgba(79, 70, 229, 0.08);
+
+  --accent-blue:        #2563eb;
+  --accent-blue-glow:   rgba(37, 99, 235, 0.18);
+  --accent-violet:      #7c3aed;
+  --accent-violet-glow: rgba(124, 58, 237, 0.18);
+  --accent-cyan:        #0891b2;
+  --accent-cyan-glow:   rgba(8, 145, 178, 0.18);
+
+  --accent-gradient:    linear-gradient(135deg, #2563eb 0%, #7c3aed 55%, #0891b2 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 55%, #06b6d4 100%);
+  --gradient-glow:      linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 50%, rgba(8, 145, 178, 0.08) 100%);
+
+  /* Typography Colors - High Contrast */
+  --text-primary:       #0f172a;
+  --text-secondary:     #475569;
+  --text-muted:         #64748b;
+  --text-accent:        #4f46e5;
+  --text-on-dark:       #ffffff;
+
+  /* Status Colors */
+  --status-available:   #059669;
+  --status-available-glow: rgba(5, 150, 105, 0.25);
+
+  /* Hero Gradient */
+  --hero-start:         #ffffff;
+  --hero-mid:           #f8fafc;
+  --hero-end:           #edf2f7;
+
+  /* Navbar */
+  --navbar-bg:          rgba(255, 255, 255, 0.88);
+  --navbar-text:        #0f172a;
+  --email-btn-bg:       linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  --email-btn-text:     #ffffff;
+
+  /* Card shadow */
+  --card-shadow:        0 10px 25px -8px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+
+  /* shadcn bridge */
+  --background:         var(--bg-obsidian);
+  --foreground:         var(--text-primary);
+  --primary:            var(--accent);
+  --primary-foreground: #ffffff;
+  --ring:               var(--accent-light);
+}
+
+/* ─── Typography Scale ───────────────────────────────────── */
+:root {
+  --hero-name-size:     clamp(3.8rem, 9.5vw, 8.5rem);
+  --text-body:          clamp(0.9rem, 1.15vw, 1.05rem);
+  --text-small:         0.75rem;
+  --hero-role-size:     clamp(0.85rem, 1.2vw, 1rem);
 }
 
 @theme inline {
@@ -84,6 +158,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   background-color: var(--bg-obsidian);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -104,6 +179,11 @@ main { scrollbar-width: none; -ms-overflow-style: none; }
   color: #ffffff;
 }
 
+[data-theme="light"] ::selection {
+  background: rgba(79, 70, 229, 0.25);
+  color: #0f172a;
+}
+
 @media (max-width: 767px) {
   :root {
     --hero-name-size: clamp(2.8rem, 11vw, 4.2rem);
@@ -112,4 +192,3 @@ main { scrollbar-width: none; -ms-overflow-style: none; }
   html, body { height: 100svh !important; }
   main { height: 100svh !important; }
 }
-
