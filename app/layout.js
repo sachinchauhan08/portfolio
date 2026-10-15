@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono, Baloo_2, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import Cursor from "@/components/ui/Cursor";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { SITE_URL } from '@/lib/siteConfig';
 import { Analytics } from "@vercel/analytics/next";
 
@@ -110,8 +111,16 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${baloo.variable} ${dancing.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('theme')||'dark';var r=s;if(s==='system'){r=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',r);document.documentElement.classList.add(r);}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${baloo.variable} ${dancing.variable} h-full antialiased`}>
         <script
           type="application/ld+json"
@@ -130,9 +139,11 @@ export default function RootLayout({ children }) {
             }),
           }}
         />
-        <Cursor />
-        {children}
-        <Analytics />
+        <ThemeProvider>
+          <Cursor />
+          {children}
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   );

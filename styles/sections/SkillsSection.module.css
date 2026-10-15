@@ -387,3 +387,83 @@
     font-size: 0.76rem;
   }
 }
+
+/* ── Light Mode Custom Styling ── */
+:global([data-theme="light"]) .section {
+  background: var(--bg-obsidian);
+}
+
+:global([data-theme="light"]) .bgGlow {
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 25%, rgba(124, 58, 237, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 20% 75%, rgba(37, 99, 235, 0.05) 0%, transparent 55%);
+}
+
+:global([data-theme="light"]) .gridLines {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+}
+
+:global([data-theme="light"]) .title {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .subtitle {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .skillCard {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: var(--card-shadow);
+}
+
+:global([data-theme="light"]) .skillCard:hover {
+  background: var(--surface-card-hover);
+  border-color: var(--accent);
+}
+
+:global([data-theme="light"]) .categoryName {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .countBadge {
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--accent);
+  border-color: rgba(79, 70, 229, 0.2);
+}
+
+:global([data-theme="light"]) .divider {
+  background: rgba(15, 23, 42, 0.07);
+}
+
+:global([data-theme="light"]) .skillTag {
+  background: var(--surface-card);
+  border-color: var(--border-glass);
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .skillTag:hover {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .eduBanner {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: var(--card-shadow);
+}
+
+:global([data-theme="light"]) .eduDegree {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .eduFocus {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .eduDesc {
+  color: var(--text-muted);
+}

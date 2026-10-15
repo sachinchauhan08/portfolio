@@ -34,6 +34,7 @@ export default function VideoIntro() {
   const hasLeftTopRef = useRef(false)
 
   const [playing, setPlaying] = useState(true)
+  const [hasEnded, setHasEnded] = useState(false)
 
   // Smooth entrance choreography
   useEffect(() => {
@@ -96,14 +97,6 @@ export default function VideoIntro() {
     startPlayback()
   }, [])
 
-  // Trigger playback when ScreenLoader finishes
-  useEffect(() => {
-    function onLoaderDone() {
-      startPlayback()
-    }
-    window.addEventListener('loader-animation-done', onLoaderDone)
-    return () => window.removeEventListener('loader-animation-done', onLoaderDone)
-  }, [])
 
   // Automatically unmute audio with full volume on any user click or touch
   useEffect(() => {
@@ -175,6 +168,7 @@ export default function VideoIntro() {
   // Video End: ALWAYS scroll to the next section
   function handleEnded() {
     hasEndedRef.current = true
+    setHasEnded(true)
     setPlaying(false)
     if (bgVideoRef.current) {
       bgVideoRef.current.pause()
@@ -195,6 +189,7 @@ export default function VideoIntro() {
       v.muted = false
       v.volume = 1
       hasEndedRef.current = false
+      setHasEnded(false)
 
       if (v.ended || (v.duration && v.currentTime >= v.duration - 0.2)) {
         v.currentTime = 0
@@ -290,6 +285,7 @@ export default function VideoIntro() {
             onPlay={() => {
               setPlaying(true)
               hasEndedRef.current = false
+              setHasEnded(false)
             }}
             onPause={() => setPlaying(false)}
             className={styles.mainVideo}
@@ -299,7 +295,7 @@ export default function VideoIntro() {
           <div className={styles.cardGlassHighlight} aria-hidden="true" />
 
           {/* Paused state centered play button */}
-          {!playing && !hasEndedRef.current && (
+          {!playing && !hasEnded && (
             <button
               type="button"
               className={styles.playOverlay}

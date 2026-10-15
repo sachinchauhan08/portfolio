@@ -400,3 +400,98 @@
     gap: 0.65rem;
   }
 }
+
+/* ── Light Mode Custom Styling ── */
+:global([data-theme="light"]) .section {
+  background: var(--bg-obsidian);
+}
+
+:global([data-theme="light"]) .bgNoise {
+  background:
+    radial-gradient(ellipse 70% 60% at 10% 30%, rgba(79, 70, 229, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 50% at 90% 70%, rgba(8, 145, 178, 0.05) 0%, transparent 55%);
+}
+
+:global([data-theme="light"]) .gridLines {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+}
+
+:global([data-theme="light"]) .photoFrame {
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.08),
+    0 24px 48px -15px rgba(15, 23, 42, 0.12),
+    0 0 40px -10px rgba(79, 70, 229, 0.15);
+}
+
+:global([data-theme="light"]) .photoBadge {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1);
+}
+
+:global([data-theme="light"]) .badgeName {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .badgeRole {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .socialBtn {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .socialBtn:hover {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .heading {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .bioParagraph {
+  color: var(--text-secondary);
+  border-left-color: rgba(79, 70, 229, 0.35);
+}
+
+:global([data-theme="light"]) .statItem {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: var(--card-shadow);
+}
+
+:global([data-theme="light"]) .statValue {
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:global([data-theme="light"]) .statLabel {
+  color: var(--text-muted);
+}
+
+:global([data-theme="light"]) .strengthCard {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: var(--card-shadow);
+}
+
+:global([data-theme="light"]) .strengthCard:hover {
+  background: var(--surface-card-hover);
+  border-color: var(--accent);
+}
+
+:global([data-theme="light"]) .strengthTitle {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .strengthDesc {
+  color: var(--text-secondary);
+}

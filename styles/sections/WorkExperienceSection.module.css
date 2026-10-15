@@ -401,3 +401,64 @@
     font-size: 0.74rem;
   }
 }
+
+/* ── Light Mode Custom Styling ── */
+:global([data-theme="light"]) .section {
+  background: var(--bg-obsidian);
+}
+
+:global([data-theme="light"]) .section::before {
+  color: rgba(15, 23, 42, 0.03);
+}
+
+:global([data-theme="light"]) .labelRight {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .card {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: var(--card-shadow);
+}
+
+:global([data-theme="light"]) .card:hover {
+  background: var(--surface-card-hover);
+  border-color: var(--accent);
+}
+
+:global([data-theme="light"]) .company {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .role {
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .bullet {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .tag {
+  background: var(--surface-card);
+  border-color: var(--border-glass);
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .tag:hover {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .typeTag {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: rgba(79, 70, 229, 0.2);
+  color: var(--accent);
+}
+
+:global([data-theme="light"]) .period,
+:global([data-theme="light"]) .location {
+  color: var(--text-muted);
+}

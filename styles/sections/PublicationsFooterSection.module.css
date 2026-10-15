@@ -812,3 +812,122 @@
     display: none;
   }
 }
+
+/* ── Light Mode Custom Styling ── */
+:global([data-theme="light"]) .sticky {
+  background: var(--bg-obsidian);
+}
+
+:global([data-theme="light"]) .contactTitle {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .contactSubtitle {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .contactCard {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  box-shadow: var(--card-shadow);
+}
+
+:global([data-theme="light"]) .emailTextWrap .emailAddress {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .copyBtn {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .copyBtn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--surface-card-hover);
+}
+
+:global([data-theme="light"]) .metricItem .metricValue {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .metricItem .metricLabel {
+  color: var(--text-muted);
+}
+
+:global([data-theme="light"]) .socialPill {
+  background: var(--surface-card);
+  border-color: var(--border-glass-light);
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .socialPill:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+:global([data-theme="light"]) .nameHeading {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .nameGhost {
+  color: rgba(15, 23, 42, 0.25);
+}
+
+:global([data-theme="light"]) .signatureText {
+  -webkit-text-stroke-color: rgba(15, 23, 42, 0.05);
+}
+
+:global([data-theme="light"]) .footerDescription {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .footerMail {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .footerLink {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .ctaHeading {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .copyBlock .copy {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .copyBlock .copyAll {
+  color: var(--text-muted);
+}
+
+:global([data-theme="light"]) .bottomBar {
+  border-top-color: var(--border-glass);
+}
+
+:global([data-theme="light"]) .builtWith {
+  color: var(--text-muted);
+}
+
+:global([data-theme="light"]) .mobileName {
+  color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .mobileNameGhost {
+  color: rgba(15, 23, 42, 0.25);
+}
+
+:global([data-theme="light"]) .mobileDesc {
+  color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .mobileTalkBtn {
+  background: var(--accent-gradient);
+  color: #ffffff;
+}
+
+:global([data-theme="light"]) .mobileSocialLink {
+  color: var(--text-secondary);
+}

@@ -585,3 +585,78 @@
         display: none;
     }
 }
+
+/* ── Light Mode Custom Styling ── */
+:global([data-theme="light"]) .section {
+    background: var(--bg-obsidian);
+}
+
+:global([data-theme="light"]) .bgVideo {
+    opacity: 0.12;
+    filter: blur(50px);
+}
+
+:global([data-theme="light"]) .vignette {
+    background: linear-gradient(
+        180deg,
+        rgba(248, 250, 252, 0.8) 0%,
+        rgba(248, 250, 252, 0.2) 25%,
+        rgba(248, 250, 252, 0.2) 75%,
+        rgba(248, 250, 252, 0.95) 100%
+    );
+}
+
+:global([data-theme="light"]) .ambientGlow {
+    background:
+        radial-gradient(ellipse 60% 50% at 75% 50%, rgba(79, 70, 229, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 45% at 25% 60%, rgba(8, 145, 178, 0.08) 0%, transparent 65%);
+}
+
+:global([data-theme="light"]) .statusBadge {
+    background: var(--surface-card);
+    border-color: var(--border-glass-light);
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08);
+}
+
+:global([data-theme="light"]) .statusText {
+    color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .nameHeading {
+    color: var(--text-primary);
+}
+
+:global([data-theme="light"]) .heroDescription {
+    color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .roleTag {
+    background: var(--surface-card);
+    border-color: var(--border-glass-light);
+    color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .cinemaCard {
+    background: #0b0f19;
+    border-color: var(--border-glass-light);
+    box-shadow:
+        0 25px 60px -15px rgba(15, 23, 42, 0.2),
+        0 0 35px -10px rgba(79, 70, 229, 0.25);
+}
+
+:global([data-theme="light"]) .scrollPill {
+    background: var(--surface-card);
+    border-color: var(--border-glass-light);
+}
+
+:global([data-theme="light"]) .scrollText {
+    color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .scrollMouse {
+    border-color: var(--text-secondary);
+}
+
+:global([data-theme="light"]) .scrollWheel {
+    background: var(--accent);
+}
