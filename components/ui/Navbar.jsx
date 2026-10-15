@@ -1,45 +1,57 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { gsap } from '@/lib/gsap'
+import { FiMenu, FiX } from 'react-icons/fi'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import profile from '@/data/profile.json'
 import styles from '@/styles/ui/Navbar.module.css'
-import { FaBars, FaTimes } from 'react-icons/fa'
 
 const PROJECT_COUNT = profile.projects.length
-const HERO_IDX       = 1
-const ABOUT_IDX      = 2
-const SKILLS_IDX     = 3
-const PROJECTS_IDX   = 4
-const EXPERIENCE_IDX = 4 + PROJECT_COUNT // 8
-const CONTACT_IDX    = 4 + PROJECT_COUNT + 1 // 9
+const HERO_IDX = 1
 
 const NAV_ITEMS = [
-  { label: 'Home',       targetId: 'hero',       idx: HERO_IDX },
-  { label: 'About',      targetId: 'about',      idx: ABOUT_IDX },
-  { label: 'Skills',     targetId: 'skills',     idx: SKILLS_IDX },
-  { label: 'Projects',   targetId: 'projects',   idx: PROJECTS_IDX },
-  { label: 'Experience', targetId: 'experience', idx: EXPERIENCE_IDX },
-  { label: 'Contact',    targetId: 'contact',    idx: CONTACT_IDX },
+  { label: 'Home', targetId: 'hero', idx: HERO_IDX },
+  { label: 'About', targetId: 'about', idx: 2 },
+  { label: 'Skills', targetId: 'skills', idx: 3 },
+  { label: 'Projects', targetId: 'projects', idx: 4 },
+  { label: 'Experience', targetId: 'experience', idx: 4 + PROJECT_COUNT },
+  { label: 'Contact', targetId: 'contact', idx: 5 + PROJECT_COUNT },
 ]
 
+const LOCATION_LABEL = profile.location.based
+
 function getIST() {
-  return new Date().toLocaleTimeString('en-IN', {
-    timeZone: 'Asia/Kolkata',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true,
-  }).toUpperCase()
+  return new Date()
+    .toLocaleTimeString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    })
+    .toUpperCase()
+}
+
+function prefersReducedMotion() {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
 export default function Navbar() {
-  const [time, setTime]                   = useState('')
-  const [menuOpen, setMenuOpen]           = useState(false)
-  const [activeSection, setActiveSection] = useState('Home')
-  const headerRef                         = useRef(null)
+  const [time, setTime] = useState('')
+  const [activeSection, setActiveSection] = useState('Intro')
+  const [menuOpen, setMenuOpen] = useState(false)
 
-  // Live IST Clock
+  const headerRef = useRef(null)
+  const navRef = useRef(null)
+  const indicatorRef = useRef(null)
+  const linkRefs = useRef({})
+
+  // The intro slide (0) is the full-bleed video stage: hide the navbar there.
+  const isIntro = activeSection === 'Intro'
+
+  // Live IST clock
   useEffect(() => {
     const t = setTimeout(() => setTime(getIST()), 0)
     const id = setInterval(() => setTime(getIST()), 1000)
@@ -80,164 +92,165 @@ export default function Navbar() {
     return () => scroller.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Move the sliding active indicator beneath the active link
+  const positionIndicator = useCallback(() => {
+    const indicator = indicatorRef.current
+    if (!indicator) return
+
+    const target = linkRefs.current[activeSection]
+    const reduce = prefersReducedMotion()
+
+    if (!target || isIntro || menuOpen) {
+      gsap.to(indicator, { opacity: 0, duration: reduce ? 0 : 0.25, ease: 'power2.out' })
+      return
+    }
+
+    gsap.to(indicator, {
+      x: target.offsetLeft,
+      width: target.offsetWidth,
+      opacity: 1,
+      duration: reduce ? 0 : 0.45,
+      ease: 'power3.out',
+    })
+  }, [activeSection, isIntro, menuOpen])
+
+  useEffect(() => {
+    positionIndicator()
+  }, [positionIndicator])
+
+  // Reposition on resize so the indicator stays aligned
+  useEffect(() => {
+    const onResize = () => positionIndicator()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [positionIndicator])
+
+  // Entrance animation (clears inline styles so the CSS hidden state can win)
+  useEffect(() => {
+    if (!headerRef.current || prefersReducedMotion()) return
+    const tween = gsap.fromTo(
+      headerRef.current,
+      { y: -26, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.75,
+        ease: 'power3.out',
+        delay: 0.15,
+        onComplete: () => gsap.set(headerRef.current, { clearProps: 'transform,opacity' }),
+      }
+    )
+    return () => tween.kill()
+  }, [])
+
+  // Auto-close the mobile menu when switching to desktop width
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 767) setMenuOpen(false)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  // Escape always closes the mobile menu
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
+
   function navigateTo(item) {
     setMenuOpen(false)
 
-    // 1. Dispatch custom event to page.js for canonical GSAP snap navigation
+    // Canonical GSAP snap navigation handled in page.js
     window.dispatchEvent(
       new CustomEvent('portfolio-navigate', { detail: { idx: item.idx } })
     )
 
-    // 2. Direct scroll fallback
+    // Direct scroll fallback
     const scroller = document.querySelector('main')
     if (scroller) {
-      const top = item.idx * window.innerHeight
-      scroller.scrollTo({ top, behavior: 'smooth' })
-    }
-  }
-
-  function navigateHome() {
-    setMenuOpen(false)
-    const scroller = document.querySelector('main')
-    const currentY = scroller ? scroller.scrollTop : 0
-    // If currently at hero, scroll to intro; otherwise scroll to hero
-    const targetIdx = currentY >= window.innerHeight * 0.8 && currentY <= window.innerHeight * 1.5 ? 0 : HERO_IDX
-
-    window.dispatchEvent(
-      new CustomEvent('portfolio-navigate', { detail: { idx: targetIdx } })
-    )
-
-    if (scroller) {
-      scroller.scrollTo({ top: targetIdx * window.innerHeight, behavior: 'smooth' })
+      scroller.scrollTo({ top: item.idx * window.innerHeight, behavior: 'smooth' })
     }
   }
 
   return (
-    <>
-      <header ref={headerRef} className={styles.header}>
-        {/* Brand Logo */}
+    <header
+      ref={headerRef}
+      className={`${styles.header} ${isIntro ? styles.headerHidden : ''}`}
+      aria-hidden={isIntro ? 'true' : undefined}
+    >
+      {/* ── Menu list (desktop) ────────────────────────────── */}
+      <nav ref={navRef} className={styles.navLinks} aria-label="Main Navigation">
+        <span
+          ref={indicatorRef}
+          className={styles.activeIndicator}
+          aria-hidden="true"
+        />
+        {NAV_ITEMS.map((item) => {
+          const isActive = activeSection === item.label
+          return (
+            <button
+              key={item.label}
+              type="button"
+              ref={(el) => { linkRefs.current[item.label] = el }}
+              className={`${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
+              onClick={() => navigateTo(item)}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {item.label}
+            </button>
+          )
+        })}
+      </nav>
+
+      {/* ── India time + theme toggle + mobile trigger ─────── */}
+      <div className={styles.actions}>
+        <span className={styles.time} aria-label={`${LOCATION_LABEL} time`}>
+          {LOCATION_LABEL} · {time}
+        </span>
+
+        <ThemeToggle />
+
         <button
           type="button"
-          className={styles.mobileBrand}
-          onClick={navigateHome}
-          aria-label="Go to Home"
+          className={styles.menuToggle}
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav-menu"
         >
-          <span className={styles.brandAvatar}>SC</span>
-          <span className={styles.brandName}>Sachin Chauhan</span>
+          {menuOpen ? <FiX size={18} /> : <FiMenu size={18} />}
         </button>
+      </div>
 
-        {/* Live IST clock */}
-        <span className={styles.time}>INDIA · {time}</span>
-
-        {/* Desktop Navigation Links */}
-        <nav className={styles.navLinks} aria-label="Main Navigation">
-          {NAV_ITEMS.map((item) => {
-            const isActive = activeSection === item.label
-            return (
-              <button
-                key={item.label}
-                type="button"
-                className={`${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
-                onClick={() => navigateTo(item)}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <span>{item.label}</span>
-                {isActive && <span className={styles.activeDot} />}
-              </button>
-            )
-          })}
-        </nav>
-
-        {/* Right Actions */}
-        <div className={styles.rightActions}>
-          <ThemeToggle />
-
-          <a
-            href={`mailto:${profile.email}?subject=Resume%20Inquiry%20-%20Sachin%20Chauhan&body=Hi%20Sachin,%20I%20would%20like%20to%20request%20your%20latest%20resume.`}
-            className={styles.resumeBtn}
-            aria-label="Request Resume"
-          >
-            Resume
-          </a>
-
-          <a
-            href={`mailto:${profile.email}`}
-            className={styles.emailBtn}
-          >
-            Email Me
-          </a>
-
-          <button
-            type="button"
-            className={styles.hamburger}
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-label="Toggle navigation menu"
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile Menu Drawer */}
-      {menuOpen && (
-        <div
-          className={styles.mobileMenu}
-          onClick={() => setMenuOpen(false)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className={styles.mobileMenuCard}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={styles.mobileMenuHeader}>
-              <div className={styles.mobileBrand}>
-                <span className={styles.brandAvatar}>SC</span>
-                <span className={styles.brandName}>Sachin Chauhan</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <button
-                  type="button"
-                  className={styles.closeBtn}
-                  onClick={() => setMenuOpen(false)}
-                  aria-label="Close navigation menu"
-                >
-                  <FaTimes size={18} />
-                </button>
-              </div>
-            </div>
-
-            <div className={styles.mobileMenuLinks}>
-              {NAV_ITEMS.map((item) => {
-                const isActive = activeSection === item.label
-                return (
-                  <button
-                    type="button"
-                    key={item.label}
-                    className={`${styles.mobileNavLink} ${isActive ? styles.mobileNavLinkActive : ''}`}
-                    onClick={() => navigateTo(item)}
-                  >
-                    <span>{item.label}</span>
-                    {isActive && <span className={styles.mobileActiveDot} />}
-                  </button>
-                )
-              })}
-            </div>
-
-            <div className={styles.mobileMenuFooter}>
-              <a
-                href={`mailto:${profile.email}`}
-                className={styles.mobileMailLink}
-                onClick={() => setMenuOpen(false)}
-              >
-                {profile.email}
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+      {/* ── Mobile dropdown menu ───────────────────────────── */}
+      <nav
+        id="mobile-nav-menu"
+        className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
+        aria-label="Mobile Navigation"
+      >
+        {NAV_ITEMS.map((item) => {
+          const isActive = activeSection === item.label
+          return (
+            <button
+              key={item.label}
+              type="button"
+              className={`${styles.mobileLink} ${isActive ? styles.mobileLinkActive : ''}`}
+              onClick={() => navigateTo(item)}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {item.label}
+            </button>
+          )
+        })}
+        <span className={styles.mobileTime} aria-label={`${LOCATION_LABEL} time`}>
+          {LOCATION_LABEL} · {time}
+        </span>
+      </nav>
+    </header>
   )
 }

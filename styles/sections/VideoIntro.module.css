@@ -1,18 +1,24 @@
+/* ═══════════════════════════════════════════════════════════════
+   VideoIntro — Centered Video-Only Stage
+   No text content · single 16:9 display centered on screen
+   Tokens sourced from app/globals.css (single source of truth)
+   ═══════════════════════════════════════════════════════════════ */
+
 /* ── Section Shell ───────────────────────────────────────── */
 .section {
     position: sticky;
     top: 0;
     height: 100vh;
     z-index: 1;
-    background: var(--bg-obsidian-deep, #040507);
+    background: var(--bg-obsidian-deep, #030407);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 clamp(1.5rem, 5vw, 5rem);
+    padding: 0 clamp(1.25rem, 4vw, 4rem);
 }
 
-/* ── Ambient Blurred Background Video (Atmospheric Depth) ── */
+/* ── Ambient Blurred Background Video ─────────────────────── */
 .bgVideo {
     position: absolute;
     inset: 0;
@@ -21,7 +27,7 @@
     object-fit: cover;
     filter: blur(60px);
     transform: scale(1.2);
-    opacity: 0.28;
+    opacity: 0.26;
     pointer-events: none;
     z-index: 1;
 }
@@ -31,8 +37,8 @@
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse 60% 50% at 75% 50%, rgba(99, 102, 241, 0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 45% at 25% 60%, rgba(6, 182, 212, 0.1) 0%, transparent 65%);
+        radial-gradient(ellipse 60% 50% at 78% 42%, rgba(99, 102, 241, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 45% at 22% 62%, rgba(6, 182, 212, 0.1) 0%, transparent 65%);
     pointer-events: none;
     z-index: 2;
 }
@@ -40,236 +46,19 @@
 .vignette {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(4, 5, 8, 0.8) 0%,
-        rgba(4, 5, 8, 0.2) 25%,
-        rgba(4, 5, 8, 0.2) 75%,
-        rgba(4, 5, 8, 0.95) 100%
-    );
+    background: linear-gradient(180deg, rgba(3, 4, 7, 0.85) 0%, rgba(3, 4, 7, 0.25) 25%, rgba(3, 4, 7, 0.25) 75%, rgba(3, 4, 7, 0.95) 100%);
     pointer-events: none;
     z-index: 2;
 }
 
-/* ── Studio Split Grid Container ─────────────────────────── */
-.studioContainer {
+/* ── Centered Video Card ─────────────────────────────────── */
+.cinemaCard {
     position: relative;
     z-index: 5;
     width: 100%;
-    max-width: 1320px;
-    display: grid;
-    grid-template-columns: 1.05fr 1.25fr;
-    align-items: center;
-    gap: clamp(2rem, 4vw, 4.5rem);
-    margin: auto 0;
-}
-
-/* ── Left Column: Editorial Identity & Typography ────────── */
-.textContent {
-    display: flex;
-    flex-direction: column;
-    gap: 1.15rem;
-}
-
-/* Status Pill */
-.statusBadge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.65rem;
-    width: fit-content;
-    background: rgba(14, 18, 28, 0.78);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 0.38rem 1rem;
-    border-radius: 9999px;
-    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
-    transition: all 0.25s ease;
-}
-
-.statusBadge:hover {
-    border-color: rgba(99, 102, 241, 0.45);
-    transform: translateY(-1px);
-}
-
-.statusDot {
-    width: 7.5px;
-    height: 7.5px;
-    border-radius: 50%;
-    background: var(--status-available, #10b981);
-    box-shadow: 0 0 10px var(--status-available, #10b981);
-    animation: pulseDot 2s ease-in-out infinite;
-}
-
-@keyframes pulseDot {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.4;
-        transform: scale(0.85);
-    }
-}
-
-.statusText {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #e2e8f0;
-}
-
-.statusYear {
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--accent-light, #818cf8);
-    font-family: var(--font-geist-mono), monospace;
-}
-
-/* Name Heading */
-.nameHeading {
-    font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: clamp(2.4rem, 4.4vw, 4.2rem);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1.02;
-    margin: 0;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-}
-
-.nameGradient {
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #22d3ee 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 4px 24px rgba(99, 102, 241, 0.35));
-}
-
-/* Tagline / Subtitle */
-.heroDescription {
-    font-size: clamp(0.92rem, 1.15vw, 1.05rem);
-    line-height: 1.55;
-    color: #94a3b8;
-    max-width: 480px;
-    margin: 0;
-}
-
-/* Interactive Sound & Role Row */
-.metaRow {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 0.2rem;
-}
-
-.soundBadge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: rgba(14, 18, 28, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(99, 102, 241, 0.35);
-    padding: 0.4rem 0.95rem;
-    border-radius: 9999px;
-    color: #f1f5f9;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    user-select: none;
-    transition: all 0.25s ease;
-}
-
-.soundBadge:hover {
-    border-color: var(--accent-light, #818cf8);
-    background: rgba(99, 102, 241, 0.15);
-    transform: translateY(-1px);
-}
-
-.waveBars {
-    display: flex;
-    align-items: center;
-    gap: 2.5px;
-    height: 12px;
-}
-
-.waveBars span {
-    width: 2px;
-    background: var(--accent-cyan, #06b6d4);
-    border-radius: 2px;
-    animation: wavePulse 1.2s ease-in-out infinite alternate;
-}
-
-.waveBars span:nth-child(1) { height: 4px; animation-delay: 0s; }
-.waveBars span:nth-child(2) { height: 11px; animation-delay: 0.2s; }
-.waveBars span:nth-child(3) { height: 7px; animation-delay: 0.4s; }
-.waveBars span:nth-child(4) { height: 12px; animation-delay: 0.15s; }
-
-@keyframes wavePulse {
-    0% { transform: scaleY(0.35); opacity: 0.5; }
-    100% { transform: scaleY(1.2); opacity: 1; }
-}
-
-.roleTag {
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: #cbd5e1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.4rem 0.95rem;
-    border-radius: 9999px;
-    letter-spacing: 0.02em;
-}
-
-/* Quick Action Row */
-.actionRow {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    margin-top: 0.4rem;
-}
-
-.primaryAction {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    background: var(--accent-gradient, linear-gradient(135deg, #3b82f6 0%, #8b5cf6 55%, #06b6d4 100%));
-    color: #ffffff;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    padding: 0.65rem 1.45rem;
-    border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    cursor: pointer;
-    box-shadow: 0 0 24px -4px rgba(99, 102, 241, 0.5);
-    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.primaryAction:hover {
-    background: var(--accent-gradient-hover, linear-gradient(135deg, #60a5fa 0%, #a78bfa 55%, #22d3ee 100%));
-    box-shadow: 0 0 32px 0 rgba(99, 102, 241, 0.7);
-    transform: translateY(-2px);
-}
-
-.primaryAction:hover .arrowIcon {
-    transform: translateY(2px);
-}
-
-.arrowIcon {
-    transition: transform 0.25s ease;
-}
-
-/* ── Right Column: 16:9 Studio Cinema Display ────────────── */
-.cinemaCard {
-    position: relative;
-    width: 100%;
+    max-width: 1120px;
     aspect-ratio: 16 / 9;
+    max-height: calc(100vh - 8rem);
     border-radius: 22px;
     overflow: hidden;
     background: #000000;
@@ -280,7 +69,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.35s ease;
+    transition:
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        transform 0.35s ease;
 }
 
 .cinemaCard:hover {
@@ -291,7 +83,7 @@
     transform: translateY(-2px);
 }
 
-/* Video: 100% fits within 16:9 container, zero cropping */
+/* Video */
 .mainVideo {
     width: 100%;
     height: 100%;
@@ -308,11 +100,11 @@
     border-radius: 22px;
     pointer-events: none;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22);
     z-index: 3;
 }
 
-/* Pinned Integrated Transport Controls */
+/* Pinned Transport Control */
 .cinemaControls {
     position: absolute;
     bottom: 1rem;
@@ -340,7 +132,9 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
 }
 
 .ctrlBtn:hover {
@@ -348,18 +142,7 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-.ctrlBtnActive {
-    color: var(--accent-light, #818cf8);
-}
-
-.ctrlDivider {
-    width: 1px;
-    height: 15px;
-    background: rgba(255, 255, 255, 0.15);
-    margin: 0 0.15rem;
-}
-
-/* Paused State Center Play Overlay */
+/* Paused State Overlay */
 .playOverlay {
     position: absolute;
     inset: 0;
@@ -367,24 +150,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(4, 5, 8, 0.4);
+    background: rgba(3, 4, 7, 0.4);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease;
 }
 
 .playCircle {
     width: 74px;
     height: 74px;
     border-radius: 50%;
-    background: var(--accent-gradient, linear-gradient(135deg, #3b82f6 0%, #8b5cf6 55%, #06b6d4 100%));
+    background: var(--accent-gradient);
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 40px rgba(99, 102, 241, 0.7);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    transition:
+        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.25s ease;
     padding-left: 4px;
 }
 
@@ -397,167 +182,32 @@
     color: #ffffff;
 }
 
-/* ── Minimalist Scroll Cue (Bottom Center) ───────────────── */
-.scrollPill {
-    position: absolute;
-    bottom: 1.25rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 6;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: rgba(14, 18, 28, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.38rem 1rem;
-    border-radius: 9999px;
-    color: #94a3b8;
-    cursor: pointer;
-    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
-    transition: all 0.25s ease;
-}
+/* ═══════════════════════════════════════════════════════════════
+   Responsive — mirrors Navbar breakpoint system (1024 / 767 / 640)
+   ═══════════════════════════════════════════════════════════════ */
 
-.scrollPill:hover {
-    background: rgba(99, 102, 241, 0.15);
-    border-color: rgba(99, 102, 241, 0.45);
-    color: #ffffff;
-    transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 12px 28px -6px rgba(99, 102, 241, 0.35);
-}
-
-.scrollMouse {
-    width: 14px;
-    height: 20px;
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
-    border-radius: 7px;
-    display: flex;
-    justify-content: center;
-    padding-top: 3px;
-}
-
-.scrollWheel {
-    width: 2px;
-    height: 4.5px;
-    border-radius: 2px;
-    background: var(--accent-cyan, #06b6d4);
-    animation: mouseWheel 1.8s ease-in-out infinite;
-}
-
-@keyframes mouseWheel {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(6px); opacity: 0; }
-}
-
-.scrollText {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: inherit;
-}
-
-/* ── Responsive: Tablet (< 1080px) ───────────────────────── */
-@media (max-width: 1080px) {
+/* ── Tablet / small laptop: < 1024px ─────────────────────── */
+@media (max-width: 1024px) {
     .section {
-        height: auto;
-        min-height: 100svh;
-        padding: 5rem 1.8rem 3rem;
-    }
-
-    .studioContainer {
-        grid-template-columns: 1fr;
-        gap: 1.8rem;
-        max-width: 680px;
-        text-align: center;
-        justify-items: center;
-        margin: auto 0;
-    }
-
-    .textContent {
-        align-items: center;
-        gap: 0.85rem;
-    }
-
-    .nameHeading {
-        font-size: clamp(2.4rem, 6vw, 3.4rem);
-    }
-
-    .heroDescription {
-        font-size: 0.92rem;
-        max-width: 480px;
-    }
-
-    .metaRow {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .actionRow {
-        justify-content: center;
-    }
-}
-
-/* ── Responsive: Mobile (< 768px) ────────────────────────── */
-@media (max-width: 767px) {
-    .section {
-        height: auto;
-        min-height: 100svh;
-        padding: 4.6rem 1.15rem 2.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .studioContainer {
-        gap: 1.2rem;
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    .textContent {
-        gap: 0.65rem;
-    }
-
-    .statusBadge {
-        padding: 0.32rem 0.85rem;
-    }
-
-    .statusText {
-        font-size: 0.7rem;
-    }
-
-    .nameHeading {
-        font-size: clamp(2rem, 9vw, 2.7rem);
-    }
-
-    .heroDescription {
-        font-size: 0.84rem;
-        line-height: 1.5;
-        max-width: 320px;
-    }
-
-    .metaRow {
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        justify-content: center;
-    }
-
-    .roleTag {
-        font-size: 0.7rem;
-        padding: 0.3rem 0.7rem;
-    }
-
-    .primaryAction {
-        font-size: 0.78rem;
-        padding: 0.58rem 1.3rem;
+        padding: 3.5rem 1.8rem;
     }
 
     .cinemaCard {
-        border-radius: 16px;
-        width: 100%;
+        max-width: 860px;
+        max-height: calc(100vh - 7rem);
+    }
+}
+
+/* ── Mobile: < 768px ─────────────────────────────────────── */
+@media (max-width: 767px) {
+    .section {
+        padding: 3.2rem 1.1rem;
+    }
+
+    .cinemaCard {
         max-width: 100%;
+        max-height: none;
+        border-radius: 16px;
     }
 
     .mainVideo,
@@ -580,63 +230,53 @@
         width: 56px;
         height: 56px;
     }
+}
 
-    .scrollPill {
-        display: none;
+/* ── Compact mobile: < 640px ─────────────────────────────── */
+@media (max-width: 640px) {
+    .section {
+        padding: 3rem 0.9rem;
+    }
+
+    .cinemaCard {
+        border-radius: 14px;
+    }
+
+    .mainVideo,
+    .cardGlassHighlight {
+        border-radius: 14px;
     }
 }
 
-/* ── Light Mode Custom Styling ── */
-:global([data-theme="light"]) .section {
+/* ═══════════════════════════════════════════════════════════════
+   Light Mode
+   ═══════════════════════════════════════════════════════════════ */
+:global([data-theme='light']) .section {
     background: var(--bg-obsidian);
 }
 
-:global([data-theme="light"]) .bgVideo {
-    opacity: 0.12;
+:global([data-theme='light']) .bgVideo {
+    opacity: 0.1;
     filter: blur(50px);
 }
 
-:global([data-theme="light"]) .vignette {
+:global([data-theme='light']) .vignette {
     background: linear-gradient(
         180deg,
-        rgba(248, 250, 252, 0.8) 0%,
+        rgba(248, 250, 252, 0.85) 0%,
         rgba(248, 250, 252, 0.2) 25%,
         rgba(248, 250, 252, 0.2) 75%,
         rgba(248, 250, 252, 0.95) 100%
     );
 }
 
-:global([data-theme="light"]) .ambientGlow {
+:global([data-theme='light']) .ambientGlow {
     background:
-        radial-gradient(ellipse 60% 50% at 75% 50%, rgba(79, 70, 229, 0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 45% at 25% 60%, rgba(8, 145, 178, 0.08) 0%, transparent 65%);
+        radial-gradient(ellipse 60% 50% at 78% 42%, rgba(79, 70, 229, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 45% at 22% 62%, rgba(8, 145, 178, 0.08) 0%, transparent 65%);
 }
 
-:global([data-theme="light"]) .statusBadge {
-    background: var(--surface-card);
-    border-color: var(--border-glass-light);
-    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08);
-}
-
-:global([data-theme="light"]) .statusText {
-    color: var(--text-primary);
-}
-
-:global([data-theme="light"]) .nameHeading {
-    color: var(--text-primary);
-}
-
-:global([data-theme="light"]) .heroDescription {
-    color: var(--text-secondary);
-}
-
-:global([data-theme="light"]) .roleTag {
-    background: var(--surface-card);
-    border-color: var(--border-glass-light);
-    color: var(--text-secondary);
-}
-
-:global([data-theme="light"]) .cinemaCard {
+:global([data-theme='light']) .cinemaCard {
     background: #0b0f19;
     border-color: var(--border-glass-light);
     box-shadow:
@@ -644,19 +284,15 @@
         0 0 35px -10px rgba(79, 70, 229, 0.25);
 }
 
-:global([data-theme="light"]) .scrollPill {
-    background: var(--surface-card);
-    border-color: var(--border-glass-light);
-}
-
-:global([data-theme="light"]) .scrollText {
-    color: var(--text-secondary);
-}
-
-:global([data-theme="light"]) .scrollMouse {
-    border-color: var(--text-secondary);
-}
-
-:global([data-theme="light"]) .scrollWheel {
-    background: var(--accent);
+/* ═══════════════════════════════════════════════════════════════
+   Reduced Motion
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    .cinemaCard,
+    .cinemaControls,
+    .ctrlBtn,
+    .playOverlay,
+    .playCircle {
+        transition-duration: 0.001ms !important;
+    }
 }

@@ -9,7 +9,6 @@ import AboutSection          from '@/components/sections/AboutSection'
 import SkillsSection         from '@/components/sections/SkillsSection'
 import ProjectsSection       from '@/components/sections/ProjectsSection'
 import WorkExperienceSection from '@/components/sections/WorkExperienceSection'
-import PublicationsFooterSection from '@/components/sections/PublicationsFooterSection'
 import profile               from '@/data/profile.json'
 
 // Snap: 0=video 1=hero 2=about 3=skills 4..=projects work-exp contact footer
@@ -181,7 +180,6 @@ export default function Home() {
           <SkillsSection />
           <ProjectsSection />
           <WorkExperienceSection />
-          <PublicationsFooterSection />
         </div>
       </main>
     </>
