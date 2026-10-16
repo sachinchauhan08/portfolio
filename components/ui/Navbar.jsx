@@ -7,18 +7,23 @@ import ThemeToggle from '@/components/ui/ThemeToggle'
 import profile from '@/data/profile.json'
 import styles from '@/styles/ui/Navbar.module.css'
 
-// The projects section renders as a single viewport slot (card grid), so it
-// contributes exactly one step to the snap index math below.
-const PROJECT_COUNT = 1
-const HERO_IDX = 1
-
+// Section order matches the DOM in app/page.js:
+// 0=VideoIntro(intro) 1=Hero(hero) 2=About(about) 3=Skills(skills)
+// 4=Projects(projects) 5=WorkExperience(experience) 6=Contact(contact)
+// The nav intentionally skips the intro slide, so Home points at the hero (1).
 const NAV_ITEMS = [
-  { label: 'Home', targetId: 'hero', idx: HERO_IDX },
+  { label: 'Home', targetId: 'hero', idx: 1 },
   { label: 'About', targetId: 'about', idx: 2 },
   { label: 'Skills', targetId: 'skills', idx: 3 },
   { label: 'Projects', targetId: 'projects', idx: 4 },
-  { label: 'Experience', targetId: 'experience', idx: 4 + PROJECT_COUNT },
-  { label: 'Contact', targetId: 'contact', idx: 5 + PROJECT_COUNT },
+  { label: 'Experience', targetId: 'experience', idx: 5 },
+  { label: 'Contact', targetId: 'contact', idx: 6 },
+]
+
+// Maps a raw section index (including the intro video at 0) to a nav label.
+const SECTION_LABELS = [
+  'Intro',
+  ...NAV_ITEMS.map((item) => item.label),
 ]
 
 const LOCATION_LABEL = profile.location.based
@@ -63,35 +68,80 @@ export default function Navbar() {
     }
   }, [])
 
-  // Active section tracking based on scroll position
+  // Active section tracking based on the real rendered section positions.
+  // Sections are NOT uniformly one viewport tall on mobile (they become
+  // `height: auto; min-height: 100svh`), so mapping scrollTop → index with
+  // `window.innerHeight` misreported the active item. Instead we measure each
+  // section's offset and pick the one nearest the current scroll position.
   useEffect(() => {
     const scroller = document.querySelector('main')
     if (!scroller) return
 
-    const onScroll = () => {
-      const currentY = scroller.scrollTop
-      const vh = window.innerHeight
+    const sections = Array.from(scroller.querySelectorAll('section'))
+    const offsets = []
 
-      if (currentY < vh * 0.5) {
-        setActiveSection('Intro')
-      } else if (currentY < vh * 1.5) {
-        setActiveSection('Home')
-      } else if (currentY < vh * 2.5) {
-        setActiveSection('About')
-      } else if (currentY < vh * 3.5) {
-        setActiveSection('Skills')
-      } else if (currentY < vh * (3.5 + PROJECT_COUNT)) {
-        setActiveSection('Projects')
-      } else if (currentY < vh * (4.5 + PROJECT_COUNT)) {
-        setActiveSection('Experience')
-      } else {
-        setActiveSection('Contact')
-      }
+    function measure() {
+      const base = scroller.getBoundingClientRect().top
+      offsets.length = 0
+      sections.forEach((s) =>
+        offsets.push(s.getBoundingClientRect().top - base + scroller.scrollTop)
+      )
+    }
+
+    function sync() {
+      const y = scroller.scrollTop
+      let nearest = 0
+      let best = Infinity
+      offsets.forEach((off, i) => {
+        const d = Math.abs(y - off)
+        if (d < best) {
+          best = d
+          nearest = i
+        }
+      })
+      setActiveSection(SECTION_LABELS[nearest] ?? 'Intro')
+    }
+
+    measure()
+
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        sync()
+        ticking = false
+      })
+    }
+
+    let resizeTimer = null
+    const onResize = () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        measure()
+        sync()
+      }, 120)
+    }
+
+    let ro = null
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => {
+        measure()
+        sync()
+      })
+      sections.forEach((s) => ro.observe(s))
     }
 
     scroller.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => scroller.removeEventListener('scroll', onScroll)
+    window.addEventListener('resize', onResize)
+    sync()
+
+    return () => {
+      scroller.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+      ro?.disconnect()
+      clearTimeout(resizeTimer)
+    }
   }, [])
 
   // Move the sliding active indicator beneath the active link
@@ -167,16 +217,12 @@ export default function Navbar() {
   function navigateTo(item) {
     setMenuOpen(false)
 
-    // Canonical GSAP snap navigation handled in page.js
+    // Canonical GSAP snap navigation handled in page.js. page.js measures the
+    // real section offsets, so no native scroll here (a competing scrollTo
+    // fought the GSAP tween and mis-targeted sections on mobile).
     window.dispatchEvent(
       new CustomEvent('portfolio-navigate', { detail: { idx: item.idx } })
     )
-
-    // Direct scroll fallback
-    const scroller = document.querySelector('main')
-    if (scroller) {
-      scroller.scrollTo({ top: item.idx * window.innerHeight, behavior: 'smooth' })
-    }
   }
 
   return (

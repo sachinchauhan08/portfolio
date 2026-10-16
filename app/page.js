@@ -12,10 +12,10 @@ import WorkExperienceSection from '@/components/sections/WorkExperienceSection'
 import ContactSection        from '@/components/sections/ContactSection'
 import profile               from '@/data/profile.json'
 
-// Snap: 0=video 1=hero 2=about 3=skills 4=projects 5=work-exp 6=contact 7=footer
-// Projects now render as a single card-grid viewport (no per-project scroll slides).
+// Snap: 0=video 1=hero 2=about 3=skills 4=projects 5=work-exp 6=contact
+// Projects render as a single card-grid viewport (no per-project scroll slides).
 const PROJECT_SLIDES = 1
-const TOTAL          = 7 + PROJECT_SLIDES
+const TOTAL          = 6 + PROJECT_SLIDES // = 7 real sections → indices 0..6
 
 export default function Home() {
   const mainRef        = useRef(null)
@@ -27,6 +27,43 @@ export default function Home() {
   useEffect(() => {
     const el = mainRef.current
     if (!el) return
+
+    // ── Measure each section's real pixel offset within the scroller ──────
+    // Below 1024px every section becomes `position: relative; height: auto;
+    // min-height: 100svh`, so sections are NOT uniformly one viewport tall.
+    // The old `idx * window.innerHeight` math overshot (tapping "About"
+    // landed on "Skills"). Measuring the live layout keeps navigation exact
+    // on mobile while behaving identically to before on desktop, where each
+    // section is exactly 100vh tall.
+    const sections = Array.from(el.querySelectorAll('section'))
+    const offsetsRef = { current: [] }
+
+    function measure() {
+      const base = el.getBoundingClientRect().top
+      offsetsRef.current = sections.map(
+        (s) => s.getBoundingClientRect().top - base + el.scrollTop
+      )
+      if (!offsetsRef.current.length) offsetsRef.current = [0]
+    }
+
+    function lastOffset() {
+      return offsetsRef.current[offsetsRef.current.length - 1] ?? 0
+    }
+
+    function nearestIdx(scrollTop) {
+      let best = 0
+      let bestDist = Infinity
+      offsetsRef.current.forEach((off, i) => {
+        const d = Math.abs(scrollTop - off)
+        if (d < bestDist) {
+          bestDist = d
+          best = i
+        }
+      })
+      return best
+    }
+
+    measure()
 
     // Fade to black → instant scrollTop jump → fade in
     // Used whenever we loop footer → first section
@@ -60,15 +97,15 @@ export default function Home() {
 
       if (idx === idxRef.current || busyRef.current) return
 
-      // Footer → top: fade-cut instead of scrolling back through all sections
+      // Last section → top: fade-cut instead of scrolling back through all sections
       if (idxRef.current === TOTAL - 1 && idx === 0) {
-        fadeLoop(0, 0)
+        fadeLoop(offsetsRef.current[0] ?? 0, 0)
         return
       }
 
-      // Top → footer: fade-cut instead of scrolling forward through all sections
+      // Top → last section: fade-cut instead of scrolling forward through all sections
       if (idxRef.current === 0 && idx === TOTAL - 1) {
-        fadeLoop((TOTAL - 1) * window.innerHeight, TOTAL - 1)
+        fadeLoop(lastOffset(), TOTAL - 1)
         return
       }
 
@@ -76,7 +113,7 @@ export default function Home() {
       busyRef.current = true
       tweenRef.current?.kill()
       tweenRef.current = gsap.to(el, {
-        scrollTop: idx * window.innerHeight,
+        scrollTop: offsetsRef.current[idx] ?? lastOffset(),
         duration: 0.7,
         ease: 'power3.inOut',
         onComplete: () => { busyRef.current = false },
@@ -99,8 +136,14 @@ export default function Home() {
       goTo(idxRef.current + (dy > 0 ? 1 : -1))
     }
 
+    let scrollTicking = false
     function onScroll() {
-      idxRef.current = Math.round(el.scrollTop / window.innerHeight)
+      if (scrollTicking) return
+      scrollTicking = true
+      requestAnimationFrame(() => {
+        idxRef.current = nearestIdx(el.scrollTop)
+        scrollTicking = false
+      })
     }
 
     // Footer video ends → same fade-cut loop back to top
@@ -121,8 +164,8 @@ export default function Home() {
       if (Math.abs(dy) < 40) return
       const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8
       const atTop    = el.scrollTop < 8
-      if (dy > 0 && atBottom) fadeLoop(0, 0)
-      if (dy < 0 && atTop)    fadeLoop(el.scrollHeight - el.clientHeight, TOTAL - 1)
+      if (dy > 0 && atBottom) fadeLoop(offsetsRef.current[0] ?? 0, 0)
+      if (dy < 0 && atTop)    fadeLoop(lastOffset(), TOTAL - 1)
     }
 
     // Navigation from Navbar or CTAs
@@ -141,6 +184,32 @@ export default function Home() {
       el.addEventListener('touchstart', onMobileTouchStart, { passive: true })
       el.addEventListener('touchend',   onMobileTouchEnd,   { passive: true })
     }
+
+    // Re-measure whenever the layout metrics change (orientation flip, mobile
+    // browser-UI collapse, font load, resize). Use ResizeObserver for accuracy
+    // with a debounced resize handler as a fallback.
+    let resizeTimer = null
+    function onResize() {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        measure()
+        idxRef.current = nearestIdx(el.scrollTop)
+      }, 120)
+    }
+
+    let ro = null
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => {
+        measure()
+        idxRef.current = nearestIdx(el.scrollTop)
+      })
+      ro.observe(el)
+      sections.forEach((s) => ro.observe(s))
+    }
+
+    window.addEventListener('resize', onResize)
+    if (document.fonts?.ready) document.fonts.ready.then(measure).catch(() => {})
+
     window.addEventListener('footer-loop-back', onFooterLoop)
     window.addEventListener('portfolio-navigate', onPortfolioNavigate)
 
@@ -154,8 +223,11 @@ export default function Home() {
         el.removeEventListener('touchstart', onMobileTouchStart)
         el.removeEventListener('touchend',   onMobileTouchEnd)
       }
+      ro?.disconnect()
+      window.removeEventListener('resize', onResize)
       window.removeEventListener('footer-loop-back', onFooterLoop)
       window.removeEventListener('portfolio-navigate', onPortfolioNavigate)
+      clearTimeout(resizeTimer)
       tweenRef.current?.kill()
     }
   }, [])
