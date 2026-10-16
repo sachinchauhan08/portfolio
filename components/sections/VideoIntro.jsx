@@ -1,9 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
-import { FiPlay, FiPause } from 'react-icons/fi'
+import { FiPlay, FiPause, FiVolume2, FiVolumeX } from 'react-icons/fi'
 import styles from '@/styles/sections/VideoIntro.module.css'
+
+const VIDEO_SRC = '/assets/about-me.mp4'
+// How far the user must scroll before we consider the video page "left"
+const LEFT_TOP_THRESHOLD = 40
 
 function scrollNext() {
   const main = document.querySelector('main')
@@ -27,79 +31,122 @@ export default function VideoIntro() {
   const videoRef = useRef(null)
   const bgVideoRef = useRef(null)
   const cinemaRef = useRef(null)
+
   const hasEndedRef = useRef(false)
   const hasLeftTopRef = useRef(false)
+  // Tracks whether the user has interacted, allowing unmuted playback
+  const userUnlockedRef = useRef(false)
 
-  const [playing, setPlaying] = useState(true)
+  const [playing, setPlaying] = useState(false)
+  const [muted, setMuted] = useState(true)
   const [hasEnded, setHasEnded] = useState(false)
 
-  // Smooth entrance choreography
-  useEffect(() => {
-    if (!cinemaRef.current) return
-    const tween = gsap.fromTo(
-      cinemaRef.current,
-      { opacity: 0, scale: 0.94, filter: 'blur(10px)' },
-      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out', delay: 0.2 }
-    )
-    return () => tween.kill()
-  }, [])
-
-  // Strictly unmuted playback - never mute
-  function startPlayback() {
+  /**
+   * Attempt to play the video.
+   * 1. Try UNMUTED first — works if the user has already interacted with the page.
+   * 2. If the browser blocks it, fall back to MUTED autoplay so the video still runs.
+   * 3. As soon as any user gesture happens, `unlockAudio` upgrades it to unmuted.
+   */
+  const startPlayback = useCallback(({ restart = false } = {}) => {
     const v = videoRef.current
     const bg = bgVideoRef.current
     if (!v) return
 
-    v.volume = 1
-    v.muted = false
-
-    const playPromise = v.play()
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setPlaying(true)
-          if (bg) bg.play().catch(() => { })
-        })
-        .catch(() => {
-          // Wait for first user click/touch to play unmuted with audio
-          setPlaying(false)
-        })
+    if (restart) {
+      try {
+        v.currentTime = 0
+        if (bg) bg.currentTime = 0
+      } catch {
+        /* seeking before metadata is ready — ignore */
+      }
     }
-  }
 
-  // Launch playback on mount
-  useEffect(() => {
-    startPlayback()
+    hasEndedRef.current = false
+    setHasEnded(false)
+
+    // Attempt with sound first
+    v.muted = false
+    v.volume = 1
+
+    const attempt = v.play()
+    const handleSuccess = () => {
+      setPlaying(true)
+      setMuted(false)
+      if (bg) {
+        bg.muted = true
+        bg.play().catch(() => { })
+      }
+    }
+
+    if (attempt && typeof attempt.then === 'function') {
+      attempt
+        .then(handleSuccess)
+        .catch(() => {
+          // Unmuted blocked → retry muted so autoplay still works
+          v.muted = true
+          const mutedAttempt = v.play()
+          if (mutedAttempt && typeof mutedAttempt.then === 'function') {
+            mutedAttempt
+              .then(() => {
+                setPlaying(true)
+                setMuted(true)
+                if (bg) bg.play().catch(() => { })
+              })
+              .catch(() => setPlaying(false))
+          }
+        })
+    } else {
+      handleSuccess()
+    }
   }, [])
 
-  // Automatically unmute audio with full volume on any user click or touch.
-  // NOTE: deliberately NOT bound to keyboard events — pressing any key must
-  // never (re)start the video.
+  // ── Cinematic entrance choreography ───────────────────────────────
+  useEffect(() => {
+    if (!cinemaRef.current) return
+    const tween = gsap.fromTo(
+      cinemaRef.current,
+      { opacity: 0, scale: 0.96, filter: 'blur(12px)' },
+      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1, ease: 'power3.out', delay: 0.15 }
+    )
+    return () => tween.kill()
+  }, [])
+
+  // ── Auto-play on first mount ──────────────────────────────────────
+  useEffect(() => {
+    startPlayback()
+  }, [startPlayback])
+
+  // ── Upgrade to unmuted audio on the first user gesture ────────────
   useEffect(() => {
     function unlockAudio() {
       const v = videoRef.current
       if (!v) return
 
+      userUnlockedRef.current = true
       v.muted = false
       v.volume = 1
+      setMuted(false)
 
+      // If playback was blocked before the gesture, kick it off now
       if (v.paused && !hasEndedRef.current) {
-        v.play().then(() => setPlaying(true)).catch(() => { })
+        v.play()
+          .then(() => setPlaying(true))
+          .catch(() => { })
       }
     }
 
     window.addEventListener('pointerdown', unlockAudio, { passive: true })
-    window.addEventListener('click', unlockAudio, { passive: true })
+    window.addEventListener('keydown', unlockAudio)
     window.addEventListener('touchstart', unlockAudio, { passive: true })
 
     return () => {
       window.removeEventListener('pointerdown', unlockAudio)
-      window.removeEventListener('click', unlockAudio)
+      window.removeEventListener('keydown', unlockAudio)
       window.removeEventListener('touchstart', unlockAudio)
     }
   }, [])
 
-  // Automatically PAUSE & MUTE when leaving the top, resume when returning
+  // ── Leave page → pause/mute · Return to page → restart & play ─────
   useEffect(() => {
     const main = document.querySelector('main')
     if (!main) return
@@ -110,39 +157,33 @@ export default function VideoIntro() {
       if (!v) return
 
       if (main.scrollTop >= window.innerHeight * 0.4) {
+        // Left the video page
+        if (!hasLeftTopRef.current) hasLeftTopRef.current = true
         v.pause()
         if (bg) bg.pause()
         v.muted = true
         setPlaying(false)
-        hasLeftTopRef.current = true
-      } else if (main.scrollTop < 30 && hasLeftTopRef.current) {
+        setMuted(true)
+      } else if (main.scrollTop < LEFT_TOP_THRESHOLD && hasLeftTopRef.current) {
+        // Scrolled back onto the video page → replay from the beginning
         hasLeftTopRef.current = false
         hasEndedRef.current = false
-        v.currentTime = 0
-        if (bg) bg.currentTime = 0
-        v.muted = false
-        v.volume = 1
-        v.play().then(() => {
-          if (bg) bg.play().catch(() => { })
-          setPlaying(true)
-        }).catch(() => {
-          v.play().then(() => setPlaying(true)).catch(() => { })
-        })
+        startPlayback({ restart: true })
       }
     }
 
     main.addEventListener('scroll', onMainScroll, { passive: true })
+    // Handle the case where the page loads already scrolled into the intro
+    onMainScroll()
     return () => main.removeEventListener('scroll', onMainScroll)
-  }, [])
+  }, [startPlayback])
 
-  // Video End: ALWAYS scroll to the next section
+  // ── Video finished → always advance to the next section ───────────
   function handleEnded() {
     hasEndedRef.current = true
     setHasEnded(true)
     setPlaying(false)
-    if (bgVideoRef.current) {
-      bgVideoRef.current.pause()
-    }
+    if (bgVideoRef.current) bgVideoRef.current.pause()
     scrollNext()
   }
 
@@ -155,27 +196,46 @@ export default function VideoIntro() {
       v.pause()
       if (bg) bg.pause()
       setPlaying(false)
-    } else {
-      v.muted = false
-      v.volume = 1
-      hasEndedRef.current = false
-      setHasEnded(false)
+      return
+    }
 
-      if (v.ended || (v.duration && v.currentTime >= v.duration - 0.2)) {
+    hasEndedRef.current = false
+    setHasEnded(false)
+
+    if (v.ended || (v.duration && v.currentTime >= v.duration - 0.2)) {
+      try {
         v.currentTime = 0
         if (bg) bg.currentTime = 0
+      } catch {
+        /* ignore */
       }
+    }
 
-      const p = v.play()
-      if (p !== undefined) {
-        p.then(() => {
-          if (bg) bg.play().catch(() => { })
-          setPlaying(true)
-        }).catch(() => setPlaying(false))
-      } else {
-        if (bg) bg.play().catch(() => { })
+    v.muted = false
+    v.volume = 1
+    const p = v.play()
+    if (p && typeof p.then === 'function') {
+      p.then(() => {
         setPlaying(true)
-      }
+        setMuted(false)
+        if (bg) bg.play().catch(() => { })
+      }).catch(() => setPlaying(false))
+    } else {
+      setPlaying(true)
+      setMuted(false)
+      if (bg) bg.play().catch(() => { })
+    }
+  }
+
+  function toggleMute() {
+    const v = videoRef.current
+    if (!v) return
+    const nextMuted = !v.muted
+    v.muted = nextMuted
+    setMuted(nextMuted)
+    if (!nextMuted) {
+      userUnlockedRef.current = true
+      v.volume = 1
     }
   }
 
@@ -184,58 +244,70 @@ export default function VideoIntro() {
       {/* Ambient blurred background bloom */}
       <video
         ref={bgVideoRef}
-        src="/assets/about-me.mp4"
+        src={VIDEO_SRC}
         autoPlay
         muted
+        loop
         playsInline
         aria-hidden="true"
+        tabIndex={-1}
         className={styles.bgVideo}
       />
 
       {/* Atmospheric layers */}
       <div className={styles.ambientGlow} aria-hidden="true" />
       <div className={styles.vignette} aria-hidden="true" />
+      <div className={styles.grain} aria-hidden="true" />
 
-      {/* Centered video-only stage */}
-      <div ref={cinemaRef} className={styles.cinemaCard}>
-        <video
-          ref={videoRef}
-          data-testid="intro-video"
-          src="/assets/about-me.mp4"
-          playsInline
-          autoPlay
-          onEnded={handleEnded}
-          onPlay={() => {
-            setPlaying(true)
-            hasEndedRef.current = false
-            setHasEnded(false)
-          }}
-          onPause={() => setPlaying(false)}
-          className={styles.mainVideo}
-        />
-
-        {/* Glass border reflection highlight */}
-        <div className={styles.cardGlassHighlight} aria-hidden="true" />
-
-        {/* Paused state centered play button */}
-        {!playing && !hasEnded && (
-          <button
-            type="button"
-            className={styles.playOverlay}
-            onClick={(e) => {
-              e.stopPropagation()
-              togglePlay()
+      {/* Cinematic stage */}
+      <div ref={cinemaRef} className={styles.stage}>
+        <div className={styles.frame}>
+          <video
+            ref={videoRef}
+            data-testid="intro-video"
+            src={VIDEO_SRC}
+            playsInline
+            preload="auto"
+            onEnded={handleEnded}
+            onPlay={() => {
+              setPlaying(true)
+              hasEndedRef.current = false
+              setHasEnded(false)
             }}
-            aria-label="Play video"
-          >
-            <div className={styles.playCircle}>
-              <FiPlay size={28} className={styles.playIcon} />
-            </div>
-          </button>
-        )}
+            onPause={() => setPlaying(false)}
+            onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
+            className={styles.mainVideo}
+          />
 
-        {/* Pinned Transport Control (icon only) */}
-        <div className={styles.cinemaControls}>
+          {/* Glass frame highlight */}
+          <div className={styles.frameGlow} aria-hidden="true" />
+
+          {/* Corner brackets for the cinematic look */}
+          <span className={`${styles.corner} ${styles.cornerTL}`} aria-hidden="true" />
+          <span className={`${styles.corner} ${styles.cornerTR}`} aria-hidden="true" />
+          <span className={`${styles.corner} ${styles.cornerBL}`} aria-hidden="true" />
+          <span className={`${styles.corner} ${styles.cornerBR}`} aria-hidden="true" />
+
+          {/* Paused / ended state → centered play button */}
+          {!playing && (
+            <button
+              type="button"
+              className={styles.playOverlay}
+              onClick={(e) => {
+                e.stopPropagation()
+                togglePlay()
+              }}
+              aria-label={hasEnded ? 'Replay video' : 'Play video'}
+            >
+              <span className={styles.playCircle}>
+                <FiPlay size={26} className={styles.playIcon} />
+              </span>
+            </button>
+          )}
+        </div>
+
+        {/* Transport controls */}
+        <div className={styles.controls}>
           <button
             type="button"
             className={styles.ctrlBtn}
@@ -246,7 +318,20 @@ export default function VideoIntro() {
             aria-label={playing ? 'Pause video' : 'Play video'}
             title={playing ? 'Pause' : 'Play'}
           >
-            {playing ? <FiPause size={14} /> : <FiPlay size={14} />}
+            {playing ? <FiPause size={15} /> : <FiPlay size={15} />}
+          </button>
+
+          <button
+            type="button"
+            className={styles.ctrlBtn}
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleMute()
+            }}
+            aria-label={muted ? 'Unmute video' : 'Mute video'}
+            title={muted ? 'Unmute' : 'Mute'}
+          >
+            {muted ? <FiVolumeX size={15} /> : <FiVolume2 size={15} />}
           </button>
         </div>
       </div>

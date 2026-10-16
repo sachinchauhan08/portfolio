@@ -9,6 +9,7 @@ import AboutSection          from '@/components/sections/AboutSection'
 import SkillsSection         from '@/components/sections/SkillsSection'
 import ProjectsSection       from '@/components/sections/ProjectsSection'
 import WorkExperienceSection from '@/components/sections/WorkExperienceSection'
+import ContactSection        from '@/components/sections/ContactSection'
 import profile               from '@/data/profile.json'
 
 // Snap: 0=video 1=hero 2=about 3=skills 4..=projects work-exp contact footer
@@ -75,15 +76,17 @@ export default function Home() {
       tweenRef.current?.kill()
       tweenRef.current = gsap.to(el, {
         scrollTop: idx * window.innerHeight,
-        duration: 1.0,
+        duration: 0.7,
         ease: 'power3.inOut',
-        onComplete: () => { setTimeout(() => { busyRef.current = false }, 600) },
+        onComplete: () => { busyRef.current = false },
       })
     }
 
     function onWheel(e) {
       e.preventDefault()
       if (busyRef.current) return
+      // Ignore tiny noise / horizontal scrolls so one gesture = one move
+      if (Math.abs(e.deltaY) < 4) return
       goTo(idxRef.current + (e.deltaY > 0 ? 1 : -1))
     }
 
@@ -180,6 +183,7 @@ export default function Home() {
           <SkillsSection />
           <ProjectsSection />
           <WorkExperienceSection />
+          <ContactSection />
         </div>
       </main>
     </>

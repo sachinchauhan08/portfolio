@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
-   VideoIntro — Centered Video-Only Stage
-   No text content · single 16:9 display centered on screen
+   VideoIntro — Cinematic Full-Bleed Video Stage
+   Auto-playing intro film · glass frame · corner brackets
    Tokens sourced from app/globals.css (single source of truth)
    ═══════════════════════════════════════════════════════════════ */
 
@@ -9,25 +9,26 @@
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     z-index: 1;
     background: var(--bg-obsidian-deep, #030407);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 clamp(1.25rem, 4vw, 4rem);
+    padding: clamp(4.5rem, 9vh, 7rem) clamp(1.1rem, 4vw, 4.5rem) clamp(3rem, 7vh, 5rem);
 }
 
-/* ── Ambient Blurred Background Video ─────────────────────── */
+/* ── Ambient Blurred Background Video Bloom ────────────────── */
 .bgVideo {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: blur(60px);
-    transform: scale(1.2);
-    opacity: 0.26;
+    filter: blur(70px) saturate(1.4);
+    transform: scale(1.25);
+    opacity: 0.3;
     pointer-events: none;
     z-index: 1;
 }
@@ -37,8 +38,8 @@
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse 60% 50% at 78% 42%, rgba(99, 102, 241, 0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 45% at 22% 62%, rgba(6, 182, 212, 0.1) 0%, transparent 65%);
+        radial-gradient(ellipse 62% 52% at 78% 38%, rgba(99, 102, 241, 0.2) 0%, transparent 70%),
+        radial-gradient(ellipse 52% 46% at 20% 66%, rgba(6, 182, 212, 0.12) 0%, transparent 66%);
     pointer-events: none;
     z-index: 2;
 }
@@ -46,87 +47,151 @@
 .vignette {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(3, 4, 7, 0.85) 0%, rgba(3, 4, 7, 0.25) 25%, rgba(3, 4, 7, 0.25) 75%, rgba(3, 4, 7, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(3, 4, 7, 0.9) 0%, rgba(3, 4, 7, 0.3) 22%, rgba(3, 4, 7, 0.3) 78%, rgba(3, 4, 7, 0.95) 100%);
     pointer-events: none;
     z-index: 2;
 }
 
-/* ── Centered Video Card ─────────────────────────────────── */
-.cinemaCard {
+.grain {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.7) 0.5px, transparent 0.5px);
+    background-size: 3px 3px;
+    mix-blend-mode: overlay;
+}
+
+/* ── Cinematic Stage ─────────────────────────────────────── */
+.stage {
     position: relative;
     z-index: 5;
     width: 100%;
-    max-width: 1120px;
-    aspect-ratio: 16 / 9;
-    max-height: calc(100vh - 8rem);
-    border-radius: 22px;
-    overflow: hidden;
-    background: #000000;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow:
-        0 30px 70px -15px rgba(0, 0, 0, 0.9),
-        0 0 45px -10px rgba(99, 102, 241, 0.45);
+    max-width: 1240px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition:
-        border-color 0.35s ease,
-        box-shadow 0.35s ease,
-        transform 0.35s ease;
+    will-change: transform, opacity, filter;
 }
 
-.cinemaCard:hover {
-    border-color: rgba(99, 102, 241, 0.45);
+/* Inner frame that owns the aspect ratio + glass shell */
+.frame {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow:
-        0 35px 85px -15px rgba(0, 0, 0, 0.95),
-        0 0 60px -8px rgba(99, 102, 241, 0.6);
-    transform: translateY(-2px);
+        0 40px 90px -20px rgba(0, 0, 0, 0.95),
+        0 0 60px -14px rgba(99, 102, 241, 0.5);
+    transition:
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+.frame:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow:
+        0 45px 110px -20px rgba(0, 0, 0, 0.98),
+        0 0 80px -10px rgba(99, 102, 241, 0.65);
 }
 
 /* Video */
 .mainVideo {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    border-radius: 22px;
     display: block;
+    background: #000;
 }
 
-/* Glass border highlight overlay */
-.cardGlassHighlight {
+/* Glass frame highlight overlay */
+.frameGlow {
     position: absolute;
     inset: 0;
-    border-radius: 22px;
     pointer-events: none;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.24);
     z-index: 3;
 }
 
-/* Pinned Transport Control */
-.cinemaControls {
+/* ── Corner Brackets ─────────────────────────────────────── */
+.corner {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    z-index: 6;
+    pointer-events: none;
+    border-color: rgba(129, 140, 248, 0.85);
+    opacity: 0.85;
+}
+
+.cornerTL {
+    top: 14px;
+    left: 14px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+    border-top-left-radius: 6px;
+}
+
+.cornerTR {
+    top: 14px;
+    right: 14px;
+    border-top: 2px solid;
+    border-right: 2px solid;
+    border-top-right-radius: 6px;
+}
+
+.cornerBL {
+    bottom: 14px;
+    left: 14px;
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    border-bottom-left-radius: 6px;
+}
+
+.cornerBR {
+    bottom: 14px;
+    right: 14px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+    border-bottom-right-radius: 6px;
+}
+
+/* ── Transport Controls ──────────────────────────────────── */
+.controls {
     position: absolute;
     bottom: 1rem;
     right: 1.1rem;
     z-index: 8;
     display: flex;
     align-items: center;
-    background: rgba(14, 18, 28, 0.85);
+    gap: 0.15rem;
+    background: rgba(14, 18, 28, 0.82);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 9999px;
-    padding: 0.22rem 0.45rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+    padding: 0.22rem 0.4rem;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
 }
 
 .ctrlBtn {
     background: none;
     border: none;
     color: #94a3b8;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -142,7 +207,12 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Paused State Overlay */
+.ctrlBtn:focus-visible {
+    outline: 2px solid var(--accent-light, #818cf8);
+    outline-offset: 2px;
+}
+
+/* ── Paused / Ended Overlay ──────────────────────────────── */
 .playOverlay {
     position: absolute;
     inset: 0;
@@ -150,7 +220,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(3, 4, 7, 0.4);
+    background: rgba(3, 4, 7, 0.42);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     border: none;
@@ -158,9 +228,13 @@
     transition: background 0.3s ease;
 }
 
+.playOverlay:hover {
+    background: rgba(3, 4, 7, 0.3);
+}
+
 .playCircle {
-    width: 74px;
-    height: 74px;
+    width: 78px;
+    height: 78px;
     border-radius: 50%;
     background: var(--accent-gradient);
     display: flex;
@@ -174,8 +248,8 @@
 }
 
 .playOverlay:hover .playCircle {
-    transform: scale(1.1);
-    box-shadow: 0 0 50px rgba(99, 102, 241, 0.9);
+    transform: scale(1.09);
+    box-shadow: 0 0 55px rgba(99, 102, 241, 0.95);
 }
 
 .playIcon {
@@ -189,62 +263,94 @@
 /* ── Tablet / small laptop: < 1024px ─────────────────────── */
 @media (max-width: 1024px) {
     .section {
-        padding: 3.5rem 1.8rem;
+        padding: 4rem 1.8rem 3.2rem;
     }
 
-    .cinemaCard {
-        max-width: 860px;
-        max-height: calc(100vh - 7rem);
+    .stage {
+        max-width: 900px;
+    }
+
+    .corner {
+        width: 22px;
+        height: 22px;
     }
 }
 
 /* ── Mobile: < 768px ─────────────────────────────────────── */
 @media (max-width: 767px) {
     .section {
-        padding: 3.2rem 1.1rem;
+        padding: 4rem 1.1rem 3rem;
     }
 
-    .cinemaCard {
-        max-width: 100%;
-        max-height: none;
+    .frame {
         border-radius: 16px;
     }
 
-    .mainVideo,
-    .cardGlassHighlight {
+    .frameGlow {
         border-radius: 16px;
     }
 
-    .cinemaControls {
+    .corner {
+        width: 18px;
+        height: 18px;
+        top: auto;
+        bottom: auto;
+    }
+
+    .cornerTL {
+        top: 10px;
+        left: 10px;
+    }
+
+    .cornerTR {
+        top: 10px;
+        right: 10px;
+    }
+
+    .cornerBL {
+        bottom: 10px;
+        left: 10px;
+    }
+
+    .cornerBR {
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .controls {
         bottom: 0.7rem;
         right: 0.7rem;
         padding: 0.15rem 0.3rem;
     }
 
     .ctrlBtn {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
     }
 
     .playCircle {
-        width: 56px;
-        height: 56px;
+        width: 58px;
+        height: 58px;
     }
 }
 
 /* ── Compact mobile: < 640px ─────────────────────────────── */
 @media (max-width: 640px) {
     .section {
-        padding: 3rem 0.9rem;
+        padding: 3.6rem 0.9rem 2.6rem;
     }
 
-    .cinemaCard {
+    .frame,
+    .frameGlow {
         border-radius: 14px;
     }
+}
 
-    .mainVideo,
-    .cardGlassHighlight {
-        border-radius: 14px;
+/* Portrait phones: prefer filling width with a taller crop */
+@media (max-width: 767px) and (orientation: portrait) {
+    .frame {
+        aspect-ratio: 4 / 5;
+        max-height: 100%;
     }
 }
 
@@ -256,40 +362,59 @@
 }
 
 :global([data-theme='light']) .bgVideo {
-    opacity: 0.1;
-    filter: blur(50px);
+    opacity: 0.12;
+    filter: blur(55px);
 }
 
 :global([data-theme='light']) .vignette {
     background: linear-gradient(
         180deg,
-        rgba(248, 250, 252, 0.85) 0%,
-        rgba(248, 250, 252, 0.2) 25%,
-        rgba(248, 250, 252, 0.2) 75%,
+        rgba(248, 250, 252, 0.9) 0%,
+        rgba(248, 250, 252, 0.25) 22%,
+        rgba(248, 250, 252, 0.25) 78%,
         rgba(248, 250, 252, 0.95) 100%
     );
 }
 
 :global([data-theme='light']) .ambientGlow {
     background:
-        radial-gradient(ellipse 60% 50% at 78% 42%, rgba(79, 70, 229, 0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 45% at 22% 62%, rgba(8, 145, 178, 0.08) 0%, transparent 65%);
+        radial-gradient(ellipse 62% 52% at 78% 38%, rgba(79, 70, 229, 0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 52% 46% at 20% 66%, rgba(8, 145, 178, 0.09) 0%, transparent 66%);
 }
 
-:global([data-theme='light']) .cinemaCard {
-    background: #0b0f19;
+:global([data-theme='light']) .grain {
+    opacity: 0.03;
+    mix-blend-mode: multiply;
+}
+
+:global([data-theme='light']) .frame {
     border-color: var(--border-glass-light);
     box-shadow:
-        0 25px 60px -15px rgba(15, 23, 42, 0.2),
-        0 0 35px -10px rgba(79, 70, 229, 0.25);
+        0 30px 70px -20px rgba(15, 23, 42, 0.25),
+        0 0 45px -12px rgba(79, 70, 229, 0.28);
+}
+
+:global([data-theme='light']) .controls {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: var(--border-glass-light);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+}
+
+:global([data-theme='light']) .ctrlBtn {
+    color: var(--text-secondary);
+}
+
+:global([data-theme='light']) .ctrlBtn:hover {
+    color: var(--text-primary);
+    background: rgba(15, 23, 42, 0.06);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    Reduced Motion
    ═══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-    .cinemaCard,
-    .cinemaControls,
+    .frame,
+    .controls,
     .ctrlBtn,
     .playOverlay,
     .playCircle {
