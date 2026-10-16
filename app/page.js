@@ -12,8 +12,9 @@ import WorkExperienceSection from '@/components/sections/WorkExperienceSection'
 import ContactSection        from '@/components/sections/ContactSection'
 import profile               from '@/data/profile.json'
 
-// Snap: 0=video 1=hero 2=about 3=skills 4..=projects work-exp contact footer
-const PROJECT_SLIDES = profile.projects.length
+// Snap: 0=video 1=hero 2=about 3=skills 4=projects 5=work-exp 6=contact 7=footer
+// Projects now render as a single card-grid viewport (no per-project scroll slides).
+const PROJECT_SLIDES = 1
 const TOTAL          = 7 + PROJECT_SLIDES
 
 export default function Home() {

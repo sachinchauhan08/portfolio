@@ -1,228 +1,184 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { gsap } from '@/lib/gsap'
 import { FaGithub } from 'react-icons/fa'
-import { FiArrowUpRight, FiCheck } from 'react-icons/fi'
+import { FiArrowUpRight, FiExternalLink } from 'react-icons/fi'
 import profile from '@/data/profile.json'
 import styles from '@/styles/sections/ProjectsSection.module.css'
 
 const PROJECTS = profile.projects
 
 export default function ProjectsSection() {
-  const sectionRef  = useRef(null)
-  const trackRef    = useRef(null)
-  const contentRefs = useRef([])
-  const bgRefs      = useRef([])
-  const counterRef  = useRef(null)
-  const progressRef = useRef(null)
-  const [slideIdx, setSlideIdx] = useState(0)
+  const sectionRef = useRef(null)
+  const headerRef = useRef(null)
+  const cardsRef = useRef([])
 
   useEffect(() => {
     const section = sectionRef.current
-    const track   = trackRef.current
-    if (!section || !track) return
-
+    if (!section) return
     const scroller = document.querySelector('main')
     if (!scroller) return
-    const n = PROJECTS.length
-    contentRefs.current = contentRefs.current.slice(0, n)
-    bgRefs.current      = bgRefs.current.slice(0, n)
 
-    // Slides 2+ hidden initially
-    contentRefs.current.forEach((el, i) => {
-      if (el && i > 0) gsap.set(el, { opacity: 0, y: 30 })
-    })
+    let isActive = false
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024
 
-    const tl = gsap.timeline({ paused: true })
+    function resetAnim() {
+      gsap.killTweensOf(headerRef.current)
+      cardsRef.current.forEach(el => el && gsap.killTweensOf(el))
+      gsap.set(headerRef.current, { opacity: 0, y: 30 })
+      cardsRef.current.forEach(el => el && gsap.set(el, { opacity: 0, y: 28, scale: 0.97 }))
+    }
 
-    // Horizontal slide - xPercent is viewport-independent
-    tl.to(track, {
-      xPercent: -((n - 1) / n * 100),
-      ease: 'none',
-      duration: n - 1,
-    }, 0)
-
-    for (let i = 0; i < n - 1; i++) {
-      const curr   = contentRefs.current[i]
-      const next   = contentRefs.current[i + 1]
-      const nextBg = bgRefs.current[i + 1]
-
-      if (curr) {
-        tl.to(curr, {
-          opacity: 0, y: -40, filter: 'blur(6px)',
-          duration: 0.2, ease: 'power2.in',
-        }, i + 0.30)
-      }
-
-      if (nextBg) {
-        tl.fromTo(nextBg,
-          { scale: 1.04 },
-          { scale: 1.0, duration: 1.0, ease: 'power2.out' },
-          i
-        )
-      }
-
-      if (next) {
-        tl.set(next, { opacity: 1, y: 0 }, i + 0.44)
-
-        const meta  = next.querySelector(`.${styles.meta}`)
-        const title = next.querySelector(`.${styles.title}`)
-        const sub   = next.querySelector(`.${styles.subtitle}`)
-        const desc  = next.querySelector(`.${styles.desc}`)
-        const tags  = next.querySelectorAll(`.${styles.tag}`)
-        const btnGroup = next.querySelector(`.${styles.btnGroup}`)
-
-        if (meta)  tl.fromTo(meta,  { x: -10, opacity: 0 }, { x: 0, opacity: 1, duration: 0.25, ease: 'power2.out' }, i + 0.45)
-        if (title) tl.fromTo(title, { opacity: 0, y: 20 },  { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out'   }, i + 0.48)
-        if (sub)   tl.fromTo(sub,   { y: 12, opacity: 0 },  { y: 0, opacity: 1, duration: 0.30, ease: 'power2.out' }, i + 0.54)
-        if (desc)  tl.fromTo(desc,  { y: 10, opacity: 0 },  { y: 0, opacity: 1, duration: 0.35, ease: 'power2.out' }, i + 0.58)
-        if (tags.length) {
-          tl.fromTo(tags,  { y: 6, opacity: 0 },  { y: 0, opacity: 1, duration: 0.25, ease: 'power2.out', stagger: 0.03 }, i + 0.65)
+    function playAnim() {
+      resetAnim()
+      gsap.to(headerRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' })
+      cardsRef.current.forEach((el, idx) => {
+        if (el) {
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.65,
+            ease: 'power2.out',
+            delay: 0.2 + idx * 0.1,
+          })
         }
-        if (btnGroup) tl.fromTo(btnGroup, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.30, ease: 'power2.out' }, i + 0.72)
+      })
+    }
+
+    if (isMobileOrTablet) {
+      playAnim()
+      isActive = true
+    } else {
+      resetAnim()
+    }
+
+    function onScroll() {
+      const scrollY = scroller.scrollTop
+      const top = section.offsetTop
+      const height = section.offsetHeight
+      const inRange =
+        scrollY + window.innerHeight * 0.85 >= top &&
+        scrollY <= top + height - window.innerHeight * 0.15
+
+      if (inRange && !isActive) {
+        isActive = true
+        playAnim()
+      } else if (!inRange && isActive && !isMobileOrTablet) {
+        isActive = false
+        resetAnim()
       }
     }
 
-    const st = ScrollTrigger.create({
-      trigger:  section,
-      scroller,
-      start:    'top top',
-      end:      () => `+=${(n - 1) * window.innerHeight}`,
-      onUpdate: (self) => {
-        tl.progress(self.progress)
-
-        const activeIdx = Math.round(self.progress * (n - 1))
-        setSlideIdx(prev => prev !== activeIdx ? activeIdx : prev)
-
-        if (progressRef.current) {
-          gsap.set(progressRef.current, {
-            scaleX: self.progress, transformOrigin: 'left center', overwrite: true,
-          })
-        }
-
-        if (counterRef.current) counterRef.current.textContent = `0${activeIdx + 1}`
-      },
-    })
-
-    return () => st.kill()
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => scroller.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <div style={{ height: `${PROJECTS.length * 100}vh` }} id="projects">
-      <section ref={sectionRef} className={styles.section}>
+    <section ref={sectionRef} className={styles.section} id="projects">
+      <div className={styles.bgGlow} aria-hidden />
+      <div className={styles.gridLines} aria-hidden />
 
-        {/* Top bar */}
-        <div className={styles.topBar}>
-          <span className={styles.sectionLabel}>Featured Projects</span>
-          <div className={styles.counter}>
-            <span ref={counterRef} className={styles.cCur}>01</span>
-            <span className={styles.cSep}> / </span>
-            <span className={styles.cTot}>0{PROJECTS.length}</span>
+      <div className={styles.container}>
+
+        {/* Section Header */}
+        <div ref={headerRef} className={styles.header}>
+          <div className={styles.eyebrowWrap}>
+            <span className={styles.eyebrowLine} />
+            <span className={styles.eyebrow}>Featured Work</span>
           </div>
+          <div className={styles.titleRow}>
+            <h2 className={styles.title}>
+              Projects &{' '}
+              <span className={styles.titleAccent}>Case Studies</span>
+            </h2>
+            <span className={styles.countBadge}>{PROJECTS.length} Projects Shipped</span>
+          </div>
+          <p className={styles.subtitle}>
+            Production applications spanning AI marketplaces, conversational agents, multi-user
+            platforms, and healthcare SaaS — built end to end with modern full-stack tooling.
+          </p>
         </div>
 
-        {/* Horizontal track */}
-        <div
-          ref={trackRef}
-          className={styles.track}
-          style={{ width: `${PROJECTS.length * 100}vw` }}
-        >
-          {PROJECTS.map((proj, i) => (
-            <div key={proj.id} className={styles.slide}>
-
-              <div
-                ref={el => { bgRefs.current[i] = el }}
-                className={styles.slideBg}
-              >
+        {/* Project Cards */}
+        <div className={styles.projectsGrid}>
+          {PROJECTS.map((proj, idx) => (
+            <article
+              key={proj.id}
+              ref={el => { cardsRef.current[idx] = el }}
+              className={styles.card}
+            >
+              {/* Media */}
+              <div className={styles.media}>
                 <Image
                   src={proj.image}
                   alt={proj.title}
                   fill
                   quality={100}
-                  sizes="100vw"
-                  className={styles.slideImg}
-                  priority={i === 0}
+                  sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className={styles.mediaImg}
                 />
-                <div className={styles.slideOverlayLeft}   aria-hidden />
-                <div className={styles.slideOverlayBottom} aria-hidden />
-                <div className={styles.slideVignette}      aria-hidden />
+                <div className={styles.mediaOverlay} aria-hidden />
+                <span className={styles.typeTag}>{proj.type}</span>
+                {proj.link && (
+                  <a
+                    href={proj.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.viewIcon}
+                    aria-label={`Open ${proj.title}`}
+                  >
+                    <FiExternalLink size={16} />
+                  </a>
+                )}
               </div>
 
-              <span className={styles.slideNum} aria-hidden>0{i + 1}</span>
+              {/* Body */}
+              <div className={styles.body}>
+                <h3 className={styles.cardTitle}>{proj.title}</h3>
+                <p className={styles.cardSubtitle}>{proj.subtitle}</p>
+                <p className={styles.desc}>{proj.desc}</p>
 
-              <div
-                ref={el => { contentRefs.current[i] = el }}
-                className={styles.slideContent}
-              >
-                <div className={styles.slideLeft}>
-                  <div className={styles.meta}>
-                    <span className={styles.typeTag}>{proj.type}</span>
-                  </div>
-                  <h2 className={styles.title}>{proj.title}</h2>
-                  <p  className={styles.subtitle}>{proj.subtitle}</p>
-
-                  <div className={styles.btnGroup}>
-                    {proj.link && (
-                      <a
-                        href={proj.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.liveBtn}
-                      >
-                        <span>Live Preview</span>
-                        <FiArrowUpRight size={14} />
-                      </a>
-                    )}
-                    {proj.github && (
-                      <a
-                        href={proj.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.githubBtn}
-                      >
-                        <FaGithub size={14} />
-                        <span>Source</span>
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                <div className={styles.slideRight}>
-                  <p className={styles.desc}>{proj.desc}</p>
-
-                  {proj.features && proj.features.length > 0 && (
-                    <div className={styles.featuresList}>
-                      {proj.features.map(f => (
-                        <div key={f} className={styles.featureItem}>
-                          <FiCheck className={styles.featureCheck} size={13} />
-                          <span>{f}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className={styles.stack}>
-                    {proj.tech.map(t => (
-                      <span key={t} className={styles.tag}>{t}</span>
-                    ))}
-                  </div>
+                <div className={styles.stack}>
+                  {proj.tech.slice(0, 5).map(t => (
+                    <span key={t} className={styles.tag}>{t}</span>
+                  ))}
                 </div>
               </div>
 
-            </div>
+              {/* Actions */}
+              <div className={styles.cardFooter}>
+                {proj.link && (
+                  <a
+                    href={proj.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.liveBtn}
+                  >
+                    <span>View Project</span>
+                    <FiArrowUpRight size={14} />
+                  </a>
+                )}
+                {proj.github && (
+                  <a
+                    href={proj.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.githubBtn}
+                    aria-label={`${proj.title} source code`}
+                  >
+                    <FaGithub size={15} />
+                  </a>
+                )}
+              </div>
+            </article>
           ))}
         </div>
 
-        {/* Progress bar */}
-        <div className={styles.bottomUI}>
-          <div className={styles.progressTrack}>
-            <div ref={progressRef} className={styles.progressBar} />
-          </div>
-        </div>
-
-      </section>
-    </div>
+      </div>
+    </section>
   )
 }

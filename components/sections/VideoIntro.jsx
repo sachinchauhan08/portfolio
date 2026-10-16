@@ -118,11 +118,24 @@ export default function VideoIntro() {
 
   // ── Upgrade to unmuted audio on the first user gesture ────────────
   useEffect(() => {
+    // Only treat the intro as "active" while its slide is the current viewport
+    function isOnIntroPage() {
+      const main = document.querySelector('main')
+      if (!main) return true
+      return main.scrollTop < window.innerHeight * 0.4
+    }
+
     function unlockAudio() {
       const v = videoRef.current
       if (!v) return
 
       userUnlockedRef.current = true
+
+      // A click/tap anywhere on the site fires this handler globally.
+      // Never touch playback unless the intro slide is actually on screen —
+      // otherwise clicking another section would start the video there.
+      if (!isOnIntroPage()) return
+
       v.muted = false
       v.volume = 1
       setMuted(false)
@@ -156,19 +169,24 @@ export default function VideoIntro() {
       const bg = bgVideoRef.current
       if (!v) return
 
-      if (main.scrollTop >= window.innerHeight * 0.4) {
-        // Left the video page
+      const onIntroViewport = main.scrollTop < window.innerHeight * 0.4
+
+      if (!onIntroViewport) {
+        // Left the video page → stop it so it never runs in the background
         if (!hasLeftTopRef.current) hasLeftTopRef.current = true
-        v.pause()
-        if (bg) bg.pause()
+        if (!v.paused) v.pause()
+        if (bg && !bg.paused) bg.pause()
         v.muted = true
         setPlaying(false)
         setMuted(true)
-      } else if (main.scrollTop < LEFT_TOP_THRESHOLD && hasLeftTopRef.current) {
-        // Scrolled back onto the video page → replay from the beginning
+      } else if (hasLeftTopRef.current) {
+        // Arrived back on the video page → replay from the beginning
         hasLeftTopRef.current = false
         hasEndedRef.current = false
         startPlayback({ restart: true })
+      } else if (main.scrollTop < LEFT_TOP_THRESHOLD && !hasEndedRef.current && v.paused) {
+        // Landed on the video page (e.g. via navbar) but it isn't running
+        startPlayback()
       }
     }
 

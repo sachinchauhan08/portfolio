@@ -7,7 +7,9 @@ import ThemeToggle from '@/components/ui/ThemeToggle'
 import profile from '@/data/profile.json'
 import styles from '@/styles/ui/Navbar.module.css'
 
-const PROJECT_COUNT = profile.projects.length
+// The projects section renders as a single viewport slot (card grid), so it
+// contributes exactly one step to the snap index math below.
+const PROJECT_COUNT = 1
 const HERO_IDX = 1
 
 const NAV_ITEMS = [

@@ -13,19 +13,19 @@ import styles from '@/styles/sections/HeroSection.module.css'
 const HeroVisual = dynamic(() => import('@/components/three/HeroVisual'), { ssr: false })
 
 const SOCIAL_ICON_MAP = { GitHub: FaGithub, LinkedIn: FaLinkedinIn }
-const SIDEBAR_LABELS  = ['GitHub', 'LinkedIn']
+const SIDEBAR_LABELS = ['GitHub', 'LinkedIn']
 
 export default function HeroSection() {
-  const sectionRef     = useRef(null)
-  const availRef       = useRef(null)
-  const headingRef     = useRef(null)
-  const descRef        = useRef(null)
-  const ctaGroupRef    = useRef(null)
-  const pillsRef       = useRef(null)
-  const statsRef       = useRef(null)
-  const photoRef       = useRef(null)
-  const socialRef      = useRef(null)
-  const scrollCueRef   = useRef(null)
+  const sectionRef = useRef(null)
+  const availRef = useRef(null)
+  const headingRef = useRef(null)
+  const descRef = useRef(null)
+  const ctaGroupRef = useRef(null)
+  const pillsRef = useRef(null)
+  const statsRef = useRef(null)
+  const photoRef = useRef(null)
+  const socialRef = useRef(null)
+  const scrollCueRef = useRef(null)
 
   function handleViewProjects() {
     const scroller = document.querySelector('main')
@@ -43,7 +43,8 @@ export default function HeroSection() {
     if (scroller && target) {
       gsap.to(scroller, { scrollTop: target.offsetTop, duration: 1.1, ease: 'power3.inOut' })
     } else if (scroller) {
-      const contactIdx = 4 + profile.projects.length + 1
+      // Snap layout: 0=video 1=hero 2=about 3=skills 4=projects 5=work-exp 6=contact
+      const contactIdx = 6
       gsap.to(scroller, { scrollTop: contactIdx * window.innerHeight, duration: 1.2, ease: 'power3.inOut' })
     }
   }
@@ -66,20 +67,20 @@ export default function HeroSection() {
     ].filter(Boolean)
 
     gsap.set(fadeY, { opacity: 0, y: 30 })
-    if (photoRef.current)     gsap.set(photoRef.current,     { opacity: 0, scale: 0.96, x: 40 })
-    if (socialRef.current)    gsap.set(socialRef.current,    { opacity: 0, x: -20 })
+    if (photoRef.current) gsap.set(photoRef.current, { opacity: 0, scale: 0.96, x: 40 })
+    if (socialRef.current) gsap.set(socialRef.current, { opacity: 0, x: -20 })
     if (scrollCueRef.current) gsap.set(scrollCueRef.current, { opacity: 0, y: 15 })
 
     const tl = gsap.timeline({ paused: true })
-    tl.to(availRef.current,       { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' })
-      .to(headingRef.current,     { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.25')
-      .to(descRef.current,        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.35')
-      .to(ctaGroupRef.current,    { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.25')
-      .to(pillsRef.current,       { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.2')
-      .to(statsRef.current,       { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.2')
-      .to(photoRef.current,       { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: 'power3.out' }, '-=0.7')
-      .to(socialRef.current,      { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, '-=0.5')
-      .to(scrollCueRef.current,   { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.3')
+    tl.to(availRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' })
+      .to(headingRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.25')
+      .to(descRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.35')
+      .to(ctaGroupRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.25')
+      .to(pillsRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.2')
+      .to(statsRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.2')
+      .to(photoRef.current, { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: 'power3.out' }, '-=0.7')
+      .to(socialRef.current, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, '-=0.5')
+      .to(scrollCueRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.3')
 
     const observer = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { tl.play(); observer.disconnect() } },
