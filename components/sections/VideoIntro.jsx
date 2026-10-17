@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
-import { FiPlay, FiPause } from 'react-icons/fi'
+import { FiPlay, FiPause, FiVolume2, FiVolumeX } from 'react-icons/fi'
 import styles from '@/styles/sections/VideoIntro.module.css'
 
 const VIDEO_SRC = '/assets/about-me.mp4'
@@ -34,20 +34,21 @@ export default function VideoIntro() {
 
   const hasEndedRef = useRef(false)
   const hasLeftTopRef = useRef(false)
-  // True when the browser refused unmuted autoplay — we then wait for a real
-  // user gesture instead of silently falling back to muted autoplay.
+  // True while the video is running but the browser forced us to mute it.
   const blockedRef = useRef(false)
 
   const [playing, setPlaying] = useState(false)
   const [hasEnded, setHasEnded] = useState(false)
   const [needsGesture, setNeedsGesture] = useState(false)
+  const [muted, setMuted] = useState(false)
 
   /**
-   * Attempt to play the video WITH SOUND.
-   * There is intentionally no muted fallback: if the browser blocks unmuted
-   * autoplay we surface a "Click to Play with Sound" action instead.
+   * Start the video and try to do it WITH SOUND.
+   * Chrome/Safari only allow unmuted autoplay after a user gesture, so when
+   * that is refused we immediately fall back to muted autoplay (the film still
+   * runs) and surface an "Unmute" control that restores audio on click.
    */
-  const startPlayback = useCallback(({ restart = false } = {}) => {
+  const startPlayback = useCallback(({ restart = false, forceMuted } = {}) => {
     const v = videoRef.current
     const bg = bgVideoRef.current
     if (!v) return
@@ -64,35 +65,95 @@ export default function VideoIntro() {
     hasEndedRef.current = false
     setHasEnded(false)
 
-    // Always request sound. The ambient background video stays muted.
-    v.muted = false
-    v.volume = 1
+    const startBg = () => {
+      if (!bg) return
+      bg.muted = true
+      bg.play().catch(() => { })
+    }
 
-    const attempt = v.play()
-    const handleSuccess = () => {
-      blockedRef.current = false
+    const playWith = (mute) => {
+      v.muted = mute
+      if (!mute) v.volume = 1
+      setMuted(mute)
+      return v.play()
+    }
+
+    const onStarted = () => {
       setNeedsGesture(false)
       setPlaying(true)
-      if (bg) {
-        bg.muted = true
-        bg.play().catch(() => { })
-      }
+      startBg()
     }
 
-    if (attempt && typeof attempt.then === 'function') {
-      attempt
-        .then(handleSuccess)
-        .catch(() => {
-          // Autoplay with sound was blocked. Never re-try muted — surface the
-          // manual "Click to Play with Sound" control instead.
+    const onBlocked = () => {
+      blockedRef.current = true
+      setNeedsGesture(true)
+      setPlaying(false)
+    }
+
+    if (forceMuted) {
+      const attempt = playWith(true)
+      if (attempt && typeof attempt.then === 'function') {
+        attempt.then(onStarted).catch(onBlocked)
+      } else {
+        onStarted()
+      }
+      return
+    }
+
+    // First choice: sound on (allowed once the user has interacted with the page)
+    const soundAttempt = playWith(false)
+    if (!soundAttempt || typeof soundAttempt.then !== 'function') {
+      blockedRef.current = false
+      onStarted()
+      return
+    }
+
+    soundAttempt
+      .then(() => {
+        blockedRef.current = false
+        onStarted()
+      })
+      .catch(() => {
+        // Browsers refused unmuted autoplay → keep the film running, muted,
+        // and show the Unmute affordance.
+        const mutedAttempt = playWith(true)
+        if (mutedAttempt && typeof mutedAttempt.then === 'function') {
+          mutedAttempt
+            .then(() => {
+              blockedRef.current = true
+              setNeedsGesture(true)
+              onStarted()
+            })
+            .catch(onBlocked)
+        } else {
           blockedRef.current = true
           setNeedsGesture(true)
-          setPlaying(false)
-        })
-    } else {
-      handleSuccess()
+          onStarted()
+        }
+      })
+  }, [])
+
+  /** Restore sound — always called from a real user gesture. */
+  const unmute = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = false
+    v.volume = 1
+    setMuted(false)
+    blockedRef.current = false
+    setNeedsGesture(false)
+    if (v.paused && !hasEndedRef.current) {
+      v.play()
+        .then(() => setPlaying(true))
+        .catch(() => { })
     }
   }, [])
+
+  // Keep the React state in sync if the browser changes the mute state.
+  function handleVolumeChange(e) {
+    setMuted(e.currentTarget.muted)
+    if (!e.currentTarget.muted) blockedRef.current = false
+  }
 
   // ── Cinematic entrance choreography ───────────────────────────────
   useEffect(() => {
@@ -105,12 +166,12 @@ export default function VideoIntro() {
     return () => tween.kill()
   }, [])
 
-  // ── Auto-play on first mount (with sound) ─────────────────────────
+  // ── Auto-play on first mount (sound first, muted fallback) ────────
   useEffect(() => {
     startPlayback()
   }, [startPlayback])
 
-  // ── Unlock audio on the first user gesture ────────────────────────
+  // ── Unlock sound on the first user gesture ────────────────────────
   useEffect(() => {
     // Only treat the intro as "active" while its slide is the current viewport
     function isOnIntroPage() {
@@ -125,11 +186,10 @@ export default function VideoIntro() {
 
       // A click/tap anywhere on the site fires this handler globally.
       // Never touch playback unless the intro slide is actually on screen —
-      // otherwise clicking another section would start the video there.
+      // otherwise clicking another section would unmute the video there.
       if (!isOnIntroPage()) return
 
-      // Gestures inside the cinematic stage are handled by the local
-      // controls (which already play with sound) — avoid double-handling.
+      // Gestures inside the cinematic stage are handled by the local controls
       if (
         cinemaRef.current &&
         e?.target instanceof Node &&
@@ -138,20 +198,7 @@ export default function VideoIntro() {
         return
       }
 
-      v.muted = false
-      v.volume = 1
-
-      // If playback was blocked before this gesture, kick it off now with sound
-      if (blockedRef.current && v.paused && !hasEndedRef.current) {
-        v.play()
-          .then(() => {
-            blockedRef.current = false
-            setNeedsGesture(false)
-            setPlaying(true)
-            if (bgVideoRef.current) bgVideoRef.current.play().catch(() => { })
-          })
-          .catch(() => { })
-      }
+      if (v.muted) unmute()
     }
 
     window.addEventListener('pointerdown', unlockAudio, { passive: true })
@@ -163,11 +210,9 @@ export default function VideoIntro() {
       window.removeEventListener('keydown', unlockAudio)
       window.removeEventListener('touchstart', unlockAudio)
     }
-  }, [])
+  }, [unmute])
 
-  // ── Leave page → pause · Return to page → restart & play ──────────
-  // Audio state is never touched here, so navigation/re-render can never
-  // silently mute the intro.
+  // ── Leave page → pause · Return to page → restart & autoplay ──────
   useEffect(() => {
     const main = document.querySelector('main')
     if (!main) return
@@ -186,7 +231,7 @@ export default function VideoIntro() {
         if (bg && !bg.paused) bg.pause()
         setPlaying(false)
       } else if (hasLeftTopRef.current) {
-        // Arrived back on the video page → replay from the beginning
+        // Arrived back on the video page → autoplay from the beginning
         hasLeftTopRef.current = false
         hasEndedRef.current = false
         startPlayback({ restart: true })
@@ -211,8 +256,7 @@ export default function VideoIntro() {
     scrollNext()
   }
 
-  // Overlay is only rendered while paused/blocked/ended, so it always starts
-  // playback (with sound) rather than toggling.
+  // Overlay is only rendered while paused/blocked/ended.
   function handleOverlayPlay(e) {
     e.stopPropagation()
     const v = videoRef.current
@@ -234,7 +278,25 @@ export default function VideoIntro() {
     }
 
     const atEnd = v.ended || (v.duration && v.currentTime >= v.duration - 0.2)
-    startPlayback({ restart: Boolean(atEnd) })
+    // An explicit click is a user gesture, so sound is allowed here
+    if (atEnd) {
+      startPlayback({ restart: true })
+    } else {
+      v.muted = false
+      v.volume = 1
+      setMuted(false)
+      blockedRef.current = false
+      setNeedsGesture(false)
+      v.play()
+        .then(() => {
+          setPlaying(true)
+          if (bg) {
+            bg.muted = true
+            bg.play().catch(() => { })
+          }
+        })
+        .catch(() => { })
+    }
   }
 
   return (
@@ -266,11 +328,10 @@ export default function VideoIntro() {
             src={VIDEO_SRC}
             playsInline
             preload="auto"
-            muted={false}
+            autoPlay
             onEnded={handleEnded}
+            onVolumeChange={handleVolumeChange}
             onPlay={() => {
-              blockedRef.current = false
-              setNeedsGesture(false)
               setPlaying(true)
               hasEndedRef.current = false
               setHasEnded(false)
@@ -288,19 +349,13 @@ export default function VideoIntro() {
           <span className={`${styles.corner} ${styles.cornerBL}`} aria-hidden="true" />
           <span className={`${styles.corner} ${styles.cornerBR}`} aria-hidden="true" />
 
-          {/* Paused / ended / autoplay-blocked state → centered play button */}
+          {/* Paused / ended / blocked state → centered play button */}
           {!playing && (
             <button
               type="button"
               className={styles.playOverlay}
               onClick={handleOverlayPlay}
-              aria-label={
-                needsGesture
-                  ? 'Click to Play with Sound'
-                  : hasEnded
-                    ? 'Replay video'
-                    : 'Play video'
-              }
+              aria-label={hasEnded ? 'Replay video' : 'Play video with sound'}
             >
               <span className={styles.playContent}>
                 <span className={styles.playCircle}>
@@ -312,9 +367,25 @@ export default function VideoIntro() {
               </span>
             </button>
           )}
+
+          {/* Playing but the browser forced muted autoplay → offer unmute */}
+          {playing && muted && (
+            <button
+              type="button"
+              className={styles.unmuteHint}
+              onClick={(e) => {
+                e.stopPropagation()
+                unmute()
+              }}
+              aria-label="Unmute video"
+            >
+              <FiVolumeX size={15} />
+              <span>Tap for sound</span>
+            </button>
+          )}
         </div>
 
-        {/* Transport controls (play / pause only — sound is always on) */}
+        {/* Transport controls (play / pause + mute toggle) */}
         <div className={styles.controls}>
           <button
             type="button"
@@ -327,6 +398,26 @@ export default function VideoIntro() {
             title={playing ? 'Pause' : 'Play'}
           >
             {playing ? <FiPause size={15} /> : <FiPlay size={15} />}
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.ctrlBtn} ${muted ? styles.ctrlBtnAttention : ''}`}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (muted) {
+                unmute()
+              } else {
+                const v = videoRef.current
+                if (!v) return
+                v.muted = true
+                setMuted(true)
+              }
+            }}
+            aria-label={muted ? 'Unmute video' : 'Mute video'}
+            title={muted ? 'Unmute' : 'Mute'}
+          >
+            {muted ? <FiVolumeX size={15} /> : <FiVolume2 size={15} />}
           </button>
         </div>
       </div>

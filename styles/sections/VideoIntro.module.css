@@ -207,6 +207,15 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* Muted (browser-blocked autoplay) → draw the eye to the speaker button */
+.ctrlBtnAttention {
+    color: var(--accent-light, #818cf8);
+}
+
+.ctrlBtnAttention:hover {
+    color: #ffffff;
+}
+
 .ctrlBtn:focus-visible {
     outline: 2px solid var(--accent-light, #818cf8);
     outline-offset: 2px;
@@ -230,6 +239,42 @@
 
 .playOverlay:hover {
     background: rgba(3, 4, 7, 0.3);
+}
+
+/* Inline "Tap for sound" chip shown while the video autoplays muted */
+.unmuteHint {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 7;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 9999px;
+    background: rgba(14, 18, 28, 0.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f1f5f9;
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.unmuteHint:hover {
+    background: rgba(99, 102, 241, 0.85);
+    border-color: rgba(129, 140, 248, 0.9);
+}
+
+.unmuteHint:focus-visible {
+    outline: 2px solid var(--accent-light, #818cf8);
+    outline-offset: 2px;
 }
 
 /* Stack for the play circle + optional "Click to Play with Sound" label */
@@ -443,6 +488,17 @@
 :global([data-theme='light']) .ctrlBtn:hover {
     color: var(--text-primary);
     background: rgba(15, 23, 42, 0.06);
+}
+
+:global([data-theme='light']) .ctrlBtnAttention {
+    color: var(--accent, #4f46e5);
+}
+
+:global([data-theme='light']) .unmuteHint {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: var(--border-glass-light);
+    color: var(--text-primary);
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.2);
 }
 
 :global([data-theme='light']) .playLabel {
