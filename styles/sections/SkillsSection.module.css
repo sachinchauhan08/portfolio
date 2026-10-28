@@ -116,34 +116,6 @@
   margin: 0;
 }
 
-.overviewStats {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  flex-shrink: 0;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--border-glass);
-  border-radius: 0.9rem;
-  background: var(--surface-glass);
-}
-
-.overviewValue {
-  color: var(--text-primary);
-  font-size: 1.7rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.06em;
-}
-
-.overviewLabel {
-  color: var(--text-muted);
-  font-size: 0.65rem;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 /* Skills Grid */
 .skillsGrid {
   display: grid;
