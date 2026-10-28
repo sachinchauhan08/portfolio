@@ -8,7 +8,7 @@
   "tagline": "Building high-performance digital experiences with modern web technologies & AI.",
   "description": "Software developer focused on building responsive, intuitive, and high-performance web applications using modern frontend technologies and practical full-stack development tools.",
   "roles": {
-    "short": "Frontend & Full Stack Developer",
+    "short": "Full Stack Developer",
     "detailed": "Frontend Architecture · React & Next.js · Full Stack Systems"
   },
   "location": {
@@ -19,9 +19,9 @@
   "availabilityLabel": "Open to Opportunities",
   "bio": "I'm Sachin Chauhan, a developer with a background in computer applications and a passion for building reliable, user-focused web experiences. I work with modern JavaScript frameworks, reusable components, API integrations, and responsive interfaces. I enjoy solving practical problems, writing maintainable code, and continuously improving my development skills.",
   "stats": [
-    { "value": "4+",  "label": "Years Experience" },
-    { "value": "20+", "label": "Projects Completed" },
-    { "value": "3",   "label": "Companies" }
+    { "value": "2+", "label": "Years Experience" },
+    { "value": "4",  "label": "Projects Completed" },
+    { "value": "1",  "label": "Companies" }
   ],
   "skills": [
     "React.js",
