@@ -100,100 +100,96 @@ export default function AboutSection() {
       <div className={styles.gridLines} aria-hidden />
 
       <div className={styles.container}>
-
-        {/* Left: Identity Panel */}
-        <div ref={photoColRef} className={styles.identityPanel}>
-          <div className={styles.photoWrapper}>
-            <div className={styles.photoCornerGlow} aria-hidden />
-            <div className={styles.photoFrame}>
-              <Image
-                src="/assets/myImage.png"
-                alt={profile.name.full}
-                fill
-                quality={100}
-                sizes="(min-width: 768px) 32vw, 100vw"
-                className={styles.photoImg}
-              />
-              <div className={styles.photoOverlay} aria-hidden />
-              <div className={styles.photoBadge}>
-                <div className={styles.badgeAvatar}>SC</div>
-                <div className={styles.badgeInfo}>
-                  <span className={styles.badgeName}>{profile.name.full}</span>
-                  <span className={styles.badgeRole}>{profile.roles.short}</span>
-                </div>
-                <div className={styles.badgeStatus}>
-                  <span className={styles.statusDot} />
-                  Available
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.socialRow}>
-            {profile.socials.map(s => {
-              const Icon = SOCIAL_ICONS[s.label]
-              if (!Icon) return null
-              return (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.socialBtn}
-                  aria-label={s.label}
-                >
-                  <Icon size={14} />
-                  <span>{s.label}</span>
-                </a>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Right: Content Column */}
-        <div ref={contentRef} className={styles.contentCol}>
-
+        <header className={styles.aboutHeader}>
           <div className={styles.eyebrowWrap}>
             <span className={styles.eyebrowLine} />
             <span className={styles.eyebrow}>About Me</span>
           </div>
-
           <h2 className={styles.heading}>
             Engineering{' '}
-            <span className={styles.headingAccent}>High-Performance</span>{' '}
-            Interfaces &amp; Modern Web Apps
+            <span className={styles.headingAccent}>High-Performance Interfaces</span>
+            <br />
+            &amp; Modern Web Apps
           </h2>
+        </header>
 
-          <p className={styles.bioParagraph}>{profile.bio}</p>
-
-          <div className={styles.statsStrip}>
-            {profile.stats.map(s => (
-              <div key={s.label} className={styles.statItem}>
-                <span className={styles.statValue}>{s.value}</span>
-                <span className={styles.statLabel}>{s.label}</span>
+        <div className={styles.profileLayout}>
+          <div ref={photoColRef} className={styles.identityPanel}>
+            <div className={styles.photoWrapper}>
+              <div className={styles.photoCornerGlow} aria-hidden />
+              <div className={styles.photoFrame}>
+                <Image
+                  src="/assets/myImage.png"
+                  alt={profile.name.full}
+                  fill
+                  quality={100}
+                  sizes="(min-width: 768px) 32vw, 100vw"
+                  className={styles.photoImg}
+                />
+                <div className={styles.photoOverlay} aria-hidden />
               </div>
-            ))}
+            </div>
+
+            <div className={styles.identityFooter}>
+              <div className={styles.socialRow}>
+                {profile.socials.map(s => {
+                  const Icon = SOCIAL_ICONS[s.label]
+                  if (!Icon) return null
+                  return (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.socialBtn}
+                      aria-label={s.label}
+                    >
+                      <Icon size={14} />
+                      <span>{s.label}</span>
+                    </a>
+                  )
+                })}
+              </div>
+          
+            </div>
           </div>
 
-          <div className={styles.strengthsGrid}>
-            {PILLARS.map((p, idx) => {
-              const Icon = p.icon
-              return (
-                <div
-                  key={p.title}
-                  ref={el => { pillarsRef.current[idx] = el }}
-                  className={styles.strengthCard}
-                >
-                  <div className={styles.strengthIconBox}>
-                    <Icon size={17} />
-                  </div>
-                  <h3 className={styles.strengthTitle}>{p.title}</h3>
-                  <p className={styles.strengthDesc}>{p.desc}</p>
+          <div ref={contentRef} className={styles.contentCol}>
+            <p className={styles.bioParagraph}>{profile.bio}</p>
+
+            <div className={styles.statsStrip}>
+              {profile.stats.map(s => (
+                <div key={s.label} className={styles.statItem}>
+                  <span className={styles.statValue}>{s.value}</span>
+                  <span className={styles.statLabel}>{s.label}</span>
                 </div>
-              )
-            })}
-          </div>
+              ))}
+            </div>
 
+            <div className={styles.focusHeader}>
+              <span className={styles.focusTitle}>What I bring</span>
+              <span className={styles.focusLine} aria-hidden="true" />
+            </div>
+
+            <div className={styles.strengthsGrid}>
+              {PILLARS.map((p, idx) => {
+                const Icon = p.icon
+                return (
+                  <div
+                    key={p.title}
+                    ref={el => { pillarsRef.current[idx] = el }}
+                    className={styles.strengthCard}
+                  >
+                    <div className={styles.strengthIconBox}>
+                      <Icon size={17} />
+                    </div>
+                    <h3 className={styles.strengthTitle}>{p.title}</h3>
+                    <p className={styles.strengthDesc}>{p.desc}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>
