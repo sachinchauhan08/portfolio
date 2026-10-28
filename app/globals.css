@@ -47,6 +47,12 @@
   --status-available:   #10b981;
   --status-available-glow: rgba(16, 185, 129, 0.35);
 
+  /* WhatsApp */
+  --whatsapp-green:     #25d366;
+  --whatsapp-green-hover: #20bd5a;
+  --whatsapp-green-glow: rgba(37, 211, 102, 0.28);
+  --whatsapp-green-glow-hover: rgba(37, 211, 102, 0.38);
+
   /* Hero Gradient & Nebula Accents */
   --hero-start:         #0c101c;
   --hero-mid:           #12162b;

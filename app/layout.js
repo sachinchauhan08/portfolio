@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Cursor from "@/components/ui/Cursor";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { SITE_URL } from '@/lib/siteConfig';
 import profile from '@/lib/profile';
@@ -131,6 +132,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <Cursor />
           <ScrollProgressBar />
+          <WhatsAppButton />
           {children}
           <Analytics />
         </ThemeProvider>
