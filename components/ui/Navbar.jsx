@@ -57,6 +57,8 @@ export default function Navbar() {
 
   // The intro slide (0) is the full-bleed video stage: hide the navbar there.
   const isIntro = activeSection === 'Intro'
+  const activeNavIndex = NAV_ITEMS.findIndex((item) => item.label === activeSection)
+  const activeNavItem = NAV_ITEMS[activeNavIndex] ?? NAV_ITEMS[0]
 
   // Live IST clock
   useEffect(() => {
@@ -254,6 +256,16 @@ export default function Navbar() {
           )
         })}
       </nav>
+
+      <div className={styles.mobileStatus} aria-hidden="true">
+        <span className={styles.mobileStatusEyebrow}>Now exploring</span>
+        <span className={styles.mobileStatusCurrent}>
+          <span className={styles.mobileStatusTitle}>{activeNavItem.label}</span>
+          <span className={styles.mobileStatusCount}>
+            {String(activeNavIndex + 1).padStart(2, '0')} / {String(NAV_ITEMS.length).padStart(2, '0')}
+          </span>
+        </span>
+      </div>
 
       {/* ── India time + theme toggle + mobile trigger ─────── */}
       <div className={styles.actions}>
