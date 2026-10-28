@@ -390,6 +390,15 @@
     color: var(--accent-light);
 }
 
+.whatsappChannel .channelIcon {
+    background: rgba(37, 211, 102, 0.12);
+    color: #128c4a;
+}
+
+.whatsappChannel:hover {
+    border-color: rgba(37, 211, 102, 0.4);
+}
+
 /* CTA row */
 .ctaRow {
     display: flex;

@@ -15,6 +15,7 @@ import {
     FiBriefcase,
     FiActivity,
 } from 'react-icons/fi'
+import { FaWhatsapp } from 'react-icons/fa'
 
 import profile from '@/lib/profile'
 import content from '@/data/content.json'
@@ -119,6 +120,16 @@ export default function ContactSection() {
     const channels = profile.socials
         .map((s) => ({ ...s, Icon: SOCIAL_ICONS[s.label] }))
         .filter((s) => s.Icon)
+    const whatsappNumber = profile.phone.replace(/\D/g, '')
+    if (whatsappNumber) {
+        channels.push({
+            label: 'WhatsApp',
+            href: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi ${profile.name.first}, I would like to connect with you.`)}`,
+            Icon: FaWhatsapp,
+            hint: 'Message directly',
+            className: styles.whatsappChannel,
+        })
+    }
 
     return (
         <section ref={sectionRef} className={styles.section} id="contact">
@@ -174,20 +185,21 @@ export default function ContactSection() {
                     </div>
 
                     <div className={styles.channels}>
-                        {channels.map(({ label, href, Icon }) => (
+                        {channels.map(({ label, href, Icon, hint = 'View profile', className = '' }) => (
                             <a
                                 key={label}
                                 href={href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={styles.channelCard}
+                                className={`${styles.channelCard} ${className}`}
+                                aria-label={`${label}: ${hint}`}
                             >
                                 <span className={styles.channelIcon}>
                                     <Icon size={17} />
                                 </span>
                                 <span className={styles.channelBody}>
                                     <span className={styles.channelLabel}>{label}</span>
-                                    <span className={styles.channelHint}>View profile</span>
+                                    <span className={styles.channelHint}>{hint}</span>
                                 </span>
                                 <FiArrowUpRight className={styles.channelArrow} size={16} />
                             </a>
