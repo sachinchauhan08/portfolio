@@ -3,20 +3,20 @@
 import React, { createContext, useContext, useEffect, useState, useTransition } from 'react'
 
 const ThemeContext = createContext({
-  theme: 'dark',
-  resolvedTheme: 'dark',
+  theme: 'light',
+  resolvedTheme: 'light',
   setTheme: () => {},
 })
 
 export function ThemeProvider({ children }) {
-  const [theme, setThemeState] = useState('dark')
-  const [resolvedTheme, setResolvedTheme] = useState('dark')
+  const [theme, setThemeState] = useState('light')
+  const [resolvedTheme, setResolvedTheme] = useState('light')
   const [, startTransition] = useTransition()
 
   // Initialize theme from localStorage or document attribute on mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('theme') || 'dark'
+      const stored = localStorage.getItem('theme') || 'light'
       const isSystem = stored === 'system'
       const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
       const resolved = isSystem ? (systemDark ? 'dark' : 'light') : stored
