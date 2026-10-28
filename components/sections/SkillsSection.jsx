@@ -5,10 +5,9 @@ import { gsap } from '@/lib/gsap'
 import {
   FiLayout,
   FiServer,
-  FiDatabase,
   FiTerminal,
+  FiCpu,
   FiAward,
-  FiCheck,
 } from 'react-icons/fi'
 import profile from '@/lib/profile'
 import styles from '@/styles/sections/SkillsSection.module.css'
@@ -16,7 +15,7 @@ import styles from '@/styles/sections/SkillsSection.module.css'
 const CATEGORY_ICONS = {
   'Frontend': FiLayout,
   'Backend & APIs': FiServer,
-  'Database': FiDatabase,
+  'AI & Automation': FiCpu,
   'Tools & Workflow': FiTerminal,
 }
 
@@ -147,17 +146,18 @@ export default function SkillsSection() {
               <FiAward size={22} />
             </div>
             <div className={styles.eduContent}>
-              <div className={styles.eduLeft}>
-                <div className={styles.eduDegreeRow}>
-                  <h4 className={styles.eduDegree}>{profile.education[0].degree}</h4>
-                  <span className={styles.verifiedTag}>
-                    <FiCheck size={11} /> Verified
-                  </span>
-                </div>
-                <p className={styles.eduFocus}>{profile.education[0].focus}</p>
-              </div>
-              <div className={styles.eduDivider} />
-              <p className={styles.eduDesc}>{profile.education[0].description}</p>
+              {profile.education.map((education) => (
+                <article key={education.degree} className={styles.eduEntry}>
+                  <div className={styles.eduLeft}>
+                    <h4 className={styles.eduDegree}>{education.degree}</h4>
+                    <p className={styles.eduFocus}>{education.institution}</p>
+                  </div>
+                  <div className={styles.eduMeta}>
+                    <span>{education.period}</span>
+                    <span>CGPA: {education.cgpa}</span>
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
         )}

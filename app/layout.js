@@ -25,7 +25,7 @@ export const metadata = {
     template: '%s | Sachin Chauhan',
   },
   description:
-    'Frontend & Full Stack Developer with 4+ years of experience building high-performance web applications, reusable UI architectures, and scalable full-stack systems using React, Next.js, and TypeScript.',
+    'Software Engineer with 3 years of experience building web applications, frontend features, backend functionality, and third-party integrations.',
   keywords: [
     'Sachin Chauhan',
     'Frontend Developer',
@@ -49,7 +49,7 @@ export const metadata = {
     siteName: 'Sachin Chauhan',
     title: 'Sachin Chauhan | Frontend & Full Stack Developer',
     description:
-      'Frontend & Full Stack Developer with 4+ years of experience building high-performance web applications, reusable UI architectures, and scalable full-stack systems using React, Next.js, and TypeScript.',
+      'Software Engineer with 3 years of experience building web applications, frontend features, backend functionality, and third-party integrations.',
     images: [
       {
         url: '/opengraph-image',
@@ -63,7 +63,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Sachin Chauhan | Full Stack Developer',
     description:
-      'Full Stack Engineer with 4+ years building scalable web and AI-powered systems using MERN, Next.js, and Python. Available worldwide for collaborations.',
+      'Software Engineer with 3 years of experience building web applications, frontend features, backend functionality, and third-party integrations. Available worldwide for collaborations.',
     images: ['/opengraph-image'],
   },
   robots: {

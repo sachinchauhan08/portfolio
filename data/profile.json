@@ -20,38 +20,38 @@
   "availabilityLabel": "Open to Opportunities",
   "bio": "I'm Sachin Chauhan, a developer with a background in computer applications and a passion for building reliable, user-focused web experiences. I work with modern JavaScript frameworks, reusable components, API integrations, and responsive interfaces. I enjoy solving practical problems, writing maintainable code, and continuously improving my development skills.",
   "stats": [
-    { "value": "2+", "label": "Years Experience" },
+    { "value": "3", "label": "Years Experience" },
     { "value": "4",  "label": "Projects Completed" },
     { "value": "1",  "label": "Companies" }
   ],
   "skills": [
+    "Angular",
+    "Angular Material",
     "React.js",
     "Next.js",
     "TypeScript",
     "JavaScript",
-    "Node.js",
-    "FastAPI",
-    "Express.js",
-    "MongoDB",
-    "PostgreSQL",
-    "Redis",
+    "HTML5",
+    "CSS3",
     "Tailwind CSS",
-    "REST APIs"
+    "Node.js",
+    "NestJS",
+    "Python"
   ],
   "skillGroups": [
     {
       "category": "Frontend",
       "skills": [
+        "Angular",
+        "Angular Material",
         "React.js",
         "Next.js",
         "TypeScript",
         "JavaScript",
-        "Angular",
         "HTML5",
         "CSS3",
-        "Responsive UI",
-        "RxJS",
-        "Tailwind CSS"
+        "Tailwind CSS",
+        "Responsive UI"
       ]
     },
     {
@@ -59,110 +59,80 @@
       "skills": [
         "Node.js",
         "NestJS",
-        "Express.js",
-        "FastAPI",
-        "REST APIs",
+        "RESTful APIs",
+        "API Integration",
         "JWT Authentication",
-        "Role-Based Access Control",
-        "Middleware & Guards",
-        "Swagger"
+        "Role-Based Access Control (RBAC)",
+        "PostgreSQL"
       ]
     },
     {
-      "category": "Database",
+      "category": "AI & Automation",
       "skills": [
-        "MongoDB",
-        "PostgreSQL",
-        "Redis Caching",
-        "SQL Server",
-        "Entity Framework Core",
-        "Dapper",
-        "Drizzle ORM"
+        "Python",
+        "AI Automation",
+        "n8n (Basics)"
       ]
     },
     {
       "category": "Tools & Workflow",
       "skills": [
         "Git",
-        "GitHub",
+        "GitLab",
+        "Azure",
         "Postman",
         "VS Code",
         "Cursor",
         "GitHub Copilot",
-        "Docker",
-        "AWS"
+        "Twilio",
+        "ElevenLabs",
+        "Antigravity"
       ]
     }
   ],
   "education": [
     {
       "degree": "Bachelor of Computer Applications (BCA)",
-      "institution": "University Computer Science & Applications",
-      "focus": "Software Engineering, Data Structures, Database Systems & Modern Web Technologies",
-      "description": "Comprehensive academic foundation in computer applications, object-oriented programming, systems architecture, and modern application development."
+      "institution": "Atmiya University, Rajkot",
+      "period": "2019 - 2021",
+      "cgpa": "7.0"
+    },
+    {
+      "degree": "Master of Computer Applications (MCA)",
+      "institution": "RK University, School of Engineering, Rajkot",
+      "period": "2021 - 2022",
+      "cgpa": "8.0"
     }
   ],
   "experience": [
     {
       "id": 1,
-      "role": "Software Developer",
-      "company": "Kylo Apps",
-      "companyShort": "KYLO APPS",
-      "type": "Full-time",
-      "location": "Delhi, India",
-      "period": "Jan 2022",
-      "periodEnd": "Mar 2023",
+      "role": "Software Engineer",
+      "company": "Woyce Technologies and Services Pvt Ltd",
+      "companyShort": "WOYCE TECHNOLOGIES",
+      "period": "July 2023",
+      "periodEnd": "July 2026",
       "bullets": [
-        "Built reusable React.js components and React Native features, reducing development time by 20% and improving UI performance across multiple modules.",
-        "Improved frontend performance using lazy loading, memoization, and code splitting.",
-        "Built and deployed full-stack MERN applications including dashboards, admin panels, and REST APIs."
+        "Health Wealth Safe (HWS): Implemented and maintained Angular modules, integrated third-party services, and worked with scheduled Cron jobs.",
+        "QuickHub AI: Developed CRM features with React.js and backend functionality using NestJS and PostgreSQL.",
+        "VetWise: Built tenant-based application features and integrated Twilio calling and appointment-booking functionality.",
+        "Hospital Management System: Developed a React.js web application with OPD, ward-management, and booking workflows.",
+        "Woyce AI: Integrated Stripe and Razorpay payments and improved user interfaces."
       ],
-      "desc": "Worked on frontend and full-stack development using React.js, React Native, and MERN stack technologies. Built reusable UI components, optimized application performance, and developed dashboards, admin panels, and REST APIs.",
+      "desc": "Built and maintained features across five web applications, working on frontend and backend development, third-party integrations, scheduled jobs, booking workflows, and payment systems.",
       "tech": [
+        "Angular 15",
         "React.js",
-        "React Native",
-        "JavaScript",
-        "CSS",
         "Node.js",
-        "Express.js",
-        "MongoDB"
+        "NestJS",
+        "PostgreSQL",
+        "Twilio",
+        "Cron Jobs",
+        "Python",
+        "FastAPI",
+        "Stripe",
+        "Razorpay"
       ]
-    },
-    {
-      "id": 2,
-      "role": "Full Stack Developer",
-      "company": "Sellers Commerce",
-      "companyShort": "SELLERS COMMERCE",
-      "type": "Full-time",
-      "location": "Hyderabad, India",
-      "period": "Mar 2023",
-      "periodEnd": "Jul 2025",
-      "bullets": [
-        "Led Catalog Sync, a high-throughput data pipeline automating product ingestion from FTP to Shopify, processing 100k+ SKUs per run and reducing manual effort 80%.",
-        "Delivered microfrontend architecture via shared NPM packages across 5+ product teams, accelerating release cycles 30%.",
-        "Boosted Core Web Vitals (LCP, CLS, FID) to passing thresholds using SSR, ISR, lazy loading, code splitting, and Redis caching.",
-        "Designed RESTful APIs with Node.js; integrated Stripe payments, Shopify Storefront API, automated billing and onboarding workflows."
-      ],
-      "desc": "Led Catalog Sync pipeline processing 100k+ SKUs, cutting manual effort 80%. Microfrontend architecture across 5+ teams. Core Web Vitals optimized via SSR, ISR, Redis. Stripe + Shopify API integrations.",
-      "tech": ["Next.js", "React.js", "Node.js", "Redis", "MongoDB", "AWS", "Docker", "Stripe"]
-    },
-    {
-      "id": 3,
-      "role": "Full Stack Developer",
-      "company": "Hestabit Technologies",
-      "companyShort": "HESTABIT",
-      "type": "Full-time",
-      "location": "Noida, India",
-      "period": "Jul 2025",
-      "periodEnd": "May 2026",
-      "bullets": [
-        "Architected AI-powered creator platform using Node.js, React.js & FastAPI; LLM agents simulate creator tone for automated Instagram DMs, boosting engagement 40%.",
-        "Built scalable interview assessment platform with Node.js microservices and sandboxed multi-language code execution (C, C++, Java, Python).",
-        "Implemented BullMQ + Redis queue system for async job processing, cutting API response latency 60%.",
-        "Enforced platform security via JWT, RBAC, sandboxed execution environments, and real-time activity monitoring."
-      ],
-      "desc": "AI-powered creator platform with LLM agents boosting engagement 40%. Interview assessment platform with sandboxed multi-language code execution. BullMQ + Redis cutting latency 60%. JWT, RBAC, real-time monitoring.",
-      "tech": ["React.js", "Node.js", "FastAPI", "Redis", "BullMQ", "MongoDB", "Python"]
     }
   ],
   "projects": [

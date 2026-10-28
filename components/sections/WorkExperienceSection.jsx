@@ -105,7 +105,7 @@ export default function WorkExperienceSection() {
               Work <span className={styles.titleAccent}>Experience</span>
             </h2>
             <span className={styles.countBadge}>
-              0{EXPS.length} Companies · 4+ Years
+              {String(EXPS.length).padStart(2, '0')} {EXPS.length === 1 ? 'Company' : 'Companies'} · 3 Years
             </span>
           </div>
           <p className={styles.subtitle}>
@@ -122,7 +122,7 @@ export default function WorkExperienceSection() {
 
           <ol className={styles.entries}>
             {EXPS.map((exp, i) => {
-              const isCurrent = i === EXPS.length - 1
+              const isCurrent = exp.periodEnd?.toLowerCase() === 'present'
               return (
                 <li
                   key={exp.id}
@@ -144,6 +144,13 @@ export default function WorkExperienceSection() {
                       </span>
                     </div>
                     <p className={styles.desc}>{exp.desc}</p>
+                    {exp.bullets?.length > 0 && (
+                      <ul className={styles.bullets}>
+                        {exp.bullets.map((bullet) => (
+                          <li key={bullet}>{bullet}</li>
+                        ))}
+                      </ul>
+                    )}
                     <div className={styles.stack}>
                       {exp.tech.map(t => (
                         <span key={t} className={styles.tag}>{t}</span>

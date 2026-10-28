@@ -267,19 +267,20 @@
 
 .eduContent {
   flex: 1;
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
 }
 
-.eduLeft { display: flex; flex-direction: column; gap: 0.2rem; }
-
-.eduDegreeRow {
+.eduEntry {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 0.65rem;
-  flex-wrap: wrap;
+  min-width: 0;
 }
+
+.eduLeft { display: flex; flex-direction: column; gap: 0.2rem; }
 
 .eduDegree {
   font-size: 0.98rem;
@@ -288,41 +289,29 @@
   margin: 0;
 }
 
-.verifiedTag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #6ee7b7;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  padding: 0.18rem 0.55rem;
-  border-radius: 9999px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
 .eduFocus {
   font-size: 0.76rem;
   color: var(--accent-light);
   margin: 0;
   font-weight: 500;
+  line-height: 1.45;
 }
 
-.eduDivider {
-  width: 1px;
-  height: 36px;
-  background: rgba(255,255,255,0.07);
-  flex-shrink: 0;
+.eduMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-.eduDesc {
-  font-size: 0.78rem;
-  line-height: 1.55;
-  color: #64748b;
-  margin: 0;
-  flex: 1;
+.eduMeta span {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--border-glass);
+  border-radius: 9999px;
+  background: var(--surface-glass);
 }
 
 /* Responsive */
@@ -345,12 +334,8 @@
     gap: 1rem;
   }
   .eduContent {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr;
     gap: 0.75rem;
-  }
-  .eduDivider {
-    display: none;
   }
 }
 
@@ -369,11 +354,8 @@
     padding: 1rem;
   }
   .eduContent {
-    flex-direction: column;
+    width: 100%;
     gap: 0.5rem;
-  }
-  .eduDesc {
-    font-size: 0.76rem;
   }
 }
 
@@ -480,8 +462,4 @@
 
 :global([data-theme="light"]) .eduFocus {
   color: var(--text-secondary);
-}
-
-:global([data-theme="light"]) .eduDesc {
-  color: var(--text-muted);
 }
