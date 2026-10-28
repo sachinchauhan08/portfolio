@@ -37,6 +37,10 @@ export default function Home() {
     // section is exactly 100vh tall.
     const sections = Array.from(el.querySelectorAll('section'))
     const offsetsRef = { current: [] }
+    let wheelEndTimer = null
+    let wheelGestureActive = false
+    let queuedWheelDirection = 0
+    let busyReleaseTimer = null
 
     function measure() {
       const base = el.getBoundingClientRect().top
@@ -48,6 +52,15 @@ export default function Home() {
 
     function lastOffset() {
       return offsetsRef.current[offsetsRef.current.length - 1] ?? 0
+    }
+
+    function finishTransition() {
+      busyRef.current = false
+      if (queuedWheelDirection) {
+        const direction = queuedWheelDirection
+        queuedWheelDirection = 0
+        goTo(idxRef.current + direction)
+      }
     }
 
     function nearestIdx(scrollTop) {
@@ -83,7 +96,7 @@ export default function Home() {
             ease: 'power2.out',
             delay: 0.05,
             onComplete: () => {
-              setTimeout(() => { busyRef.current = false }, 300)
+              busyReleaseTimer = setTimeout(finishTransition, 300)
             },
           })
         },
@@ -116,16 +129,26 @@ export default function Home() {
         scrollTop: offsetsRef.current[idx] ?? lastOffset(),
         duration: 0.7,
         ease: 'power3.inOut',
-        onComplete: () => { busyRef.current = false },
+        onComplete: finishTransition,
       })
     }
 
     function onWheel(e) {
       e.preventDefault()
-      if (busyRef.current) return
       // Ignore tiny noise / horizontal scrolls so one gesture = one move
       if (Math.abs(e.deltaY) < 4) return
-      goTo(idxRef.current + (e.deltaY > 0 ? 1 : -1))
+      clearTimeout(wheelEndTimer)
+      wheelEndTimer = setTimeout(() => { wheelGestureActive = false }, 220)
+      if (wheelGestureActive) return
+
+      wheelGestureActive = true
+
+      const direction = e.deltaY > 0 ? 1 : -1
+      if (busyRef.current) {
+        queuedWheelDirection = direction
+        return
+      }
+      goTo(idxRef.current + direction)
     }
 
     let touchY = 0
@@ -141,7 +164,7 @@ export default function Home() {
       if (scrollTicking) return
       scrollTicking = true
       requestAnimationFrame(() => {
-        idxRef.current = nearestIdx(el.scrollTop)
+        if (!busyRef.current) idxRef.current = nearestIdx(el.scrollTop)
         scrollTicking = false
       })
     }
@@ -193,7 +216,7 @@ export default function Home() {
       clearTimeout(resizeTimer)
       resizeTimer = setTimeout(() => {
         measure()
-        idxRef.current = nearestIdx(el.scrollTop)
+        if (!busyRef.current) idxRef.current = nearestIdx(el.scrollTop)
       }, 120)
     }
 
@@ -201,7 +224,7 @@ export default function Home() {
     if (typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(() => {
         measure()
-        idxRef.current = nearestIdx(el.scrollTop)
+        if (!busyRef.current) idxRef.current = nearestIdx(el.scrollTop)
       })
       ro.observe(el)
       sections.forEach((s) => ro.observe(s))
@@ -228,6 +251,8 @@ export default function Home() {
       window.removeEventListener('footer-loop-back', onFooterLoop)
       window.removeEventListener('portfolio-navigate', onPortfolioNavigate)
       clearTimeout(resizeTimer)
+      clearTimeout(wheelEndTimer)
+      clearTimeout(busyReleaseTimer)
       tweenRef.current?.kill()
     }
   }, [])
