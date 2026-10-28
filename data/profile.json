@@ -62,8 +62,7 @@
         "RESTful APIs",
         "API Integration",
         "JWT Authentication",
-        "Role-Based Access Control (RBAC)",
-        "PostgreSQL"
+        "Role-Based Access Control (RBAC)"
       ]
     },
     {
@@ -84,9 +83,26 @@
         "VS Code",
         "Cursor",
         "GitHub Copilot",
-        "Twilio",
         "ElevenLabs",
         "Antigravity"
+      ]
+    },
+    {
+      "category": "Data & Infrastructure",
+      "skills": [
+        "MongoDB",
+        "PostgreSQL",
+        "Redis",
+        "Drizzle ORM"
+      ]
+    },
+    {
+      "category": "Payments & Integrations",
+      "skills": [
+        "Stripe",
+        "Razorpay",
+        "PayPal",
+        "Twilio"
       ]
     }
   ],

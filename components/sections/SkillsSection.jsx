@@ -7,7 +7,8 @@ import {
   FiServer,
   FiTerminal,
   FiCpu,
-  FiAward,
+  FiDatabase,
+  FiCreditCard,
 } from 'react-icons/fi'
 import profile from '@/lib/profile'
 import styles from '@/styles/sections/SkillsSection.module.css'
@@ -17,17 +18,14 @@ const CATEGORY_ICONS = {
   'Backend & APIs': FiServer,
   'AI & Automation': FiCpu,
   'Tools & Workflow': FiTerminal,
+  'Data & Infrastructure': FiDatabase,
+  'Payments & Integrations': FiCreditCard,
 }
 
 export default function SkillsSection() {
-  const totalSkills = profile.skillGroups.reduce(
-    (total, group) => total + group.skills.length,
-    0
-  )
   const sectionRef  = useRef(null)
   const headerRef   = useRef(null)
   const cardsRef    = useRef([])
-  const eduCardRef  = useRef(null)
 
   useEffect(() => {
     const section = sectionRef.current
@@ -41,10 +39,8 @@ export default function SkillsSection() {
     function resetAnim() {
       gsap.killTweensOf(headerRef.current)
       cardsRef.current.forEach(el => el && gsap.killTweensOf(el))
-      gsap.killTweensOf(eduCardRef.current)
       gsap.set(headerRef.current, { opacity: 0, y: 30 })
       cardsRef.current.forEach(el => el && gsap.set(el, { opacity: 0, y: 25, scale: 0.98 }))
-      if (eduCardRef.current) gsap.set(eduCardRef.current, { opacity: 0, y: 20 })
     }
 
     function playAnim() {
@@ -53,7 +49,6 @@ export default function SkillsSection() {
       cardsRef.current.forEach((el, idx) => {
         if (el) gsap.to(el, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out', delay: 0.2 + idx * 0.08 })
       })
-      if (eduCardRef.current) gsap.to(eduCardRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', delay: 0.55 })
     }
 
     if (isMobileOrTablet) {
@@ -108,14 +103,10 @@ export default function SkillsSection() {
                 A practical toolkit for building polished interfaces and dependable web applications.
               </p>
             </div>
-            <div className={styles.overviewStats} aria-label={`${totalSkills} skills across ${profile.skillGroups.length} disciplines`}>
-              <span className={styles.overviewValue}>{String(totalSkills).padStart(2, '0')}</span>
-              <span className={styles.overviewLabel}>Skills<br />across {String(profile.skillGroups.length).padStart(2, '0')} disciplines</span>
-            </div>
           </div>
         </div>
 
-        {/* 4 Skill Category Cards */}
+        {/* Skill category cards */}
         <div className={styles.skillsGrid}>
           {profile.skillGroups.map((group, idx) => {
             const Icon = CATEGORY_ICONS[group.category] || FiTerminal
@@ -150,29 +141,6 @@ export default function SkillsSection() {
             )
           })}
         </div>
-
-        {/* Education Banner */}
-        {profile.education && profile.education.length > 0 && (
-          <div ref={eduCardRef} className={styles.eduBanner}>
-            <div className={styles.eduIconWrap}>
-              <FiAward size={22} />
-            </div>
-            <div className={styles.eduContent}>
-              {profile.education.map((education) => (
-                <article key={education.degree} className={styles.eduEntry}>
-                  <div className={styles.eduLeft}>
-                    <h4 className={styles.eduDegree}>{education.degree}</h4>
-                    <p className={styles.eduFocus}>{education.institution}</p>
-                  </div>
-                  <div className={styles.eduMeta}>
-                    <span>{education.period}</span>
-                    <span>CGPA: {education.cgpa}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        )}
 
       </div>
     </section>

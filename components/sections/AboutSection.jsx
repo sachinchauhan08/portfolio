@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { gsap } from '@/lib/gsap'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
-import { FiLayers, FiCpu, FiTrendingUp } from 'react-icons/fi'
+import { FiAward } from 'react-icons/fi'
 import profile from '@/lib/profile'
 import styles from '@/styles/sections/AboutSection.module.css'
 
@@ -13,29 +13,10 @@ const SOCIAL_ICONS = {
   LinkedIn: FaLinkedinIn,
 }
 
-const PILLARS = [
-  {
-    icon: FiLayers,
-    title: 'Frontend Architecture',
-    desc: 'Modular React & Next.js systems, responsive component libraries, and clean state workflows.',
-  },
-  {
-    icon: FiCpu,
-    title: 'API & Microservices',
-    desc: 'Scalable RESTful endpoints, JWT/RBAC security, Redis caching, and async job queues with BullMQ.',
-  },
-  {
-    icon: FiTrendingUp,
-    title: 'Speed & Optimization',
-    desc: 'Core Web Vitals tuning, SSR/ISR data fetching, memoization, and optimized asset pipelines.',
-  },
-]
-
 export default function AboutSection() {
   const sectionRef  = useRef(null)
   const photoColRef = useRef(null)
   const contentRef  = useRef(null)
-  const pillarsRef  = useRef([])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -49,19 +30,14 @@ export default function AboutSection() {
     function resetAnim() {
       gsap.killTweensOf(photoColRef.current)
       gsap.killTweensOf(contentRef.current)
-      pillarsRef.current.forEach(el => el && gsap.killTweensOf(el))
-      gsap.set(photoColRef.current, { opacity: 0, x: -40 })
-      gsap.set(contentRef.current,  { opacity: 0, y: 30 })
-      pillarsRef.current.forEach(el => el && gsap.set(el, { opacity: 0, y: 20 }))
+      gsap.set(photoColRef.current, { opacity: 0, x: -32 })
+      gsap.set(contentRef.current, { opacity: 0, y: 24 })
     }
 
     function playAnim() {
       resetAnim()
-      gsap.to(photoColRef.current, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' })
-      gsap.to(contentRef.current,  { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.15 })
-      pillarsRef.current.forEach((el, idx) => {
-        if (el) gsap.to(el, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', delay: 0.4 + idx * 0.08 })
-      })
+      gsap.to(photoColRef.current, { opacity: 1, x: 0, duration: 0.75, ease: 'power3.out' })
+      gsap.to(contentRef.current, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out', delay: 0.12 })
     }
 
     if (isMobileOrTablet) {
@@ -97,26 +73,11 @@ export default function AboutSection() {
   return (
     <section ref={sectionRef} className={styles.section} id="about">
       <div className={styles.bgNoise} aria-hidden />
-      <div className={styles.gridLines} aria-hidden />
 
       <div className={styles.container}>
-        <header className={styles.aboutHeader}>
-          <div className={styles.eyebrowWrap}>
-            <span className={styles.eyebrowLine} />
-            <span className={styles.eyebrow}>About Me</span>
-          </div>
-          <h2 className={styles.heading}>
-            Engineering{' '}
-            <span className={styles.headingAccent}>High-Performance Interfaces</span>
-            <br />
-            &amp; Modern Web Apps
-          </h2>
-        </header>
-
         <div className={styles.profileLayout}>
           <div ref={photoColRef} className={styles.identityPanel}>
             <div className={styles.photoWrapper}>
-              <div className={styles.photoCornerGlow} aria-hidden />
               <div className={styles.photoFrame}>
                 <Image
                   src="/assets/myImage.png"
@@ -127,6 +88,10 @@ export default function AboutSection() {
                   className={styles.photoImg}
                 />
                 <div className={styles.photoOverlay} aria-hidden />
+                <div className={styles.photoAvailability}>
+                  <span className={styles.statusDot} aria-hidden />
+                  <span>{profile.availabilityLabel}</span>
+                </div>
               </div>
             </div>
 
@@ -150,14 +115,29 @@ export default function AboutSection() {
                   )
                 })}
               </div>
-          
+              <p className={styles.locationNote}>
+                <span>{profile.location.based}</span>
+                <span className={styles.locationDivider} aria-hidden>·</span>
+                <span>{profile.location.availability}</span>
+              </p>
             </div>
           </div>
 
           <div ref={contentRef} className={styles.contentCol}>
+            <header className={styles.introHeader}>
+              <div className={styles.eyebrowWrap}>
+                <span className={styles.eyebrowLine} aria-hidden />
+                <span className={styles.eyebrow}>About Me</span>
+              </div>
+              <h2 className={styles.heading}>
+                <span className={styles.headingAccent}>{profile.name.full}</span>
+                <span className={styles.headingRole}>{profile.roles.short}</span>
+              </h2>
+            </header>
+
             <p className={styles.bioParagraph}>{profile.bio}</p>
 
-            <div className={styles.statsStrip}>
+            <div className={styles.statsStrip} role="group" aria-label="Career highlights">
               {profile.stats.map(s => (
                 <div key={s.label} className={styles.statItem}>
                   <span className={styles.statValue}>{s.value}</span>
@@ -166,29 +146,31 @@ export default function AboutSection() {
               ))}
             </div>
 
-            <div className={styles.focusHeader}>
-              <span className={styles.focusTitle}>What I bring</span>
-              <span className={styles.focusLine} aria-hidden="true" />
-            </div>
-
-            <div className={styles.strengthsGrid}>
-              {PILLARS.map((p, idx) => {
-                const Icon = p.icon
-                return (
-                  <div
-                    key={p.title}
-                    ref={el => { pillarsRef.current[idx] = el }}
-                    className={styles.strengthCard}
-                  >
-                    <div className={styles.strengthIconBox}>
-                      <Icon size={17} />
-                    </div>
-                    <h3 className={styles.strengthTitle}>{p.title}</h3>
-                    <p className={styles.strengthDesc}>{p.desc}</p>
+            {profile.education && profile.education.length > 0 && (
+              <section className={styles.educationSection} aria-labelledby="education-title">
+                <div className={styles.educationHeading}>
+                  <div>
+                    <span className={styles.educationEyebrow}>Academic foundation</span>
+                    <h3 className={styles.educationTitle} id="education-title">Education</h3>
                   </div>
-                )
-              })}
-            </div>
+                  <FiAward className={styles.educationIcon} size={19} aria-hidden />
+                </div>
+                <div className={styles.educationGrid}>
+                  {profile.education.map((education) => (
+                    <article key={education.degree} className={styles.educationCard}>
+                      <div className={styles.educationDetails}>
+                        <h4 className={styles.educationDegree}>{education.degree}</h4>
+                        <p className={styles.educationInstitution}>{education.institution}</p>
+                      </div>
+                      <div className={styles.educationMeta}>
+                        <span className={styles.educationPeriod}>{education.period}</span>
+                        <span className={styles.educationGrade}>CGPA <strong>{education.cgpa}</strong></span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </div>
       </div>

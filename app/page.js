@@ -35,7 +35,7 @@ export default function Home() {
     // landed on "Skills"). Measuring the live layout keeps navigation exact
     // on mobile while behaving identically to before on desktop, where each
     // section is exactly 100vh tall.
-    const sections = Array.from(el.querySelectorAll('section'))
+    const sections = Array.from(el.querySelectorAll(':scope > div > section'))
     const offsetsRef = { current: [] }
     let wheelEndTimer = null
     let wheelGestureActive = false
@@ -145,11 +145,29 @@ export default function Home() {
         ? e.target.closest('[data-inner-scroll]')
         : null
       if (canScrollInner(innerScroller, e.deltaY)) return
+      const targetInsideScroller = e.target instanceof Node && el.contains(e.target)
 
       if (useNaturalScroll) {
         if (Math.abs(e.deltaY) < 4) return
         const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8
         const atTop = el.scrollTop < 8
+
+        if (!targetInsideScroller) {
+          e.preventDefault()
+          if (busyRef.current) return
+
+          if ((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) {
+            const targetScrollTop = e.deltaY > 0 ? offsetsRef.current[0] ?? 0 : lastOffset()
+            const targetIdx = e.deltaY > 0 ? 0 : TOTAL - 1
+            fadeLoop(targetScrollTop, targetIdx)
+            return
+          }
+
+          const deltaMultiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? el.clientHeight : 1
+          el.scrollTop += e.deltaY * deltaMultiplier
+          return
+        }
+
         if (!busyRef.current && ((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop))) {
           e.preventDefault()
           const targetScrollTop = e.deltaY > 0 ? offsetsRef.current[0] ?? 0 : lastOffset()
@@ -214,7 +232,7 @@ export default function Home() {
 
     const useNaturalScroll = window.matchMedia('(max-width: 1024px)').matches
 
-    el.addEventListener('wheel',  onWheel,  { passive: false })
+    window.addEventListener('wheel', onWheel, { passive: false })
     el.addEventListener('scroll', onScroll, { passive: true  })
 
     let mTouchY = 0
@@ -274,7 +292,7 @@ export default function Home() {
     window.addEventListener('portfolio-navigate', onPortfolioNavigate)
 
     return () => {
-      el.removeEventListener('wheel',  onWheel)
+      window.removeEventListener('wheel', onWheel)
       el.removeEventListener('scroll', onScroll)
       if (!useNaturalScroll) {
         el.removeEventListener('touchstart', onTouchStart)

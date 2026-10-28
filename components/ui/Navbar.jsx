@@ -79,7 +79,7 @@ export default function Navbar() {
     const scroller = document.querySelector('main')
     if (!scroller) return
 
-    const sections = Array.from(scroller.querySelectorAll('section'))
+    const sections = Array.from(scroller.querySelectorAll(':scope > div > section'))
     const offsets = []
 
     function measure() {
