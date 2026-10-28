@@ -2,13 +2,126 @@
 
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import {
+  SiAngular,
+  SiDocker,
+  SiDotnet,
+  SiDrizzle,
+  SiExpress,
+  SiFastapi,
+  SiGit,
+  SiGithub,
+  SiGithubcopilot,
+  SiHtml5,
+  SiJavascript,
+  SiMongodb,
+  SiNestjs,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiPostgresql,
+  SiPostman,
+  SiPython,
+  SiReact,
+  SiRedis,
+  SiSwagger,
+  SiTailwindcss,
+  SiTypescript,
+  SiVscodium,
+} from 'react-icons/si'
+import {
+  FiCloud,
+  FiCode,
+  FiCommand,
+  FiDatabase,
+  FiLayers,
+  FiLayout,
+  FiLock,
+  FiShield,
+  FiZap,
+} from 'react-icons/fi'
+import profile from '@/lib/profile'
+import styles from '@/styles/sections/HeroSection.module.css'
+
+const TECHNOLOGY_ICONS = {
+  'React.js': SiReact,
+  'React Native': SiReact,
+  'Next.js': SiNextdotjs,
+  TypeScript: SiTypescript,
+  JavaScript: SiJavascript,
+  Angular: SiAngular,
+  HTML5: SiHtml5,
+  CSS3: FiCode,
+  'Responsive UI': FiLayout,
+  RxJS: FiZap,
+  'Tailwind CSS': SiTailwindcss,
+  'Node.js': SiNodedotjs,
+  Python: SiPython,
+  NestJS: SiNestjs,
+  'Express.js': SiExpress,
+  FastAPI: SiFastapi,
+  'REST APIs': FiCode,
+  'JWT Authentication': FiLock,
+  'Role-Based Access Control': FiShield,
+  'Middleware & Guards': FiLayers,
+  Swagger: SiSwagger,
+  MongoDB: SiMongodb,
+  PostgreSQL: SiPostgresql,
+  'Redis Caching': SiRedis,
+  Redis: SiRedis,
+  'SQL Server': FiDatabase,
+  'Entity Framework Core': SiDotnet,
+  Dapper: FiDatabase,
+  'Drizzle ORM': SiDrizzle,
+  Git: SiGit,
+  GitHub: SiGithub,
+  Postman: SiPostman,
+  'VS Code': SiVscodium,
+  Cursor: FiCommand,
+  'GitHub Copilot': SiGithubcopilot,
+  Docker: SiDocker,
+  AWS: FiCloud,
+}
+
+const SKILL_ENTRIES = [
+  ...profile.skillGroups.flatMap((group) =>
+    group.skills.map((name) => ({
+      name,
+      category: group.category.toLowerCase().replaceAll(' & ', '-').replaceAll(' ', '-'),
+    }))
+  ),
+  ...profile.skills.map((name) => ({ name, category: 'core-stack' })),
+  { name: 'Python', category: 'core-stack' },
+]
+
+const TECHNOLOGIES = SKILL_ENTRIES
+  .filter((technology, index, list) => (
+    list.findIndex((item) => item.name.toLowerCase().replace(/ caching$/, '') === technology.name.toLowerCase().replace(/ caching$/, '')) === index
+  ))
+  .map(({ name, category }) => ({
+    name,
+    category,
+    Icon: TECHNOLOGY_ICONS[name] || FiCode,
+  }))
+
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
+const ANCHORS = TECHNOLOGIES.map((_, index) => {
+  const y = 1 - ((index + 0.5) / TECHNOLOGIES.length) * 2
+  const radius = Math.sqrt(1 - y * y)
+  const angle = GOLDEN_ANGLE * index
+  return [Math.cos(angle) * radius, y, Math.sin(angle) * radius]
+})
 
 export default function HeroVisual() {
   const mountRef = useRef(null)
+  const iconRefs = useRef([])
 
   useEffect(() => {
     const mount = mountRef.current
     if (!mount) return
+    const anchors = ANCHORS.map((point) => (
+      new THREE.Vector3(...point).multiplyScalar(2.48)
+    ))
+    const worldPosition = new THREE.Vector3()
 
     // Check WebGL availability
     let renderer
@@ -192,18 +305,38 @@ export default function HeroVisual() {
         mouse.y += (mouse.targetY - mouse.y) * 0.045
 
         // Outer rotation
-        outerMesh.rotation.y += 0.25 * dt + mouse.x * 0.02
-        outerMesh.rotation.x += 0.15 * dt + mouse.y * 0.02
+        outerMesh.rotation.y += 0.12 * dt + mouse.x * 0.008
+        outerMesh.rotation.x += 0.07 * dt + mouse.y * 0.008
 
         // Inner core counter-rotation
-        innerMesh.rotation.y -= 0.45 * dt
-        innerMesh.rotation.z += 0.2 * dt
+        innerMesh.rotation.y -= 0.22 * dt
+        innerMesh.rotation.z += 0.1 * dt
 
         // Orbital particle halo spin and tilt
-        particleHalo.rotation.y += 0.12 * dt
-        particleHalo.rotation.x = Math.sin(clock.getElapsedTime() * 0.5) * 0.2 + mouse.y * 0.1
-        particleHalo.rotation.z = mouse.x * 0.15
+        particleHalo.rotation.y += 0.06 * dt
+        particleHalo.rotation.x = Math.sin(clock.getElapsedTime() * 0.25) * 0.16 + mouse.y * 0.04
+        particleHalo.rotation.z = mouse.x * 0.06
       }
+
+      outerMesh.updateMatrixWorld(true)
+      anchors.forEach((anchor, index) => {
+        const icon = iconRefs.current[index]
+        if (!icon) return
+
+        worldPosition.copy(anchor)
+        outerMesh.localToWorld(worldPosition)
+        const facing = worldPosition.z / 2.48
+        worldPosition.project(camera)
+
+        const x = ((worldPosition.x + 1) / 2) * W
+        const y = ((1 - worldPosition.y) / 2) * H
+        const inFront = facing > 0.02
+        icon.style.left = `${x}px`
+        icon.style.top = `${y}px`
+        icon.style.opacity = inFront ? String(Math.min(1, 0.55 + facing * 0.45)) : '0'
+        icon.style.zIndex = String(Math.round((facing + 1) * 10))
+        icon.style.transform = `translate(-50%, -50%) scale(${inFront ? 0.82 + facing * 0.12 : 0.7})`
+      })
 
       renderer.render(scene, camera)
     }
@@ -248,17 +381,20 @@ export default function HeroVisual() {
   return (
     <div
       ref={mountRef}
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        minHeight: '360px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        pointerEvents: 'none',
-      }}
+      className={styles.visualCanvas}
       aria-hidden="true"
-    />
+    >
+      {TECHNOLOGIES.map(({ name, category, Icon }, index) => (
+        <span
+          key={name}
+          ref={(element) => { iconRefs.current[index] = element }}
+          className={styles.techIcon}
+          data-category={category}
+          title={name}
+        >
+          <Icon size={20} />
+        </span>
+      ))}
+    </div>
   )
 }

@@ -255,8 +255,52 @@
 }
 
 .visualWrap :global(canvas) {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   max-width: 100%;
   opacity: 0.82;
+}
+
+.visualCanvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  pointer-events: none;
+}
+
+.techIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--border-glass-light);
+  border-radius: 50%;
+  background: var(--navbar-bg);
+  color: var(--text-accent);
+  box-shadow: 0 0.5rem 1.5rem -0.5rem rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(12px);
+  transition: opacity 0.18s ease;
+}
+
+.techIcon svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.techIcon[data-category="frontend"] { color: var(--accent-blue); }
+.techIcon[data-category="backend-and-apis"] { color: var(--accent-violet); }
+.techIcon[data-category="database"] { color: var(--accent-cyan); }
+.techIcon[data-category="tools-and-workflow"] { color: var(--text-accent); }
+
+:global([data-theme="dark"]) .techIcon {
+  background: rgba(14, 18, 27, 0.92);
+  box-shadow: 0 0.5rem 1.5rem -0.5rem rgba(0, 0, 0, 0.75);
 }
 
 .scrollIndicator {
@@ -315,6 +359,16 @@
   .visualWrap {
     height: clamp(18rem, 46vh, 32rem);
     min-height: 18rem;
+  }
+
+  .techIcon {
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+
+  .techIcon svg {
+    width: 1.1rem;
+    height: 1.1rem;
   }
 
   .scrollIndicator {
@@ -404,6 +458,17 @@
     min-height: 15rem;
     margin: -0.3rem auto 0;
   }
+
+  .techIcon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .techIcon svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
 }
 
 @media (max-width: 420px) {
@@ -449,4 +514,5 @@
   .resumeBtn {
     transition: none;
   }
+
 }
