@@ -51,6 +51,19 @@
   gap: var(--section-heading-gap);
 }
 
+.headerMain {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.headerCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
 .eyebrowWrap {
   display: inline-flex;
   align-items: center;
@@ -98,9 +111,37 @@
 .subtitle {
   font-size: var(--font-body);
   line-height: var(--line-body);
-  color: #64748b;
+  color: var(--text-secondary);
   max-width: 52rem;
   margin: 0;
+}
+
+.overviewStats {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-shrink: 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border-glass);
+  border-radius: 0.9rem;
+  background: var(--surface-glass);
+}
+
+.overviewValue {
+  color: var(--text-primary);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+.overviewLabel {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* Skills Grid - 4 cards */
@@ -111,133 +152,167 @@
 }
 
 .skillCard {
-  background: rgba(12, 16, 24, 0.7);
+  --card-accent: #818cf8;
+  --card-accent-soft: rgba(99, 102, 241, 0.12);
+  background:
+    radial-gradient(ellipse at 100% 0%, var(--card-accent-soft), transparent 48%),
+    var(--surface-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.065);
-  border-radius: var(--card-radius);
-  padding: var(--card-padding);
+  border: 1px solid var(--border-glass);
+  border-radius: 1.15rem;
+  padding: clamp(1.05rem, 1.35vw, 1.4rem);
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1rem;
   box-shadow: var(--card-shadow);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.35s ease;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
-/* Top gradient accent line per card */
 .skillCard::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 1.25rem;
-  right: 1.25rem;
-  height: 1px;
-  border-radius: 9999px;
-  opacity: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+  opacity: 0.55;
   transition: opacity 0.3s ease;
 }
 
-.skillCard:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
-.skillCard:nth-child(2)::before { background: linear-gradient(90deg, #8b5cf6, #06b6d4); }
-.skillCard:nth-child(3)::before { background: linear-gradient(90deg, #06b6d4, #10b981); }
-.skillCard:nth-child(4)::before { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+.skillCard::after {
+  position: absolute;
+  top: 0.55rem;
+  right: 1rem;
+  z-index: -1;
+  color: var(--card-accent);
+  font-size: clamp(3rem, 4vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.09em;
+  opacity: 0.07;
+  transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.skillCard:nth-child(1) { --card-accent: #60a5fa; --card-accent-soft: rgba(59, 130, 246, 0.14); }
+.skillCard:nth-child(1)::after { content: '01'; }
+.skillCard:nth-child(2) { --card-accent: #a78bfa; --card-accent-soft: rgba(139, 92, 246, 0.14); }
+.skillCard:nth-child(2)::after { content: '02'; }
+.skillCard:nth-child(3) { --card-accent: #22d3ee; --card-accent-soft: rgba(6, 182, 212, 0.13); }
+.skillCard:nth-child(3)::after { content: '03'; }
+.skillCard:nth-child(4) { --card-accent: #34d399; --card-accent-soft: rgba(16, 185, 129, 0.12); }
+.skillCard:nth-child(4)::after { content: '04'; }
 
 .skillCard:hover {
-  border-color: rgba(99, 102, 241, 0.32);
-  background: rgba(16, 22, 36, 0.85);
-  box-shadow: 0 14px 28px -16px var(--accent-glow);
-  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--card-accent) 48%, transparent);
+  background-color: var(--surface-card-hover);
+  box-shadow: 0 22px 45px -28px var(--card-accent), 0 0 0 1px var(--card-accent-soft);
+  transform: translateY(-6px);
 }
 
 .skillCard:hover::before { opacity: 1; }
+.skillCard:hover::after { opacity: 0.13; transform: translate(-0.2rem, 0.15rem); }
 
 .cardHeader {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  position: relative;
+  z-index: 1;
 }
 
 .iconWrap {
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.22);
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: var(--card-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--card-accent) 25%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-light);
+  color: var(--card-accent);
   flex-shrink: 0;
-  transition: all 0.25s ease;
+  transition: transform 0.35s ease, background-color 0.3s ease;
 }
 
 .skillCard:hover .iconWrap {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%);
-  border-color: rgba(99, 102, 241, 0.45);
+  background: color-mix(in srgb, var(--card-accent) 18%, transparent);
+  transform: rotate(-6deg) scale(1.06);
 }
 
 .cardTitleWrap {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  min-width: 0;
 }
 
 .categoryName {
   font-size: var(--font-h3);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
 .countBadge {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .divider {
   height: 1px;
-  background: rgba(255,255,255,0.06);
+  background: var(--border-glass);
   margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .tagsWrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.45rem;
+  position: relative;
+  z-index: 1;
 }
 
 .skillTag {
-  font-size: 0.73rem;
+  font-size: 0.72rem;
   font-weight: 500;
-  color: #94a3b8;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 6px;
-  padding: 0.26rem 0.65rem;
+  color: var(--text-secondary);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
   cursor: default;
 }
 
 .skillTag:hover {
-  background: rgba(99, 102, 241, 0.14);
-  border-color: rgba(99, 102, 241, 0.32);
-  color: #e2e8f0;
-  transform: translateY(-1px);
+  background: var(--card-accent-soft);
+  border-color: color-mix(in srgb, var(--card-accent) 38%, transparent);
+  color: var(--text-primary);
+  transform: translateY(-2px);
 }
 
 /* Education Banner */
 .eduBanner {
-  background: rgba(12, 16, 24, 0.6);
-  border: 1px solid rgba(255,255,255,0.065);
+  background: var(--surface-card);
+  border: 1px solid var(--border-glass);
   border-radius: 1.25rem;
   padding: 1.1rem 1.6rem;
   backdrop-filter: blur(14px);
@@ -249,7 +324,7 @@
 }
 
 .eduBanner:hover {
-  border-color: rgba(16, 185, 129, 0.25);
+  border-color: var(--status-available-glow);
 }
 
 .eduIconWrap {
@@ -261,7 +336,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6ee7b7;
+  color: var(--status-available);
   flex-shrink: 0;
 }
 
@@ -285,7 +360,7 @@
 .eduDegree {
   font-size: 0.98rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -340,10 +415,17 @@
 }
 
 @media (max-width: 767px) {
+  .headerMain {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
   .skillsGrid {
     grid-template-columns: 1fr;
     gap: var(--grid-gap);
   }
+
   .titleRow {
     flex-direction: column;
     align-items: flex-start;
@@ -414,28 +496,22 @@
 }
 
 :global([data-theme="light"]) .skillCard {
-  background: var(--surface-card);
-  border-color: var(--border-glass-light);
+  border-color: var(--border-glass);
   box-shadow: var(--card-shadow);
 }
 
 :global([data-theme="light"]) .skillCard:hover {
-  background: var(--surface-card-hover);
-  border-color: var(--accent);
+  border-color: color-mix(in srgb, var(--card-accent) 48%, transparent);
 }
 
-:global([data-theme="light"]) .categoryName {
-  color: var(--text-primary);
-}
-
-:global([data-theme="light"]) .countBadge {
-  background: rgba(79, 70, 229, 0.08);
-  color: var(--accent);
-  border-color: rgba(79, 70, 229, 0.2);
-}
-
-:global([data-theme="light"]) .divider {
-  background: rgba(15, 23, 42, 0.07);
+@media (prefers-reduced-motion: reduce) {
+  .skillCard,
+  .skillCard::before,
+  .skillCard::after,
+  .iconWrap,
+  .skillTag {
+    transition-duration: 0.01ms;
+  }
 }
 
 :global([data-theme="light"]) .skillTag {
@@ -445,9 +521,9 @@
 }
 
 :global([data-theme="light"]) .skillTag:hover {
-  background: rgba(79, 70, 229, 0.08);
-  border-color: var(--accent);
-  color: var(--accent);
+  background: var(--card-accent-soft);
+  border-color: color-mix(in srgb, var(--card-accent) 38%, transparent);
+  color: var(--card-accent);
 }
 
 :global([data-theme="light"]) .eduBanner {

@@ -20,6 +20,10 @@ const CATEGORY_ICONS = {
 }
 
 export default function SkillsSection() {
+  const totalSkills = profile.skillGroups.reduce(
+    (total, group) => total + group.skills.length,
+    0
+  )
   const sectionRef  = useRef(null)
   const headerRef   = useRef(null)
   const cardsRef    = useRef([])
@@ -94,15 +98,21 @@ export default function SkillsSection() {
             <span className={styles.eyebrowLine} />
             <span className={styles.eyebrow}>Technical Expertise</span>
           </div>
-          <div className={styles.titleRow}>
-            <h2 className={styles.title}>
-              Skills &amp;{' '}
-              <span className={styles.titleAccent}>Specializations</span>
-            </h2>
+          <div className={styles.headerMain}>
+            <div className={styles.headerCopy}>
+              <h2 className={styles.title}>
+                Skills &amp;{' '}
+                <span className={styles.titleAccent}>Specializations</span>
+              </h2>
+              <p className={styles.subtitle}>
+                A practical toolkit for building polished interfaces and dependable web applications.
+              </p>
+            </div>
+            <div className={styles.overviewStats} aria-label={`${totalSkills} skills across ${profile.skillGroups.length} disciplines`}>
+              <span className={styles.overviewValue}>{String(totalSkills).padStart(2, '0')}</span>
+              <span className={styles.overviewLabel}>Skills<br />across {String(profile.skillGroups.length).padStart(2, '0')} disciplines</span>
+            </div>
           </div>
-          <p className={styles.subtitle}>
-            Production-proven tools and frameworks across frontend engineering, backend services, databases, and modern developer workflows.
-          </p>
         </div>
 
         {/* 4 Skill Category Cards */}
@@ -121,7 +131,9 @@ export default function SkillsSection() {
                   </div>
                   <div className={styles.cardTitleWrap}>
                     <h3 className={styles.categoryName}>{group.category}</h3>
-                    <span className={styles.countBadge}>{group.skills.length} Technologies</span>
+                    <span className={styles.countBadge}>
+                      {String(idx + 1).padStart(2, '0')} / {String(group.skills.length).padStart(2, '0')} skills
+                    </span>
                   </div>
                 </div>
 
