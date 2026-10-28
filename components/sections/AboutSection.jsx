@@ -107,7 +107,7 @@ export default function AboutSection() {
             <div className={styles.photoCornerGlow} aria-hidden />
             <div className={styles.photoFrame}>
               <Image
-                src="/assets/about.webp"
+                src="/assets/myImage.png"
                 alt={profile.name.full}
                 fill
                 quality={100}

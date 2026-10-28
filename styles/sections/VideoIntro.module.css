@@ -16,7 +16,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: clamp(4.5rem, 9vh, 7rem) clamp(1.1rem, 4vw, 4.5rem) clamp(3rem, 7vh, 5rem);
+    padding: var(--section-top-space) var(--page-gutter) var(--section-bottom-space);
 }
 
 /* ── Ambient Blurred Background Video Bloom ────────────────── */
@@ -68,7 +68,7 @@
     position: relative;
     z-index: 5;
     width: 100%;
-    max-width: 1240px;
+    max-width: var(--content-max-width);
     height: 100%;
     display: flex;
     align-items: center;
@@ -343,7 +343,7 @@
 .permissionTitle {
     margin: 0;
     color: #f8fafc;
-    font-family: var(--font-baloo), sans-serif;
+    font-family: var(--font-geist-sans), sans-serif;
     font-size: 1.65rem;
     font-weight: 600;
     line-height: 1.2;
@@ -436,10 +436,6 @@
 
 /* ── Tablet / small laptop: < 1024px ─────────────────────── */
 @media (max-width: 1024px) {
-    .section {
-        padding: 4rem 1.8rem 3.2rem;
-    }
-
     .stage {
         max-width: 900px;
     }
@@ -452,10 +448,6 @@
 
 /* ── Mobile: < 768px ─────────────────────────────────────── */
 @media (max-width: 767px) {
-    .section {
-        padding: 4rem 1.1rem 3rem;
-    }
-
     .frame {
         border-radius: 16px;
     }
@@ -515,10 +507,6 @@
 
 /* ── Compact mobile: < 640px ─────────────────────────────── */
 @media (max-width: 640px) {
-    .section {
-        padding: 3.6rem 0.9rem 2.6rem;
-    }
-
     .frame,
     .frameGlow {
         border-radius: 14px;

@@ -11,7 +11,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: clamp(4.5rem, 8vh, 6rem) clamp(1.5rem, 5vw, 5rem) clamp(1.75rem, 3.5vh, 2.75rem);
+    padding: var(--section-top-space) var(--page-gutter) var(--section-bottom-space);
     background:
         radial-gradient(ellipse 60% 55% at 18% 22%, rgba(99, 102, 241, 0.14) 0%, transparent 62%),
         radial-gradient(ellipse 55% 50% at 85% 78%, rgba(6, 182, 212, 0.1) 0%, transparent 58%),
@@ -90,7 +90,7 @@
     z-index: 2;
     flex: 1;
     width: 100%;
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
@@ -104,6 +104,7 @@
     flex-direction: column;
     align-items: flex-start;
     max-width: 620px;
+    gap: var(--section-heading-gap);
 }
 
 .eyebrow {
@@ -142,11 +143,11 @@
 .title {
     display: flex;
     flex-direction: column;
-    margin: 0 0 1.15rem 0;
-    font-size: clamp(2.1rem, 4.6vw, 4.2rem);
-    font-weight: 900;
+    margin: 0;
+    font-size: var(--font-h2);
+    font-weight: 700;
     letter-spacing: -0.04em;
-    line-height: 1.04;
+    line-height: var(--line-heading);
 }
 
 .titleLine {
@@ -163,8 +164,8 @@
 
 .subtitle {
     margin: 0;
-    font-size: clamp(0.88rem, 1.15vw, 1.02rem);
-    line-height: 1.7;
+    font-size: var(--font-body);
+    line-height: var(--line-body);
     color: var(--text-secondary);
     max-width: 520px;
 }
@@ -175,8 +176,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.15rem;
-    padding: clamp(1.4rem, 2.6vw, 2rem);
-    border-radius: 1.5rem;
+    padding: var(--card-padding);
+    border-radius: var(--card-radius);
     background: var(--surface-card);
     border: 1px solid var(--border-glass);
     backdrop-filter: blur(26px);
@@ -248,9 +249,7 @@
     letter-spacing: -0.015em;
     color: var(--text-primary);
     text-decoration: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
     transition: color 0.22s ease;
 }
 
@@ -443,7 +442,7 @@
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -486,25 +485,30 @@
     font-size: 0.86rem;
     font-weight: 600;
     color: var(--text-primary);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 
 .factValueAccent {
     font-size: 0.86rem;
     font-weight: 700;
     color: var(--status-available);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 
 /* ══════════════════════════════════════════════════════════════
    Responsive
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
+    .section {
+        height: auto;
+        min-height: 100svh;
+        overflow: visible;
+    }
+
     .inner {
+        flex: 0 0 auto;
         grid-template-columns: 1fr;
         gap: clamp(1.5rem, 4vh, 2.5rem);
         align-content: center;
@@ -523,21 +527,13 @@
     .section {
         height: auto;
         min-height: 100svh;
-        padding: 5.2rem 1.25rem 1.75rem;
+        padding: var(--section-top-space) var(--page-gutter) var(--section-bottom-space);
         justify-content: center;
         gap: 1.5rem;
     }
 
     .inner {
-        flex: 0 1 auto;
-    }
-
-    .title {
-        font-size: clamp(1.9rem, 8.5vw, 2.9rem);
-    }
-
-    .subtitle {
-        font-size: 0.88rem;
+        flex: 0 0 auto;
     }
 
     .channels {
@@ -588,6 +584,52 @@
     }
 }
 
+@media (min-width: 1025px) and (max-height: 820px) {
+    .section {
+        padding-top: 5.5rem;
+        padding-bottom: 2rem;
+    }
+
+    .inner {
+        gap: clamp(1.25rem, 3vw, 3rem);
+    }
+
+    .header {
+        gap: 0.6rem;
+    }
+
+    .eyebrow {
+        margin-bottom: 0.4rem;
+    }
+
+    .title {
+        font-size: clamp(1.7rem, 2.4vw, 2.25rem);
+        line-height: 1.12;
+    }
+
+    .subtitle {
+        line-height: 1.5;
+    }
+
+    .panel {
+        gap: 0.8rem;
+        padding: 0.9rem;
+    }
+
+    .emailRow {
+        gap: 0.75rem;
+        padding: 0.8rem 0.9rem;
+    }
+
+    .channelCard {
+        padding: 0.8rem 0.9rem;
+    }
+
+    .strip {
+        padding-top: 0.8rem;
+    }
+}
+
 /* ══════════════════════════════════════════════════════════════
    Light theme refinements
    ══════════════════════════════════════════════════════════════ */
@@ -609,4 +651,11 @@
 
 :global([data-theme='light']) .panel {
     box-shadow: var(--card-shadow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .orbA,
+    .orbB {
+        animation: none;
+    }
 }

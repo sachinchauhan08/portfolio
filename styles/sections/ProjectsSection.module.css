@@ -3,12 +3,14 @@
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     z-index: 4;
     background: var(--bg-obsidian);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 6.75rem var(--page-gutter) 1.5rem;
 }
 
 .bgGlow {
@@ -32,13 +34,14 @@
 }
 
 .container {
-    width: 100%;
-    max-width: 1280px;
+    width: min(var(--content-max-width), calc(100% - var(--page-gutter) - var(--page-gutter)));
+    max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: 0 4rem;
+    margin-block: auto;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.6rem;
+    gap: var(--section-stack-gap);
     position: relative;
     z-index: 2;
 }
@@ -47,7 +50,7 @@
 .header {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: var(--section-heading-gap);
 }
 
 .eyebrowWrap {
@@ -79,12 +82,12 @@
 }
 
 .title {
-    font-size: clamp(1.8rem, 2.6vw, 2.5rem);
-    font-weight: 800;
+    font-size: var(--font-h2);
+    font-weight: 700;
     letter-spacing: -0.03em;
     color: var(--text-primary);
     margin: 0;
-    line-height: 1.15;
+    line-height: var(--line-heading);
 }
 
 .titleAccent {
@@ -108,8 +111,8 @@
 }
 
 .subtitle {
-    font-size: clamp(0.86rem, 1vw, 0.96rem);
-    line-height: 1.5;
+    font-size: var(--font-body);
+    line-height: var(--line-body);
     color: #64748b;
     max-width: 56rem;
     margin: 0;
@@ -119,7 +122,7 @@
 .projectsGrid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: var(--grid-gap);
 }
 
 /* ── Card ────────────────────────────────────── */
@@ -128,12 +131,12 @@
     display: flex;
     flex-direction: column;
     background: rgba(12, 16, 24, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.065);
-    border-radius: 1.25rem;
+    border-radius: var(--card-radius);
     overflow: hidden;
-    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--card-shadow);
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -153,8 +156,8 @@
 .card:hover {
     border-color: rgba(99, 102, 241, 0.32);
     background: rgba(16, 22, 36, 0.85);
-    box-shadow: 0 22px 44px -14px rgba(99, 102, 241, 0.22);
-    transform: translateY(-6px);
+    box-shadow: 0 14px 28px -16px var(--accent-glow);
+    transform: translateY(-3px);
 }
 
 .card:hover::before {
@@ -247,13 +250,13 @@
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
-    padding: 1rem 1.05rem 0.35rem;
+    padding: var(--card-padding);
     flex: 1;
     min-height: 0;
 }
 
 .cardTitle {
-    font-size: 1.02rem;
+    font-size: var(--font-h3);
     font-weight: 800;
     letter-spacing: -0.01em;
     color: #ffffff;
@@ -262,7 +265,7 @@
 }
 
 .cardSubtitle {
-    font-size: 0.72rem;
+    font-size: var(--font-caption);
     font-weight: 600;
     color: var(--accent-light);
     margin: 0;
@@ -270,14 +273,11 @@
 }
 
 .desc {
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     line-height: 1.55;
     color: #94a3b8;
     margin: 0.15rem 0 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    overflow-wrap: anywhere;
 }
 
 .stack {
@@ -366,16 +366,17 @@
         position: relative;
         height: auto;
         min-height: 100svh;
-        padding: 5.2rem 2rem 3.5rem;
+        padding: 7rem var(--page-gutter) var(--section-bottom-space);
         overflow: visible;
     }
     .container {
+        width: 100%;
         padding: 0;
-        max-width: 720px;
+        max-width: var(--content-max-width);
     }
     .projectsGrid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        gap: var(--grid-gap);
     }
     .titleRow {
         flex-direction: column;
@@ -385,24 +386,68 @@
 }
 
 @media (max-width: 767px) {
-    .section {
-        padding: 4.6rem 1.15rem 2.8rem;
-    }
-    .container {
-        gap: 1.3rem;
-    }
     .projectsGrid {
         grid-template-columns: 1fr;
-        gap: 0.85rem;
-    }
-    .title {
-        font-size: clamp(1.6rem, 7vw, 2.1rem);
+        gap: var(--grid-gap);
     }
     .media {
         aspect-ratio: 16 / 9;
     }
+}
+
+@media (min-width: 1025px) and (max-height: 820px) {
+    .container {
+        gap: clamp(0.55rem, 1.1vh, 0.8rem);
+    }
+
+    .title {
+        font-size: clamp(1.6rem, 2.2vw, 2rem);
+        line-height: 1.12;
+    }
+
+    .subtitle {
+        font-size: 0.84rem;
+        line-height: 1.4;
+    }
+
+    .media {
+        aspect-ratio: 16 / 9;
+    }
+
+    .body {
+        gap: 0.25rem;
+        padding: 0.65rem;
+    }
+
+    .cardTitle {
+        font-size: 0.98rem;
+    }
+
+    .cardSubtitle {
+        font-size: 0.68rem;
+    }
+
     .desc {
-        -webkit-line-clamp: 3;
+        font-size: 0.76rem;
+        line-height: 1.42;
+    }
+
+    .stack {
+        gap: 0.25rem;
+        padding-top: 0.35rem;
+    }
+
+    .tag {
+        font-size: 0.58rem;
+        padding: 0.16rem 0.45rem;
+    }
+
+    .cardFooter {
+        padding: 0.5rem 0.65rem 0.65rem;
+    }
+
+    .liveBtn {
+        padding: 0.5rem 0.7rem;
     }
 }
 

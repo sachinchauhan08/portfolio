@@ -83,7 +83,12 @@ export default function WorkExperienceSection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className={styles.section} id="experience">
+    <section
+      ref={sectionRef}
+      className={styles.section}
+      id="experience"
+      data-inner-scroll
+    >
       <div className={styles.bgGlow} aria-hidden />
       <div className={styles.gridLines} aria-hidden />
 

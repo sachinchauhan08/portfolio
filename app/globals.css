@@ -140,10 +140,23 @@
 
 /* ─── Typography Scale ───────────────────────────────────── */
 :root {
-  --hero-name-size:     clamp(3.8rem, 9.5vw, 8.5rem);
-  --text-body:          clamp(0.9rem, 1.15vw, 1.05rem);
-  --text-small:         0.75rem;
-  --hero-role-size:     clamp(0.85rem, 1.2vw, 1rem);
+  --content-max-width: 1200px;
+  --page-gutter: clamp(1rem, 3.2vw, 3rem);
+  --section-top-space: clamp(4.75rem, 8vh, 6rem);
+  --section-bottom-space: clamp(1.75rem, 4vh, 3rem);
+  --section-stack-gap: clamp(1.25rem, 2.4vh, 1.75rem);
+  --section-heading-gap: 0.65rem;
+  --grid-gap: clamp(0.9rem, 1.5vw, 1.25rem);
+  --card-padding: clamp(1rem, 1.25vw, 1.25rem);
+  --card-radius: 1rem;
+  --font-h1: clamp(2.2rem, 4.6vw, 4.4rem);
+  --font-h2: clamp(1.8rem, 2.8vw, 2.5rem);
+  --font-h3: clamp(1rem, 1.15vw, 1.125rem);
+  --font-body: clamp(0.9375rem, 0.95vw, 1rem);
+  --font-caption: 0.75rem;
+  --line-heading: 1.15;
+  --line-body: 1.65;
+  --content-edge: max(var(--page-gutter), calc((100vw - var(--content-max-width)) / 2));
 }
 
 @theme inline {
@@ -154,6 +167,12 @@
 }
 
 /* ─── Base Styles ────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
   overflow: hidden;
@@ -165,13 +184,19 @@ body {
   background: var(--bg-obsidian);
   color:      var(--text-primary);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: var(--font-body);
+  line-height: var(--line-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ─── Hide scrollbar ─────────────────────────────────────── */
 main::-webkit-scrollbar { display: none; }
-main { scrollbar-width: none; -ms-overflow-style: none; }
+main {
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
 /* ─── Selection styling ──────────────────────────────────── */
 ::selection {
@@ -185,10 +210,6 @@ main { scrollbar-width: none; -ms-overflow-style: none; }
 }
 
 @media (max-width: 767px) {
-  :root {
-    --hero-name-size: clamp(2.8rem, 11vw, 4.2rem);
-  }
-
   html, body { height: 100svh !important; }
   main { height: 100svh !important; }
 }

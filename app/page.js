@@ -133,7 +133,32 @@ export default function Home() {
       })
     }
 
+    function canScrollInner(target, direction) {
+      if (!target || target.scrollHeight <= target.clientHeight + 2) return false
+      return direction > 0
+        ? target.scrollTop + target.clientHeight < target.scrollHeight - 2
+        : target.scrollTop > 2
+    }
+
     function onWheel(e) {
+      const innerScroller = e.target instanceof Element
+        ? e.target.closest('[data-inner-scroll]')
+        : null
+      if (canScrollInner(innerScroller, e.deltaY)) return
+
+      if (useNaturalScroll) {
+        if (Math.abs(e.deltaY) < 4) return
+        const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8
+        const atTop = el.scrollTop < 8
+        if (!busyRef.current && ((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop))) {
+          e.preventDefault()
+          const targetScrollTop = e.deltaY > 0 ? offsetsRef.current[0] ?? 0 : lastOffset()
+          const targetIdx = e.deltaY > 0 ? 0 : TOTAL - 1
+          fadeLoop(targetScrollTop, targetIdx)
+        }
+        return
+      }
+
       e.preventDefault()
       // Ignore tiny noise / horizontal scrolls so one gesture = one move
       if (Math.abs(e.deltaY) < 4) return
@@ -152,11 +177,23 @@ export default function Home() {
     }
 
     let touchY = 0
-    function onTouchStart(e) { touchY = e.touches[0].clientY }
+    let touchScrollTarget = null
+    function onTouchStart(e) {
+      touchY = e.touches[0].clientY
+      touchScrollTarget = e.target instanceof Element
+        ? e.target.closest('[data-inner-scroll]')
+        : null
+    }
     function onTouchEnd(e) {
       const dy = touchY - e.changedTouches[0].clientY
+      const direction = dy > 0 ? 1 : -1
+      if (canScrollInner(touchScrollTarget, direction)) {
+        touchScrollTarget = null
+        return
+      }
+      touchScrollTarget = null
       if (Math.abs(dy) < 40 || busyRef.current) return
-      goTo(idxRef.current + (dy > 0 ? 1 : -1))
+      goTo(idxRef.current + direction)
     }
 
     let scrollTicking = false
@@ -175,7 +212,7 @@ export default function Home() {
       fadeLoop(0, 0)
     }
 
-    const isMobile = window.matchMedia('(max-width: 767px)').matches
+    const useNaturalScroll = window.matchMedia('(max-width: 1024px)').matches
 
     el.addEventListener('wheel',  onWheel,  { passive: false })
     el.addEventListener('scroll', onScroll, { passive: true  })
@@ -200,7 +237,7 @@ export default function Home() {
       }
     }
 
-    if (!isMobile) {
+    if (!useNaturalScroll) {
       el.addEventListener('touchstart', onTouchStart, { passive: true })
       el.addEventListener('touchend',   onTouchEnd,   { passive: true })
     } else {
@@ -239,7 +276,7 @@ export default function Home() {
     return () => {
       el.removeEventListener('wheel',  onWheel)
       el.removeEventListener('scroll', onScroll)
-      if (!isMobile) {
+      if (!useNaturalScroll) {
         el.removeEventListener('touchstart', onTouchStart)
         el.removeEventListener('touchend',   onTouchEnd)
       } else {
