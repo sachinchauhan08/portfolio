@@ -4,6 +4,7 @@ import Cursor from "@/components/ui/Cursor";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { SITE_URL } from '@/lib/siteConfig';
+import profile from '@/lib/profile';
 import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
@@ -130,14 +131,12 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Person',
-              name: 'Sachin Chauhan',
+              name: profile.name.full,
               url: SITE_URL,
-              email: 'csachinj@gmail.com',
-              jobTitle: 'Frontend & Full Stack Developer',
-              sameAs: [
-                'https://github.com/sachinchauhan08',
-                'https://linkedin.com/in/sachinchauhan08'
-              ],
+              email: profile.email,
+              jobTitle: profile.roles.short,
+              sameAs: profile.socials.map((social) => social.href),
+              ...(profile.phone ? { telephone: profile.phone } : {}),
             }),
           }}
         />

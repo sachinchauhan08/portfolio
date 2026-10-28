@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { gsap } from '@/lib/gsap'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
 import { FiLayers, FiCpu, FiTrendingUp } from 'react-icons/fi'
-import profile from '@/data/profile.json'
+import profile from '@/lib/profile'
 import styles from '@/styles/sections/AboutSection.module.css'
 
 const SOCIAL_ICONS = {

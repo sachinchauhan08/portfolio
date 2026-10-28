@@ -37,6 +37,7 @@ export default function VideoIntro() {
   const hasLeftTopRef = useRef(false)
   const audioChoiceRef = useRef('loading')
   const mediaReadyRef = useRef(false)
+  const mediaErrorRef = useRef(false)
   const playbackAttemptRef = useRef(false)
   const playbackAttemptIdRef = useRef(0)
   const deferredPlaybackRef = useRef(null)
@@ -45,6 +46,7 @@ export default function VideoIntro() {
   const [hasEnded, setHasEnded] = useState(false)
   const [audioChoice, setAudioChoice] = useState('loading')
   const [muted, setMuted] = useState(false)
+  const [needsSoundGesture, setNeedsSoundGesture] = useState(false)
   const [playbackError, setPlaybackError] = useState(false)
 
   const startPlayback = useCallback(({ restart = false, fromGesture = false } = {}) => {
@@ -86,13 +88,35 @@ export default function VideoIntro() {
     const onStarted = () => {
       if (attemptId !== playbackAttemptIdRef.current) return
       playbackAttemptRef.current = false
+      mediaErrorRef.current = false
       setPlaying(true)
+      setNeedsSoundGesture(v.muted)
       setPlaybackError(false)
       startBg()
     }
 
-    const onBlocked = (error) => {
+    const onBlocked = (error, allowMutedFallback = true) => {
       if (attemptId !== playbackAttemptIdRef.current) return
+
+      if (error?.name === 'NotAllowedError' && allowMutedFallback && !v.muted) {
+        v.muted = true
+        v.volume = 1
+        setMuted(true)
+        setNeedsSoundGesture(true)
+        try {
+          const fallbackAttempt = v.play()
+          if (!fallbackAttempt || typeof fallbackAttempt.then !== 'function') {
+            onStarted()
+            return
+          }
+          fallbackAttempt.then(onStarted).catch((fallbackError) => onBlocked(fallbackError, false))
+          return
+        } catch (fallbackError) {
+          onBlocked(fallbackError, false)
+          return
+        }
+      }
+
       playbackAttemptRef.current = false
       setPlaying(false)
       if (error?.name === 'AbortError' && v.paused && !v.error) return
@@ -176,7 +200,13 @@ export default function VideoIntro() {
 
     if (soundPreferenceSaved) {
       audioChoiceRef.current = 'sound'
+      // Read storage after hydration to keep the server and initial client render consistent.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAudioChoice('sound')
+      if (mediaErrorRef.current) {
+        setPlaybackError(true)
+        return
+      }
       startPlayback()
       return
     }
@@ -198,6 +228,7 @@ export default function VideoIntro() {
 
   function handleCanPlay(e) {
     mediaReadyRef.current = e.currentTarget.readyState >= 3
+    mediaErrorRef.current = false
     const deferredPlayback = deferredPlaybackRef.current
     if (deferredPlayback && audioChoiceRef.current === 'sound') {
       startPlayback(deferredPlayback)
@@ -206,6 +237,7 @@ export default function VideoIntro() {
 
   function handleMediaError() {
     mediaReadyRef.current = false
+    mediaErrorRef.current = true
     deferredPlaybackRef.current = null
     playbackAttemptIdRef.current += 1
     playbackAttemptRef.current = false
@@ -242,6 +274,10 @@ export default function VideoIntro() {
     } catch {
       // Keep playback available when storage is unavailable.
     }
+    if (v.error || mediaErrorRef.current) {
+      retryPlayback()
+      return
+    }
     const atEnd = v.ended || (v.duration && v.currentTime >= v.duration - 0.2)
 
     // Keep play() in the button's user-gesture call stack for browser autoplay policies.
@@ -251,8 +287,18 @@ export default function VideoIntro() {
   function retryPlayback() {
     const v = videoRef.current
     if (!v) return
-    if (v.error) v.load()
     const atEnd = v.ended || (v.duration && v.currentTime >= v.duration - 0.2)
+
+    playbackAttemptIdRef.current += 1
+    playbackAttemptRef.current = false
+
+    if (v.error || v.readyState < 3) {
+      mediaReadyRef.current = false
+      deferredPlaybackRef.current = { restart: Boolean(atEnd) }
+      if (v.error || v.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) v.load()
+      return
+    }
+
     startPlayback({ restart: Boolean(atEnd), fromGesture: true })
   }
 
@@ -264,6 +310,7 @@ export default function VideoIntro() {
     v.volume = 1
     audioChoiceRef.current = 'sound'
     setAudioChoice('sound')
+    setNeedsSoundGesture(false)
     try {
       localStorage.setItem(AUDIO_PREFERENCE_KEY, 'true')
     } catch {
@@ -324,8 +371,10 @@ export default function VideoIntro() {
             onError={handleMediaError}
             onEnded={handleEnded}
             onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
-            onPlay={() => {
+            onPlay={(e) => {
               setPlaying(true)
+              mediaErrorRef.current = false
+              setNeedsSoundGesture(e.currentTarget.muted)
               setPlaybackError(false)
               hasEndedRef.current = false
               setHasEnded(false)
@@ -398,7 +447,7 @@ export default function VideoIntro() {
 
         {audioChoice === 'sound' && (
           <div className={styles.controls}>
-            {playing && muted && (
+            {playing && muted && needsSoundGesture && (
               <button
                 type="button"
                 className={styles.soundControl}

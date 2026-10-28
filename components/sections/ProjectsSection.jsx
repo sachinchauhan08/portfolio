@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { gsap } from '@/lib/gsap'
 import { FaGithub } from 'react-icons/fa'
 import { FiArrowUpRight, FiExternalLink } from 'react-icons/fi'
-import profile from '@/data/profile.json'
+import profile from '@/lib/profile'
 import styles from '@/styles/sections/ProjectsSection.module.css'
 
 const PROJECTS = profile.projects

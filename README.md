@@ -67,6 +67,20 @@ npm run dev
 http://localhost:3000
 ```
 
+4. Configure public site and contact details:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Set `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_CONTACT_EMAIL`,
+`NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_GITHUB_URL`, and
+`NEXT_PUBLIC_LINKEDIN_URL` in `.env.local` and in your deployment provider's
+environment settings. The phone number is optional; use an international
+format such as `+1...` or `+91...`. Values with the `NEXT_PUBLIC_` prefix are
+included in the client bundle and are visible to website visitors. Restart
+the development server after changing them.
+
 ## Available Scripts
 
 ```bash

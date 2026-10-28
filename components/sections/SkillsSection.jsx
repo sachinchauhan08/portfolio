@@ -10,7 +10,7 @@ import {
   FiAward,
   FiCheck,
 } from 'react-icons/fi'
-import profile from '@/data/profile.json'
+import profile from '@/lib/profile'
 import styles from '@/styles/sections/SkillsSection.module.css'
 
 const CATEGORY_ICONS = {

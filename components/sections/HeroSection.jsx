@@ -6,7 +6,7 @@ import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
 import { FiArrowUpRight, FiFileText, FiSend } from 'react-icons/fi'
 import { gsap } from '@/lib/gsap'
 
-import profile from '@/data/profile.json'
+import profile from '@/lib/profile'
 import content from '@/data/content.json'
 import styles from '@/styles/sections/HeroSection.module.css'
 

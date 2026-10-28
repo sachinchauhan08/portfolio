@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 import { FiMenu, FiX } from 'react-icons/fi'
 import ThemeToggle from '@/components/ui/ThemeToggle'
-import profile from '@/data/profile.json'
+import profile from '@/lib/profile'
 import styles from '@/styles/ui/Navbar.module.css'
 
 // Section order matches the DOM in app/page.js:

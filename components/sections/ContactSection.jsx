@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 import {
     FiMail,
+    FiPhone,
     FiGithub,
     FiLinkedin,
     FiCopy,
@@ -15,7 +16,7 @@ import {
     FiActivity,
 } from 'react-icons/fi'
 
-import profile from '@/data/profile.json'
+import profile from '@/lib/profile'
 import content from '@/data/content.json'
 import styles from '@/styles/sections/ContactSection.module.css'
 
@@ -154,6 +155,12 @@ export default function ContactSection() {
                             <a className={styles.emailValue} href={`mailto:${profile.email}`}>
                                 {profile.email}
                             </a>
+                            {profile.phone && (
+                                <a className={styles.phoneValue} href={`tel:${profile.phone.replace(/[^\d+]/g, '')}`}>
+                                    <FiPhone size={13} />
+                                    {profile.phone}
+                                </a>
+                            )}
                         </div>
                         <button
                             type="button"

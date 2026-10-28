@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from '@/lib/gsap'
 import { FiMapPin, FiBriefcase } from 'react-icons/fi'
-import profile from '@/data/profile.json'
+import profile from '@/lib/profile'
 import styles from '@/styles/sections/WorkExperienceSection.module.css'
 
 const EXPS = profile.experience

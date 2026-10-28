@@ -10,7 +10,7 @@ import SkillsSection         from '@/components/sections/SkillsSection'
 import ProjectsSection       from '@/components/sections/ProjectsSection'
 import WorkExperienceSection from '@/components/sections/WorkExperienceSection'
 import ContactSection        from '@/components/sections/ContactSection'
-import profile               from '@/data/profile.json'
+import profile               from '@/lib/profile'
 
 // Snap: 0=video 1=hero 2=about 3=skills 4=projects 5=work-exp 6=contact
 // Projects render as a single card-grid viewport (no per-project scroll slides).
