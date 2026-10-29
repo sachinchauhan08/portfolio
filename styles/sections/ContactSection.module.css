@@ -595,7 +595,7 @@
 
 @media (min-width: 1025px) and (max-height: 820px) {
     .section {
-        padding-top: 5.5rem;
+        padding-top: var(--section-top-space);
         padding-bottom: 2rem;
     }
 

@@ -1,55 +1,53 @@
-/* Work Experience Section - Full Redesign: Horizontal Rail Cards */
 .section {
     position: sticky;
     top: 0;
-    height: 100vh;
     z-index: 5;
-    background: var(--bg-obsidian);
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg-obsidian);
 }
 
 .bgGlow {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse 55% 50% at 10% 20%, rgba(59, 130, 246, 0.09) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 45% at 90% 80%, rgba(139, 92, 246, 0.09) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 35% at 55% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 55%);
+        radial-gradient(ellipse 52% 55% at 8% 18%, var(--accent-blue-glow) 0%, transparent 68%),
+        radial-gradient(ellipse 42% 48% at 95% 85%, var(--accent-violet-glow) 0%, transparent 68%);
     pointer-events: none;
 }
 
 .gridLines {
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+    background-image:
+        linear-gradient(var(--surface-glass) 1px, transparent 1px),
+        linear-gradient(90deg, var(--surface-glass) 1px, transparent 1px);
     background-size: 84px 84px;
     pointer-events: none;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 35%, transparent 100%);
 }
 
 .container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-stack-gap);
     width: min(var(--content-max-width), calc(100% - var(--page-gutter) - var(--page-gutter)));
     max-width: var(--content-max-width);
     height: 100%;
     margin: 0 auto;
     padding: var(--section-top-space) 0 var(--section-bottom-space);
-    display: flex;
-    flex-direction: column;
-    gap: var(--section-stack-gap);
-    position: relative;
-    z-index: 2;
 }
 
-/* ── Header ──────────────────────────────────── */
 .header {
     display: flex;
+    flex: 0 0 auto;
     flex-direction: column;
     gap: var(--section-heading-gap);
-    flex-shrink: 0;
 }
 
 .eyebrowWrap {
@@ -61,16 +59,16 @@
 .eyebrowLine {
     width: 28px;
     height: 2px;
-    background: var(--accent-gradient);
     border-radius: 9999px;
+    background: var(--accent-gradient);
 }
 
 .eyebrow {
+    color: var(--accent-light);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-light);
 }
 
 .titleRow {
@@ -81,357 +79,315 @@
 }
 
 .title {
+    margin: 0;
+    color: var(--text-primary);
     font-size: var(--font-h2);
     font-weight: 700;
     letter-spacing: -0.03em;
-    color: var(--text-primary);
-    margin: 0;
     line-height: var(--line-heading);
 }
 
 .titleAccent {
     background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .countBadge {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--border-accent);
+    border-radius: 9999px;
+    background: var(--accent-subtle);
+    color: var(--accent-light);
     font-size: 0.66rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-light);
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.28);
-    padding: 0.3rem 0.8rem;
-    border-radius: 9999px;
     white-space: nowrap;
 }
 
 .subtitle {
+    max-width: 46rem;
+    margin: 0;
+    color: var(--text-secondary);
     font-size: var(--font-body);
     line-height: var(--line-body);
-    color: var(--text-secondary);
-    max-width: 56rem;
-    margin: 0;
 }
 
-/* ── Timeline ────────────────────────────────── */
 .timeline {
-    position: relative;
-    flex: 1;
-    min-height: 0;
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
-}
-
-.railTrack {
-    position: absolute;
-    left: 2.34rem;
-    top: 6%;
-    bottom: 6%;
-    width: 2px;
-    background: rgba(255, 255, 255, 0.07);
-    border-radius: 9999px;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.railFill {
-    position: absolute;
-    inset: 0;
-    border-radius: 9999px;
-    background: linear-gradient(to bottom, var(--accent-blue) 0%, var(--accent-violet) 55%, var(--accent-cyan) 100%);
-    box-shadow: 0 0 14px rgba(99, 102, 241, 0.5);
-    transform-origin: top center;
+    min-height: 0;
 }
 
 .entries {
-    list-style: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--grid-gap);
+    min-height: 0;
     margin: 0;
     padding: 0;
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--grid-gap);
+    list-style: none;
 }
 
-/* ── Card (one row) ──────────────────────────── */
 .card {
     position: relative;
-    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2.2vh, 1.5rem);
+    min-width: 0;
     min-height: 0;
-    display: grid;
-    grid-template-columns: 2.4rem minmax(0, 1fr) 12.5rem;
-    align-items: center;
-    gap: var(--grid-gap);
-    padding: var(--card-padding);
-    background: rgba(12, 16, 24, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.065);
-    border-radius: var(--card-radius);
+    padding: clamp(1.15rem, 2.3vw, 2rem);
     overflow: hidden;
+    border: 1px solid var(--border-glass);
+    border-radius: calc(var(--card-radius) + 0.25rem);
+    background: var(--surface-card);
     box-shadow: var(--card-shadow);
     transition:
-        border-color 0.32s ease,
-        background 0.32s ease,
-        box-shadow 0.32s ease,
-        transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+        border-color 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+}
+
+.card::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: var(--accent-gradient);
+    content: '';
 }
 
 .cardGlow {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     width: 45%;
-    height: 100%;
-    background: radial-gradient(ellipse 60% 80% at 0% 50%, rgba(99, 102, 241, 0.16) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.35s ease;
+    height: 50%;
+    background: radial-gradient(ellipse at 100% 0%, var(--accent-violet-glow), transparent 70%);
     pointer-events: none;
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--accent-gradient);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
 .card:hover {
-    border-color: rgba(99, 102, 241, 0.32);
-    background: rgba(16, 22, 36, 0.88);
-    box-shadow: 0 18px 40px -16px rgba(99, 102, 241, 0.22);
-    transform: translateX(4px);
+    transform: translateY(-3px);
+    border-color: var(--border-accent);
+    background: var(--surface-card-hover);
+    box-shadow: 0 22px 50px -24px var(--accent-glow), var(--card-shadow);
 }
 
-.card:hover::before,
-.card:hover .cardGlow {
-    opacity: 1;
-}
-
-/* ── Index / rail node ───────────────────────── */
-.indexCol {
+.cardTop {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    align-self: stretch;
-    position: relative;
-    z-index: 2;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.indexCol {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
 }
 
 .indexBadge {
-    width: 2.2rem;
-    height: 2.2rem;
-    display: flex;
+    display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    background: #090c14;
-    border: 2px solid var(--accent);
-    font-size: 0.7rem;
-    font-weight: 800;
+    width: 2.35rem;
+    height: 2.35rem;
+    border: 1px solid var(--border-accent);
+    border-radius: 0.8rem;
+    background: var(--accent-subtle);
     color: var(--accent-light);
     font-family: var(--font-geist-mono), monospace;
-    letter-spacing: 0.02em;
-    box-shadow:
-        0 0 0 4px rgba(99, 102, 241, 0.08),
-        0 0 16px rgba(99, 102, 241, 0.2);
-    transition:
-        box-shadow 0.3s ease,
-        border-color 0.3s ease;
-}
-
-.card:hover .indexBadge {
-    border-color: var(--accent-cyan);
-    box-shadow:
-        0 0 0 6px rgba(6, 182, 212, 0.1),
-        0 0 20px rgba(6, 182, 212, 0.3);
-}
-
-/* ── Content column ──────────────────────────── */
-.contentCol {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    min-width: 0;
-}
-
-.headRow {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.3rem 0.7rem;
-    min-width: 0;
-}
-
-.company {
-    font-size: var(--font-h3);
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    margin: 0;
-}
-
-.role {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
     font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--accent-light);
-    letter-spacing: 0.01em;
-    white-space: nowrap;
+    font-weight: 700;
 }
 
-.metaIcon {
-    flex-shrink: 0;
-    opacity: 0.85;
+.cardLabel {
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
-.desc {
-    font-size: 0.85rem;
-    line-height: var(--line-body);
-    color: var(--text-secondary);
-    margin: 0;
-    overflow-wrap: anywhere;
-}
-
-.bullets {
-    display: grid;
-    gap: 0.28rem;
-    margin: 0.25rem 0 0;
-    padding: 0;
-    list-style: none;
-}
-
-.bullets li {
-    position: relative;
-    padding-left: 0.9rem;
-    color: var(--text-secondary);
-    font-size: 0.76rem;
-    line-height: 1.45;
-    overflow-wrap: anywhere;
-}
-
-.bullets li::before {
-    position: absolute;
-    top: 0.58em;
-    left: 0.15rem;
-    width: 0.3rem;
-    height: 0.3rem;
-    border-radius: 50%;
-    background: var(--accent-light);
-    content: '';
-}
-
-.stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-top: 0.15rem;
-}
-
-.tag {
-    font-size: 0.62rem;
-    font-weight: 600;
-    padding: 0.16rem 0.5rem;
-    border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.04);
-    color: #cbd5e1;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-    transition: all 0.22s ease;
-}
-
-.card:hover .tag {
-    border-color: rgba(99, 102, 241, 0.28);
-}
-
-.tag:hover {
-    background: rgba(99, 102, 241, 0.14);
-    border-color: rgba(99, 102, 241, 0.4);
-    color: #ffffff;
-}
-
-/* ── Meta column ─────────────────────────────── */
 .metaCol {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.4rem;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     text-align: right;
 }
 
 .period {
-    font-size: 0.72rem;
-    font-weight: 700;
     color: var(--accent-light);
     font-family: var(--font-geist-mono), monospace;
-    letter-spacing: 0.02em;
+    font-size: 0.76rem;
+    font-weight: 700;
     white-space: nowrap;
 }
 
-.typeTag {
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+.typeTag,
+.currentTag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.55rem;
+    border: 1px solid var(--border-glass);
+    border-radius: 9999px;
+    background: var(--surface-glass);
     color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.14rem 0.5rem;
-    border-radius: 6px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     white-space: nowrap;
 }
 
 .currentTag {
-    display: inline-flex;
-    align-items: center;
     gap: 0.35rem;
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #67e8f9;
-    background: rgba(6, 182, 212, 0.12);
-    border: 1px solid rgba(6, 182, 212, 0.35);
-    padding: 0.14rem 0.5rem;
-    border-radius: 9999px;
-    white-space: nowrap;
+    border-color: var(--border-cyan-glow);
+    background: var(--accent-cyan-glow);
+    color: var(--accent-cyan);
 }
 
 .currentTag::before {
-    content: '';
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--accent-cyan);
-    box-shadow: 0 0 8px var(--accent-cyan);
+    background: currentColor;
+    content: '';
 }
 
 .location {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 0.66rem;
-    font-weight: 500;
     color: var(--text-muted);
+    font-size: 0.7rem;
     white-space: nowrap;
 }
 
-/* ── Tablet (<= 1024px): stack to natural height ─ */
+.metaIcon {
+    flex: 0 0 auto;
+    opacity: 0.85;
+}
+
+.contentCol {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-width: 0;
+}
+
+.headRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.companyBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.company {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: clamp(1.25rem, 2.3vw, 1.8rem);
+    font-weight: 750;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.role {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--accent-light);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.desc {
+    max-width: 64rem;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.bullets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem 1.5rem;
+    margin: 0.1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bullets li {
+    position: relative;
+    padding-left: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.79rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.bullets li::before {
+    position: absolute;
+    top: 0.55em;
+    left: 0;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 50%;
+    background: var(--accent-light);
+    box-shadow: 0 0 10px var(--accent-glow);
+    content: '';
+}
+
+.stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.2rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border-glass);
+}
+
+.tag {
+    padding: 0.28rem 0.62rem;
+    border: 1px solid var(--border-glass);
+    border-radius: 9999px;
+    background: var(--surface-glass);
+    color: var(--text-secondary);
+    font-size: 0.67rem;
+    font-weight: 600;
+    letter-spacing: 0.015em;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.tag:hover {
+    border-color: var(--border-accent);
+    background: var(--accent-subtle);
+    color: var(--text-primary);
+}
+
 @media (max-width: 1024px) {
     .section {
         position: relative;
@@ -443,69 +399,45 @@
     }
 
     .container {
+        width: 100%;
         height: auto;
         padding: 0;
-        width: 100%;
-        max-width: var(--content-max-width);
-        gap: var(--section-stack-gap);
-    }
-
-    .titleRow {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.6rem;
     }
 
     .timeline {
         flex: none;
     }
+}
 
-    .railTrack {
-        display: none;
-    }
-
-    .entries {
-        flex: none;
-        gap: var(--grid-gap);
+@media (max-width: 767px) {
+    .titleRow {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.65rem;
     }
 
     .card {
-        flex: none;
-        grid-template-columns: 1fr;
-        align-items: flex-start;
-        gap: 0.55rem;
-        padding: var(--card-padding);
+        gap: 1rem;
+        padding: 1rem;
     }
 
-    .indexCol {
-        align-self: flex-start;
+    .cardTop {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .metaCol {
-        flex-direction: row;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        justify-content: flex-start;
         text-align: left;
     }
 
-    .desc {
-        line-height: 1.55;
-    }
-}
-
-/* ── Mobile (< 768px) ────────────────────────── */
-@media (max-width: 767px) {
-    .indexBadge {
-        width: 1.9rem;
-        height: 1.9rem;
-        font-size: 0.64rem;
+    .bullets {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .company {
-        font-size: 1.02rem;
+        font-size: 1.25rem;
     }
-
 }
 
 @media (min-width: 1025px) and (max-height: 820px) {
@@ -514,144 +446,26 @@
         justify-content: flex-start;
         overflow-x: hidden;
         overflow-y: auto;
-        scrollbar-width: thin;
         scrollbar-color: var(--border-glass-light) transparent;
+        scrollbar-width: thin;
     }
 
     .container {
         height: auto;
         min-height: 100%;
-        padding-top: 6rem;
+        padding-top: var(--section-top-space);
         padding-bottom: 2rem;
         gap: clamp(0.7rem, 1.4vh, 1rem);
     }
 
-    .timeline,
-    .entries {
-        flex: 0 0 auto;
-        min-height: auto;
-    }
-
     .timeline {
-        justify-content: flex-start;
-    }
-
-    .entries {
-        gap: 0.75rem;
-    }
-
-    .card {
         flex: 0 0 auto;
-        min-height: 9.5rem;
-    }
-
-    .title {
-        font-size: clamp(1.7rem, 2.4vw, 2.25rem);
-        line-height: 1.12;
-    }
-
-    .subtitle {
-        line-height: 1.5;
-    }
-
-    .card {
-        padding: 0.8rem;
-        gap: 0.65rem;
-    }
-
-    .contentCol {
-        gap: 0.22rem;
-    }
-
-    .desc {
-        font-size: 0.78rem;
-        line-height: 1.45;
-    }
-
-    .stack {
-        gap: 0.22rem;
     }
 }
 
-/* ── Light Mode Custom Styling ── */
-:global([data-theme='light']) .section {
-    background: var(--bg-obsidian);
-}
-
-:global([data-theme='light']) .bgGlow {
-    background:
-        radial-gradient(ellipse 55% 50% at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 45% at 90% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 55%);
-}
-
-:global([data-theme='light']) .gridLines {
-    background-image: linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
-}
-
-:global([data-theme='light']) .subtitle {
-    color: var(--text-secondary);
-}
-
-:global([data-theme='light']) .countBadge {
-    background: rgba(79, 70, 229, 0.08);
-    border-color: rgba(79, 70, 229, 0.2);
-    color: var(--accent);
-}
-
-:global([data-theme='light']) .railTrack {
-    background: rgba(15, 23, 42, 0.1);
-}
-
-:global([data-theme='light']) .card {
-    background: var(--surface-card);
-    border-color: var(--border-glass-light);
-    box-shadow: var(--card-shadow);
-}
-
-:global([data-theme='light']) .card:hover {
-    background: var(--surface-card-hover);
-    border-color: var(--accent);
-}
-
-:global([data-theme='light']) .indexBadge {
-    background: #ffffff;
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow:
-        0 0 0 4px rgba(79, 70, 229, 0.08),
-        0 0 12px rgba(79, 70, 229, 0.14);
-}
-
-:global([data-theme='light']) .company {
-    color: var(--text-primary);
-}
-
-:global([data-theme='light']) .role {
-    color: var(--accent);
-}
-
-:global([data-theme='light']) .desc {
-    color: var(--text-secondary);
-}
-
-:global([data-theme='light']) .typeTag {
-    background: rgba(79, 70, 229, 0.08);
-    border-color: rgba(79, 70, 229, 0.2);
-    color: var(--accent);
-}
-
-:global([data-theme='light']) .tag {
-    background: var(--surface-card);
-    border-color: var(--border-glass);
-    color: var(--text-secondary);
-}
-
-:global([data-theme='light']) .tag:hover {
-    background: rgba(79, 70, 229, 0.08);
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-:global([data-theme='light']) .location {
-    color: var(--text-muted);
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .tag {
+        transition: none;
+    }
 }

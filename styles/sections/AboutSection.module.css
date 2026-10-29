@@ -30,7 +30,7 @@
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-  padding: clamp(6.5rem, 9vh, 7.5rem) 0 clamp(1.25rem, 3vh, 2.5rem);
+  padding: var(--section-top-space) 0 var(--section-bottom-space);
 }
 
 .profileLayout {
@@ -608,7 +608,7 @@
   .container {
     height: auto;
     min-height: 100vh;
-    padding-top: 6rem;
+    padding-top: var(--section-top-space);
     padding-bottom: 1.25rem;
   }
 

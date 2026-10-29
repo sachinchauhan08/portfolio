@@ -11,7 +11,6 @@ const EXPS = profile.experience
 export default function WorkExperienceSection() {
   const sectionRef = useRef(null)
   const headerRef = useRef(null)
-  const railRef = useRef(null)
   const rowRefs = useRef([])
   const tlRef = useRef(null)
 
@@ -27,18 +26,15 @@ export default function WorkExperienceSection() {
     function resetAnim() {
       tlRef.current?.kill()
       gsap.set(headerRef.current, { opacity: 0, y: 24 })
-      gsap.set(railRef.current, { scaleY: 0, transformOrigin: 'top center' })
       rowRefs.current.forEach(el => el && gsap.set(el, { opacity: 0, y: 26 }))
     }
 
     function playAnim() {
       resetAnim()
-      const n = EXPS.length
       const tl = gsap.timeline()
       tlRef.current = tl
 
       tl.to(headerRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0)
-      tl.to(railRef.current, { scaleY: 1, duration: 0.7 + n * 0.16, ease: 'power2.inOut' }, 0.1)
 
       EXPS.forEach((_, i) => {
         tl.to(rowRefs.current[i], {
@@ -105,21 +101,16 @@ export default function WorkExperienceSection() {
               Work <span className={styles.titleAccent}>Experience</span>
             </h2>
             <span className={styles.countBadge}>
-              {String(EXPS.length).padStart(2, '0')} {EXPS.length === 1 ? 'Company' : 'Companies'} · 3 Years
+              {String(EXPS.length).padStart(2, '0')} {EXPS.length === 1 ? 'Role' : 'Roles'}
             </span>
           </div>
           <p className={styles.subtitle}>
-            A track record of shipping production-grade frontend and full-stack systems —
-            from reusable component libraries to high-throughput pipelines and AI platforms.
+            A snapshot of the teams, products, and technologies behind my professional journey.
           </p>
         </header>
 
         {/* Timeline */}
         <div className={styles.timeline}>
-          <div className={styles.railTrack} aria-hidden>
-            <div ref={railRef} className={styles.railFill} />
-          </div>
-
           <ol className={styles.entries}>
             {EXPS.map((exp, i) => {
               const isCurrent = exp.periodEnd?.toLowerCase() === 'present'
@@ -131,17 +122,36 @@ export default function WorkExperienceSection() {
                 >
                   <span className={styles.cardGlow} aria-hidden />
 
-                  <div className={styles.indexCol}>
-                    <span className={styles.indexBadge}>0{i + 1}</span>
+                  <div className={styles.cardTop}>
+                    <div className={styles.indexCol}>
+                      <span className={styles.indexBadge}>{String(i + 1).padStart(2, '0')}</span>
+                      <span className={styles.cardLabel}>Professional experience</span>
+                    </div>
+
+                    <div className={styles.metaCol}>
+                      <span className={styles.period}>
+                        {exp.period}{exp.periodEnd ? ` — ${exp.periodEnd}` : ''}
+                      </span>
+                      {exp.type && <span className={styles.typeTag}>{exp.type}</span>}
+                      {isCurrent && <span className={styles.currentTag}>Current</span>}
+                      {exp.location && (
+                        <span className={styles.location}>
+                          <FiMapPin size={11} className={styles.metaIcon} />
+                          {exp.location}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div className={styles.contentCol}>
                     <div className={styles.headRow}>
-                      <h3 className={styles.company}>{exp.company}</h3>
-                      <span className={styles.role}>
-                        <FiBriefcase size={12} className={styles.metaIcon} />
-                        {exp.role}
-                      </span>
+                      <div className={styles.companyBlock}>
+                        <h3 className={styles.company}>{exp.company}</h3>
+                        <span className={styles.role}>
+                          <FiBriefcase size={13} className={styles.metaIcon} />
+                          {exp.role}
+                        </span>
+                      </div>
                     </div>
                     <p className={styles.desc}>{exp.desc}</p>
                     {exp.bullets?.length > 0 && (
@@ -156,20 +166,6 @@ export default function WorkExperienceSection() {
                         <span key={t} className={styles.tag}>{t}</span>
                       ))}
                     </div>
-                  </div>
-
-                  <div className={styles.metaCol}>
-                    <span className={styles.period}>
-                      {exp.period} — {exp.periodEnd}
-                    </span>
-                    <span className={styles.typeTag}>{exp.type}</span>
-                    {isCurrent && <span className={styles.currentTag}>Current</span>}
-                    {exp.location && (
-                      <span className={styles.location}>
-                        <FiMapPin size={11} className={styles.metaIcon} />
-                        {exp.location}
-                      </span>
-                    )}
                   </div>
                 </li>
               )

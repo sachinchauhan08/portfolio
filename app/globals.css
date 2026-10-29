@@ -148,7 +148,7 @@
 :root {
   --content-max-width: 1200px;
   --page-gutter: clamp(1rem, 3.2vw, 3rem);
-  --section-top-space: clamp(4.75rem, 8vh, 6rem);
+  --section-top-space: clamp(7rem, 10vh, 7.5rem);
   --section-bottom-space: clamp(1.75rem, 4vh, 3rem);
   --section-stack-gap: clamp(1.25rem, 2.4vh, 1.75rem);
   --section-heading-gap: 0.65rem;

@@ -291,7 +291,7 @@
     position: relative;
     height: auto;
     min-height: 100svh;
-    padding: var(--section-top-space) var(--page-gutter) var(--section-bottom-space);
+    padding: clamp(4.75rem, 8vh, 6rem) var(--page-gutter) var(--section-bottom-space);
     overflow: visible;
   }
   .container {
