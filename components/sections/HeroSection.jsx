@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
-import { FiArrowUpRight, FiDownload, FiSend } from 'react-icons/fi'
+import { FiArrowUpRight, FiSend } from 'react-icons/fi'
 import { gsap } from '@/lib/gsap'
 
 import profile from '@/lib/profile'
@@ -128,12 +128,13 @@ export default function HeroSection() {
             <span>{content.hero.secondaryCta}</span>
           </button>
           <a
-            href="/assets/Sachin_Chauhan_Full_Stack_Developer_Resume.pdf"
-            download="Sachin_Chauhan_Full_Stack_Developer_Resume.pdf"
+            href="/assets/sachin-chauhan-resume.html"
+            target="_blank"
+            rel="noopener noreferrer"
             className={styles.resumeBtn}
-            aria-label={`Download ${profile.name.first}'s resume`}
+            aria-label={`View ${profile.name.first}'s resume`}
           >
-            <FiDownload size={14} aria-hidden="true" />
+            <FiArrowUpRight size={14} aria-hidden="true" />
             <span>{content.hero.resumeCta}</span>
           </a>
         </div>
