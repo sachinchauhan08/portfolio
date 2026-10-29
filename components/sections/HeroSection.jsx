@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
-import { FiArrowUpRight, FiFileText, FiSend } from 'react-icons/fi'
+import { FiArrowUpRight, FiDownload, FiSend } from 'react-icons/fi'
 import { gsap } from '@/lib/gsap'
 
 import profile from '@/lib/profile'
@@ -43,12 +43,6 @@ export default function HeroSection() {
     } else if (scroller) {
       gsap.to(scroller, { scrollTop: 6 * window.innerHeight, duration: 1.2, ease: 'power3.inOut' })
     }
-  }
-
-  function handleResume() {
-    const subject = encodeURIComponent(`Resume inquiry - ${profile.name.full}`)
-    const body = encodeURIComponent(`Hi ${profile.name.first}, I reviewed your portfolio and would like to request your latest resume.`)
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
   }
 
   useEffect(() => {
@@ -133,15 +127,15 @@ export default function HeroSection() {
             <FiSend size={14} aria-hidden="true" />
             <span>{content.hero.secondaryCta}</span>
           </button>
-          <button
-            type="button"
+          <a
+            href="/assets/Sachin_Chauhan_Full_Stack_Developer_Resume.pdf"
+            download="Sachin_Chauhan_Full_Stack_Developer_Resume.pdf"
             className={styles.resumeBtn}
-            onClick={handleResume}
-            aria-label={`Request ${profile.name.first}'s resume`}
+            aria-label={`Download ${profile.name.first}'s resume`}
           >
-            <FiFileText size={14} aria-hidden="true" />
+            <FiDownload size={14} aria-hidden="true" />
             <span>{content.hero.resumeCta}</span>
-          </button>
+          </a>
         </div>
 
         <nav ref={socialRef} className={styles.socialRow} aria-label="Social profiles">

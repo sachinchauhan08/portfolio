@@ -183,6 +183,7 @@
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-secondary);
+  text-decoration: none;
 }
 
 .primaryBtn:focus-visible,
