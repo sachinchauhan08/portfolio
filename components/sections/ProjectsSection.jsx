@@ -1,10 +1,15 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { gsap } from '@/lib/gsap'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/autoplay'
 import { FaGithub } from 'react-icons/fa'
 import { FiArrowUpRight, FiExternalLink } from 'react-icons/fi'
+import { gsap } from '@/lib/gsap'
 import profile from '@/lib/profile'
 import styles from '@/styles/sections/ProjectsSection.module.css'
 
@@ -14,6 +19,31 @@ export default function ProjectsSection() {
   const sectionRef = useRef(null)
   const headerRef = useRef(null)
   const cardsRef = useRef([])
+  const [ready, setReady] = useState(false)
+
+  function resetAnim() {
+    gsap.killTweensOf(headerRef.current)
+    cardsRef.current.forEach(el => el && gsap.killTweensOf(el))
+    gsap.set(headerRef.current, { opacity: 0, y: 30 })
+    cardsRef.current.forEach(el => el && gsap.set(el, { opacity: 0, y: 28, scale: 0.97 }))
+  }
+
+  function playAnim() {
+    resetAnim()
+    gsap.to(headerRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' })
+    cardsRef.current.forEach((el, idx) => {
+      if (el) {
+        gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.65,
+          ease: 'power2.out',
+          delay: 0.2 + idx * 0.1,
+        })
+      }
+    })
+  }
 
   useEffect(() => {
     const section = sectionRef.current
@@ -23,37 +53,6 @@ export default function ProjectsSection() {
 
     let isActive = false
     const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024
-
-    function resetAnim() {
-      gsap.killTweensOf(headerRef.current)
-      cardsRef.current.forEach(el => el && gsap.killTweensOf(el))
-      gsap.set(headerRef.current, { opacity: 0, y: 30 })
-      cardsRef.current.forEach(el => el && gsap.set(el, { opacity: 0, y: 28, scale: 0.97 }))
-    }
-
-    function playAnim() {
-      resetAnim()
-      gsap.to(headerRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' })
-      cardsRef.current.forEach((el, idx) => {
-        if (el) {
-          gsap.to(el, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.65,
-            ease: 'power2.out',
-            delay: 0.2 + idx * 0.1,
-          })
-        }
-      })
-    }
-
-    if (isMobileOrTablet) {
-      playAnim()
-      isActive = true
-    } else {
-      resetAnim()
-    }
 
     function onScroll() {
       const scrollY = scroller.scrollTop
@@ -75,6 +74,21 @@ export default function ProjectsSection() {
     scroller.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
     return () => scroller.removeEventListener('scroll', onScroll)
+  }, [ready])
+
+  // Swiper is a client-only component — mount it after hydration so the
+  // grid→carousel transition is smooth and refs line up before animation.
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024
+
+    if (isMobileOrTablet) {
+      playAnim()
+    } else {
+      resetAnim()
+    }
+    setReady(true)
   }, [])
 
   return (
@@ -103,79 +117,103 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        {/* Project Cards */}
-        <div className={styles.projectsGrid}>
-          {PROJECTS.map((proj, idx) => (
-            <article
-              key={proj.id}
-              ref={el => { cardsRef.current[idx] = el }}
-              className={styles.card}
+        {/* Projects Carousel */}
+        <div className={styles.carouselWrap}>
+          {ready && (
+            <Swiper
+              slidesPerView={1}
+              spaceBetween={16}
+              loop
+              centeredSlides={false}
+              grabCursor={true}
+              navigation
+              pagination={{ clickable: true }}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              breakpoints={{
+                768: { slidesPerView: 1, spaceBetween: 20 },
+                1024: { slidesPerView: 2, spaceBetween: 22 },
+                1440: { slidesPerView: 4, spaceBetween: 24 },
+              }}
+              className={styles.swiper}
             >
-              {/* Media */}
-              <div className={styles.media}>
-                <Image
-                  src={proj.image}
-                  alt={proj.title}
-                  fill
-                  quality={100}
-                  sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className={styles.mediaImg}
-                />
-                <div className={styles.mediaOverlay} aria-hidden />
-                <span className={styles.typeTag}>{proj.type}</span>
-                {proj.link && (
-                  <a
-                    href={proj.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.viewIcon}
-                    aria-label={`Open ${proj.title}`}
+              {PROJECTS.map((proj, idx) => (
+                <SwiperSlide key={proj.id}>
+                  <article
+                    ref={el => { cardsRef.current[idx] = el }}
+                    className={styles.card}
                   >
-                    <FiExternalLink size={16} />
-                  </a>
-                )}
-              </div>
+                    {/* Media */}
+                    <div className={styles.media}>
+                      <Image
+                        src={proj.image}
+                        alt={proj.title}
+                        fill
+                        quality={100}
+                        sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className={styles.mediaImg}
+                      />
+                      <div className={styles.mediaOverlay} aria-hidden />
+                      <span className={styles.typeTag}>{proj.type}</span>
+                      {proj.link && (
+                        <a
+                          href={proj.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.viewIcon}
+                          aria-label={`Open ${proj.title}`}
+                        >
+                          <FiExternalLink size={16} />
+                        </a>
+                      )}
+                    </div>
 
-              {/* Body */}
-              <div className={styles.body}>
-                <h3 className={styles.cardTitle}>{proj.title}</h3>
-                <p className={styles.cardSubtitle}>{proj.subtitle}</p>
-                <p className={styles.desc}>{proj.desc}</p>
+                    {/* Body */}
+                    <div className={styles.body}>
+                      <h3 className={styles.cardTitle}>{proj.title}</h3>
+                      <p className={styles.cardSubtitle}>{proj.subtitle}</p>
+                      <p className={styles.desc}>{proj.desc}</p>
 
-                <div className={styles.stack}>
-                  {proj.tech.slice(0, 5).map(t => (
-                    <span key={t} className={styles.tag}>{t}</span>
-                  ))}
-                </div>
-              </div>
+                      <div className={styles.stack}>
+                        {proj.tech.slice(0, 5).map(t => (
+                          <span key={t} className={styles.tag}>{t}</span>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Actions */}
-              <div className={styles.cardFooter}>
-                {proj.link && (
-                  <a
-                    href={proj.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.liveBtn}
-                  >
-                    <span>View Project</span>
-                    <FiArrowUpRight size={14} />
-                  </a>
-                )}
-                {proj.github && (
-                  <a
-                    href={proj.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.githubBtn}
-                    aria-label={`${proj.title} source code`}
-                  >
-                    <FaGithub size={15} />
-                  </a>
-                )}
-              </div>
-            </article>
-          ))}
+                    {/* Actions */}
+                    <div className={styles.cardFooter}>
+                      {proj.link && (
+                        <a
+                          href={proj.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.liveBtn}
+                        >
+                          <span>View Project</span>
+                          <FiArrowUpRight size={14} />
+                        </a>
+                      )}
+                      {proj.github && (
+                        <a
+                          href={proj.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.githubBtn}
+                          aria-label={`${proj.title} source code`}
+                        >
+                          <FaGithub size={15} />
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
 
       </div>
