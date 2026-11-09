@@ -16,7 +16,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--section-top-space) var(--page-gutter) var(--section-bottom-space);
+    padding: clamp(1rem, 2.5vh, 2rem) var(--page-gutter);
 }
 
 /* ── Ambient Blurred Background Video Bloom ────────────────── */
@@ -80,9 +80,9 @@
 .frame {
     position: relative;
     width: 100%;
-    max-width: 100%;
+    max-width: min(100%, calc((100svh - clamp(2rem, 5vh, 4rem)) * 16 / 9));
     aspect-ratio: 16 / 9;
-    max-height: 100%;
+    max-height: calc(100svh - clamp(2rem, 5vh, 4rem));
     border-radius: 20px;
     overflow: hidden;
     background: #000;
@@ -517,7 +517,8 @@
 @media (max-width: 767px) and (orientation: portrait) {
     .frame {
         aspect-ratio: 4 / 5;
-        max-height: 100%;
+        max-height: calc(100svh - clamp(2rem, 5vh, 4rem));
+        max-width: min(100%, calc((100svh - clamp(2rem, 5vh, 4rem)) * 4 / 5));
     }
 }
 

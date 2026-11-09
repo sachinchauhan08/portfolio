@@ -443,36 +443,35 @@ export default function VideoIntro() {
             </button>
           )}
 
-        </div>
-
-        {audioChoice === 'sound' && (
-          <div className={styles.controls}>
-            {playing && muted && needsSoundGesture && (
+          {audioChoice === 'sound' && (
+            <div className={styles.controls}>
+              {playing && muted && needsSoundGesture && (
+                <button
+                  type="button"
+                  className={styles.soundControl}
+                  onClick={enableSound}
+                  aria-label="Enable video sound"
+                  title="Enable sound"
+                >
+                  <FiVolume2 size={15} />
+                  <span>Enable sound</span>
+                </button>
+              )}
               <button
                 type="button"
-                className={styles.soundControl}
-                onClick={enableSound}
-                aria-label="Enable video sound"
-                title="Enable sound"
+                className={styles.ctrlBtn}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  togglePlay()
+                }}
+                aria-label={playing ? 'Pause video' : 'Play video'}
+                title={playing ? 'Pause' : 'Play'}
               >
-                <FiVolume2 size={15} />
-                <span>Enable sound</span>
+                {playing ? <FiPause size={15} /> : <FiPlay size={15} />}
               </button>
-            )}
-            <button
-              type="button"
-              className={styles.ctrlBtn}
-              onClick={(e) => {
-                e.stopPropagation()
-                togglePlay()
-              }}
-              aria-label={playing ? 'Pause video' : 'Play video'}
-              title={playing ? 'Pause' : 'Play'}
-            >
-              {playing ? <FiPause size={15} /> : <FiPlay size={15} />}
-            </button>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   )
