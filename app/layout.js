@@ -18,53 +18,71 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteTitle = `${profile.name.full} | ${profile.roles.short}`;
+const siteDescription = profile.description || profile.tagline;
+const ogImageUrl = `${SITE_URL}/assets/og-image.jpg`;
+
+export const viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#07090e" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Sachin Chauhan | Frontend & Full Stack Developer',
-    template: '%s | Sachin Chauhan',
+    default: siteTitle,
+    template: `%s | ${profile.name.full}`,
   },
-  description:
-    'Software Engineer with 3 years of experience building web applications, frontend features, backend functionality, and third-party integrations.',
+  description: siteDescription,
+  applicationName: `${profile.name.full} Portfolio`,
   keywords: [
-    'Sachin Chauhan',
+    profile.name.full,
+    profile.roles.short,
+    'Software Engineer',
     'Frontend Developer',
-    'React Developer',
     'Full Stack Developer',
+    'React Developer',
     'Next.js Developer',
     'TypeScript',
-    'Software Engineer',
     'JavaScript',
     'Node.js',
+    'NestJS',
     'Web Architecture',
     'Portfolio',
-    'India',
+    profile.location.based,
   ],
-  authors: [{ name: 'Sachin Chauhan', url: SITE_URL }],
-  creator: 'Sachin Chauhan',
+  authors: [{ name: profile.name.full, url: SITE_URL }],
+  creator: profile.name.full,
+  publisher: profile.name.full,
+  category: 'technology',
   openGraph: {
     type: 'website',
     locale: 'en_IN',
     url: SITE_URL,
-    siteName: 'Sachin Chauhan',
-    title: 'Sachin Chauhan | Frontend & Full Stack Developer',
-    description:
-      'Software Engineer with 3 years of experience building web applications, frontend features, backend functionality, and third-party integrations.',
+    siteName: `${profile.name.full} Portfolio`,
+    title: siteTitle,
+    description: siteDescription,
     images: [
       {
-        url: '/opengraph-image',
+        url: ogImageUrl,
+        secureUrl: ogImageUrl,
         width: 1200,
         height: 630,
-        alt: 'Sachin Chauhan | Full Stack Developer Portfolio',
+        alt: `${profile.name.full} | ${profile.roles.short} Portfolio`,
+        type: 'image/jpeg',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sachin Chauhan | Full Stack Developer',
-    description:
-      'Software Engineer with 3 years of experience building web applications, frontend features, backend functionality, and third-party integrations. Available worldwide for collaborations.',
-    images: ['/opengraph-image'],
+    title: siteTitle,
+    description: siteDescription,
+    images: [ogImageUrl],
+    creator: profile.name.full,
   },
   robots: {
     index: true,
@@ -74,6 +92,7 @@ export const metadata = {
       follow: true,
       'max-image-preview': 'large',
       'max-snippet': -1,
+      'max-video-preview': -1,
     },
   },
   alternates: {
@@ -96,6 +115,10 @@ export const metadata = {
     ],
   },
   manifest: '/favicons/manifest.webmanifest',
+  other: {
+    'image': ogImageUrl,
+    'og:image:secure_url': ogImageUrl,
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -107,6 +130,8 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <link rel="image_src" href={ogImageUrl} />
+        <meta name="theme-color" content="#07090e" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var s=localStorage.getItem('theme')||'light';var r=s;if(s==='system'){r=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',r);document.documentElement.classList.add(r);}catch(e){}})();`,
@@ -124,6 +149,7 @@ export default function RootLayout({ children }) {
               url: SITE_URL,
               email: profile.email,
               jobTitle: profile.roles.short,
+              image: ogImageUrl,
               sameAs: profile.socials.map((social) => social.href),
               ...(profile.phone ? { telephone: profile.phone } : {}),
             }),
