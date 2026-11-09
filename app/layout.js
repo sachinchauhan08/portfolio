@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 const siteTitle = `${profile.name.full} | ${profile.roles.short}`;
 const siteDescription = profile.tagline || profile.description;
-const ogImageUrl = `${SITE_URL}/og.jpg`;
+const ogImageUrl = `${SITE_URL}/assets/og-image.png`;
 
 export const viewport = {
   themeColor: [
@@ -73,7 +73,7 @@ export const metadata = {
         width: 1200,
         height: 630,
         alt: `${profile.name.full} | ${profile.roles.short} Portfolio`,
-        type: 'image/jpeg',
+        type: 'image/png',
       },
     ],
   },
