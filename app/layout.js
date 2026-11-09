@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 const siteTitle = `${profile.name.full} | ${profile.roles.short}`;
-const siteDescription = profile.description || profile.tagline;
-const ogImageUrl = `${SITE_URL}/assets/og-image.jpg`;
+const siteDescription = profile.tagline || profile.description;
+const ogImageUrl = `${SITE_URL}/og.jpg`;
 
 export const viewport = {
   themeColor: [
@@ -130,6 +130,12 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        {/* 5 Core Open Graph tags (per Grow With Shad guide) */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:url" content={SITE_URL} />
         <link rel="image_src" href={ogImageUrl} />
         <meta name="theme-color" content="#07090e" />
         <script
