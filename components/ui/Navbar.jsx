@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { gsap } from '@/lib/gsap'
 import { FiMenu, FiX } from 'react-icons/fi'
 import ThemeToggle from '@/components/ui/ThemeToggle'
@@ -269,6 +270,10 @@ export default function Navbar() {
 
       {/* ── India time + theme toggle + mobile trigger ─────── */}
       <div className={styles.actions}>
+        <Link href="/blog" className={styles.blogBtn} aria-label="Read articles and technical blog">
+          Articles
+        </Link>
+
         <span className={styles.time} aria-label={`${LOCATION_LABEL} time`}>
           {LOCATION_LABEL} · {time}
         </span>
@@ -307,6 +312,13 @@ export default function Navbar() {
             </button>
           )
         })}
+        <Link
+          href="/blog"
+          className={styles.mobileLink}
+          onClick={() => setMenuOpen(false)}
+        >
+          Articles & Blog
+        </Link>
         <span className={styles.mobileTime} aria-label={`${LOCATION_LABEL} time`}>
           {LOCATION_LABEL} · {time}
         </span>

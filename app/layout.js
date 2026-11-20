@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Cursor from "@/components/ui/Cursor";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
@@ -142,6 +143,14 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var s=localStorage.getItem('theme')||'light';var r=s;if(s==='system'){r=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',r);document.documentElement.classList.add(r);}catch(e){}})();`,
           }}
+        />
+        {/* Google AdSense */}
+        <Script
+          id="google-adsense"
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-1407777244890571'}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
         />
       </head>
       <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { gsap } from '@/lib/gsap'
 import {
     FiMail,
@@ -246,6 +247,38 @@ export default function ContactSection() {
                     <span className={styles.statusDot} />
                     <span className={styles.factLabel}>Status</span>
                     <span className={styles.factValueAccent}>{profile.availabilityLabel}</span>
+                </div>
+            </div>
+
+            {/* ── Legal & Policy bar ─────────────────────────────────── */}
+            <div className={styles.legalBar}>
+                <span className={styles.copyright}>
+                    &copy; {new Date().getFullYear()} {profile.name.full}. All rights reserved.
+                </span>
+                <div className={styles.legalLinks}>
+                    <Link href="/about" className={styles.legalLink}>
+                        About
+                    </Link>
+                    <span className={styles.legalDivider}>&bull;</span>
+                    <Link href="/contact" className={styles.legalLink}>
+                        Contact
+                    </Link>
+                    <span className={styles.legalDivider}>&bull;</span>
+                    <Link href="/blog" className={styles.legalLink}>
+                        Articles
+                    </Link>
+                    <span className={styles.legalDivider}>&bull;</span>
+                    <Link href="/privacy-policy" className={styles.legalLink}>
+                        Privacy Policy
+                    </Link>
+                    <span className={styles.legalDivider}>&bull;</span>
+                    <Link href="/terms" className={styles.legalLink}>
+                        Terms
+                    </Link>
+                    <span className={styles.legalDivider}>&bull;</span>
+                    <Link href="/disclaimer" className={styles.legalLink}>
+                        Disclaimer
+                    </Link>
                 </div>
             </div>
         </section>
