@@ -1,5 +1,6 @@
 .container {
   min-height: 100vh;
+  min-height: 100svh;
   background: var(--bg-obsidian);
   color: var(--text-primary);
   display: flex;

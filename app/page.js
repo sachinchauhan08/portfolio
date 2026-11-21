@@ -25,6 +25,9 @@ export default function Home() {
   const loopOverlayRef = useRef(null)
 
   useEffect(() => {
+    document.documentElement.classList.add('home-locked')
+    document.body.classList.add('home-locked')
+
     const el = mainRef.current
     if (!el) return
 
@@ -292,6 +295,8 @@ export default function Home() {
     window.addEventListener('portfolio-navigate', onPortfolioNavigate)
 
     return () => {
+      document.documentElement.classList.remove('home-locked')
+      document.body.classList.remove('home-locked')
       window.removeEventListener('wheel', onWheel)
       el.removeEventListener('scroll', onScroll)
       if (!useNaturalScroll) {
@@ -328,7 +333,11 @@ export default function Home() {
       />
 
       <Navbar />
-      <main ref={mainRef} style={{ height: '100vh', overflowY: 'scroll', overscrollBehavior: 'none' }}>
+      <main
+        ref={mainRef}
+        data-home-scroller="true"
+        style={{ height: '100vh', overflowY: 'scroll', overscrollBehavior: 'none' }}
+      >
         <div>
           <VideoIntro />
           <HeroSection />

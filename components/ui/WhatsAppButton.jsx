@@ -12,8 +12,11 @@ export default function WhatsAppButton() {
   const phoneNumber = profile.phone.replace(/\D/g, '')
 
   useEffect(() => {
-    const main = document.querySelector('main')
-    if (!main) return
+    const main = document.querySelector('main[data-home-scroller]')
+    if (!main) {
+      setIntroVisible(false)
+      return
+    }
 
     const updatePosition = () => {
       setIntroVisible(main.scrollTop < main.clientHeight / 2)

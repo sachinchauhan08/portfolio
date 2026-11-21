@@ -14,10 +14,10 @@ export default function ScrollProgressBar({ className = '' }) {
     const updateProgress = () => {
       if (!barRef.current) return
 
-      // In this portfolio, the primary scroll container is <main>, which is styled
-      // with height: 100vh / overflowY: scroll in app/page.js.
-      // We check for <main> first, then fall back to the window/document.
-      const target = document.querySelector('main')
+      // In this portfolio, the primary scroll container on the homepage is <main data-home-scroller>,
+      // which is styled with height: 100vh / overflowY: scroll in app/page.js.
+      // We check for the home scroller first, then fall back to the window/document on all other pages.
+      const target = document.querySelector('main[data-home-scroller]')
       let currentScroll = 0
       let maxScroll = 0
 
@@ -74,16 +74,16 @@ export default function ScrollProgressBar({ className = '' }) {
     window.addEventListener('footer-loop-back', onScroll)
     window.addEventListener('portfolio-navigate', onScroll)
 
-    mainEl = document.querySelector('main')
+    mainEl = document.querySelector('main[data-home-scroller]')
     if (mainEl) {
       mainEl.addEventListener('scroll', onScroll, { passive: true })
     }
 
-    // MutationObserver to attach to <main> if it renders/replaces dynamically
+    // MutationObserver to attach to home scroller if it renders/replaces dynamically
     let mutationObs = null
     if (!mainEl && typeof MutationObserver !== 'undefined') {
       mutationObs = new MutationObserver(() => {
-        const m = document.querySelector('main')
+        const m = document.querySelector('main[data-home-scroller]')
         if (m && m !== mainEl) {
           mainEl = m
           mainEl.addEventListener('scroll', onScroll, { passive: true })

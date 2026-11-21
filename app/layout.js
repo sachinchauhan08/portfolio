@@ -128,7 +128,7 @@ export default function RootLayout({ children }) {
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} min-h-full antialiased`}
     >
       <head>
         {/* 5 Core Open Graph tags (per Grow With Shad guide) */}
@@ -153,7 +153,7 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
       </head>
-      <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} min-h-full antialiased`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

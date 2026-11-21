@@ -179,26 +179,41 @@
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  overflow: hidden;
+html {
+  min-height: 100%;
   background-color: var(--bg-obsidian);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
-  background: var(--bg-obsidian);
+  min-height: 100%;
+  background-color: var(--bg-obsidian);
   color:      var(--text-primary);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: var(--font-body);
   line-height: var(--line-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ─── Hide scrollbar ─────────────────────────────────────── */
-main::-webkit-scrollbar { display: none; }
-main {
+/* ─── Home Page GSAP Scroller Lock ──────────────────────── */
+html:has([data-home-scroller]),
+body:has([data-home-scroller]),
+html.home-locked,
+body.home-locked {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ─── Hide scrollbar on home GSAP scroller ───────────────── */
+main[data-home-scroller]::-webkit-scrollbar { display: none; }
+main[data-home-scroller] {
   overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -216,6 +231,13 @@ main {
 }
 
 @media (max-width: 767px) {
-  html, body { height: 100svh !important; }
-  main { height: 100svh !important; }
+  html:has([data-home-scroller]),
+  body:has([data-home-scroller]),
+  html.home-locked,
+  body.home-locked {
+    height: 100svh !important;
+  }
+  main[data-home-scroller] {
+    height: 100svh !important;
+  }
 }

@@ -1,5 +1,6 @@
 .container {
   min-height: 100vh;
+  min-height: 100svh;
   background: var(--bg-obsidian);
   color: var(--text-primary);
   display: flex;
@@ -204,6 +205,7 @@
 
 /* ─── Single Article Page ───────────────────────────────────── */
 .articleShell {
+  flex: 1;
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
