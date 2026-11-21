@@ -1,5 +1,4 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Cursor from "@/components/ui/Cursor";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
@@ -145,12 +144,10 @@ export default function RootLayout({ children }) {
           }}
         />
         {/* Google AdSense */}
-        <Script
-          id="google-adsense"
+        <script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-1407777244890571'}`}
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
       </head>
       <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} min-h-full antialiased`}>

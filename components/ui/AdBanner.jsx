@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import styles from '@/styles/ui/AdBanner.module.css'
 
 export default function AdBanner({
-  slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID || '',
+  slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID || '1909796584',
   format = 'auto',
   responsive = 'true',
   className = '',
@@ -42,13 +42,15 @@ export default function AdBanner({
     }
   }, [clientId, slot])
 
-  // If Client ID is not configured yet, show a developer-friendly placeholder
-  if (!clientId || clientId === 'ca-pub-XXXXXXXXXXXXXXXX') {
+  // If Client ID or Slot ID is not configured yet, show a clean developer placeholder
+  if (!clientId || clientId === 'ca-pub-XXXXXXXXXXXXXXXX' || !slot) {
     return (
       <aside className={`${styles.adContainer} ${styles.placeholder} ${className}`} aria-label="Sponsored Content">
         <span className={styles.adLabel}>Advertisement</span>
         <span className={styles.placeholderText}>
-          Google AdSense Unit (Ad will appear here once approved &amp; Publisher ID is added).
+          {!slot
+            ? 'AdSense Unit: Please set NEXT_PUBLIC_ADSENSE_SLOT_ID in .env.local to activate.'
+            : 'AdSense Unit: Ad will appear here once approved & publisher account is live.'}
         </span>
       </aside>
     )
